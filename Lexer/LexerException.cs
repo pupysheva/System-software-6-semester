@@ -6,7 +6,7 @@ namespace Lexer
     [Serializable]
     internal class LexerException : Exception
     {
-        public LexerException()
+        public LexerException() : base()
         {
         }
 

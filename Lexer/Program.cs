@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Lexer
@@ -32,13 +33,15 @@ namespace Lexer
             BufferedStream bStream = new BufferedStream(stream.BaseStream);
             if (!bStream.CanRead)
                 return 4;
+            List<Token> tokens;
             try
             {
-                List<Token> tokens = new Lang().SearchTokens(bStream);
+                tokens = new Lang().SearchTokens(bStream);
             }
             catch(LexerException e)
             {
                 Console.WriteLine(e + "\n" + e.StackTrace);
+                return 5;
             }
             foreach (Token token in tokens)
                 Console.WriteLine(token);
