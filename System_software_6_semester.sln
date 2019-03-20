@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexer", "Lexer\Lexer.csproj", "{8D4FB903-1A85-4B29-818C-E37FD921CD57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexerUnitTest", "LexerUnitTest\LexerUnitTest.csproj", "{AC0412C6-5179-4E30-9C1D-D142BE24BD18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8D4FB903-1A85-4B29-818C-E37FD921CD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D4FB903-1A85-4B29-818C-E37FD921CD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D4FB903-1A85-4B29-818C-E37FD921CD57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0412C6-5179-4E30-9C1D-D142BE24BD18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0412C6-5179-4E30-9C1D-D142BE24BD18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0412C6-5179-4E30-9C1D-D142BE24BD18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0412C6-5179-4E30-9C1D-D142BE24BD18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

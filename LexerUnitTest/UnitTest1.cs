@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lexer;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 
 namespace LexerUnitTest
 {
@@ -15,9 +16,9 @@ namespace LexerUnitTest
             Lang lang = new Lang();
             Assert.IsNotNull(lang);
             BufferedStream input = new BufferedStream(
-                new StreamReader(
-                    Resource1.assign_op
-                ).BaseStream);
+                new MemoryStream(
+                    Encoding.UTF8.GetBytes(Resource1.assign_op.ToCharArray())
+                ));
             List<Token> tokens = lang.SearchTokens(input);
             Assert.AreEqual(tokens.Count, 3);
         }

@@ -27,7 +27,7 @@ namespace Lexer
 
         public List<Token> SearchTokens(BufferedStream input)
         {
-
+            throw new NotImplementedException();
         }
     }
 }
