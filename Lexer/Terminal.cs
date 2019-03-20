@@ -3,20 +3,32 @@
 namespace Lexer
 {
     /// <summary>
-    /// Представление транслятора.
+    /// Представление терминала.
     /// </summary>
-    public abstract class Translator
+    public class Terminal
     {
         /// <summary>
-        /// Имя транслятора.
+        /// Создание экземпляра терминала.
         /// </summary>
-        public abstract string Name { get; }
-        
+        /// <param name="Name">Имя терминала.</param>
+        /// <param name="RegularExpression">Регулярное
+        /// выражение терминала.</param>
+        public Terminal(string Name, string RegularExpression)
+        {
+            this.Name = Name;
+            this.RegularExpression = RegularExpression;
+        }
+
+        /// <summary>
+        /// Имя терминала.
+        /// </summary>
+        public readonly string Name;
+
         /// <summary>
         /// Регулярное выражение, которое соответсвует данному
-        /// транслятору.
+        /// терминалу.
         /// </summary>
-        public abstract string RegularExpression { get; }
+        public readonly string RegularExpression;
 
         /// <summary>
         /// Определяет, является ли текущий объект эквивалентным входому.
@@ -32,7 +44,7 @@ namespace Lexer
         {
             if (translator == null)
                 return false;
-            if (!(translator is Translator))
+            if (!(translator is Terminal))
                 return false;
             return Name.Equals(translator);
         }
