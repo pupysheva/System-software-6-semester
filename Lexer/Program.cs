@@ -32,7 +32,17 @@ namespace Lexer
             BufferedStream bStream = new BufferedStream(stream.BaseStream);
             if (!bStream.CanRead)
                 return 4;
-
+            try
+            {
+                List<Token> tokens = new Lang().SearchTokens(bStream);
+            }
+            catch(LexerException e)
+            {
+                Console.WriteLine(e + "\n" + e.StackTrace);
+            }
+            foreach (Token token in tokens)
+                Console.WriteLine(token);
+            return 0;
         }
     }
 }
