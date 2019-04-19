@@ -15,12 +15,12 @@ namespace LexerUnitTest
         {
             Lang lang = new Lang();
             Assert.IsNotNull(lang);
-            BufferedStream input = new BufferedStream(
+            StreamReader input = new StreamReader(
                 new MemoryStream(
                     Encoding.UTF8.GetBytes(Resource1.assign_op.ToCharArray())
                 ));
-            //List<Token> tokens = lang.SearchTokens(input);
-            //Assert.AreEqual(tokens.Count, 3);
+            List<Token> tokens = lang.SearchTokens(input);
+            Assert.AreEqual(tokens.Count, 3);
         }
     }
 }

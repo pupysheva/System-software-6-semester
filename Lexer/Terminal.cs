@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Lexer
 {
@@ -14,6 +15,15 @@ namespace Lexer
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
         public Terminal(string Name, string RegularExpression)
+            : this(Name, new Regex(RegularExpression)) { }
+
+        /// <summary>
+        /// Создание экземпляра терминала.
+        /// </summary>
+        /// <param name="Name">Имя терминала.</param>
+        /// <param name="RegularExpression">Регулярное
+        /// выражение терминала.</param>
+        public Terminal(string Name, Regex RegularExpression)
         {
             this.Name = Name;
             this.RegularExpression = RegularExpression;
@@ -28,7 +38,7 @@ namespace Lexer
         /// Регулярное выражение, которое соответсвует данному
         /// терминалу.
         /// </summary>
-        public readonly string RegularExpression;
+        public readonly Regex RegularExpression;
 
         /// <summary>
         /// Определяет, является ли текущий объект эквивалентным входому.

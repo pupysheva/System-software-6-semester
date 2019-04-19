@@ -3,9 +3,9 @@
     /// <summary>
     /// Класс, представляющий токен.
     /// </summary>
-    public class Token : Token<object>
+    public class Token : Token<string>
     {
-        public Token(Terminal Type, object Value) : base(Type, Value) { }
+        public Token(Terminal Type, string Value) : base(Type, Value) { }
     }
 
     public class Token<T>
@@ -17,7 +17,7 @@
         /// был найден токен.</param>
         /// <param name="Value">Подстрока, которая была найдена
         /// транслятором.</param>
-        public Token(Terminal Type, object Value)
+        public Token(Terminal Type, T Value)
         {
             this.Type = Type;
             this.Value = Value;
@@ -31,6 +31,6 @@
         /// <summary>
         /// Значение токена.
         /// </summary>
-        public virtual object Value { get; }
+        public T Value { get; }
     }
 }
