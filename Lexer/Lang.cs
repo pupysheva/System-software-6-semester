@@ -21,6 +21,14 @@ namespace Lexer
                 new Terminal("ASSIGN_OP", "^=$"),
                 new Terminal("VAR", "^[a-zA-Z]+$"),
                 new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
+
+                /*
+                 Те терминалы, которые ниже, по-сути нужны парсеру.
+                 Для того, чтобы проанализировать выражение:
+                 a = "Привет, мир!",
+                 чтобы не было так:
+                 a="Привет,мир!".
+                 */
                 new Terminal("CH_SPACE", "^ $"),
                 new Terminal("CH_LEFTLINE", "^\r$"),
                 new Terminal("CH_NEWLINE", "^\n$")

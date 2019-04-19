@@ -23,6 +23,7 @@ namespace LexerUnitTest
             List<Token> tokens = lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             Assert.AreEqual(3, tokens.Count);
+            input.Close();
         }
 
         [TestMethod]
@@ -32,6 +33,7 @@ namespace LexerUnitTest
             List<Token> tokens = lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             Assert.AreEqual(6, tokens.Count);
+            input.Close();
         }
 
         public StreamReader OpenFile(string resurse)
