@@ -3,7 +3,12 @@
     /// <summary>
     /// Класс, представляющий токен.
     /// </summary>
-    public class Token
+    public class Token : Token<object>
+    {
+        public Token(Terminal Type, object Value) : base(Type, Value) { }
+    }
+
+    public class Token<T>
     {
         /// <summary>
         /// Создание экземпляра токена.
@@ -27,15 +32,5 @@
         /// Значение токена.
         /// </summary>
         public virtual object Value { get; }
-    }
-
-    public class Token<T> : Token
-    {
-        public Token(Terminal Type, T Value) : base(Type, Value) { }
-
-        /// <summary>
-        /// Значение токена.
-        /// </summary>
-        public override T Value { get; }
     }
 }

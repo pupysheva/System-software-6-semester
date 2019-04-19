@@ -16,7 +16,7 @@ namespace Lexer
         /// <summary>
         /// Список поддерживаемых терминалов.
         /// </summary>
-        private List<Terminal> avalibleTerminals = new List<Terminal>(
+        private readonly List<Terminal> avalibleTerminals = new List<Terminal>(
            new Terminal[]
            {
                new Terminal("ASSIGN_OP", "^=$"),
@@ -25,8 +25,15 @@ namespace Lexer
            }
             );
 
-        public List<Token> SearchTokens(BufferedStream input)
+        public async Task<List<Token>> SearchTokens(BufferedStream input)
         {
+            if (input == null)
+                throw new ArgumentNullException("BufferedStream input = null");
+            if (!input.CanRead)
+                throw new ArgumentException("BufferedStream can't read.");
+            char[] a = new char[1];
+            await new StreamReader(input).ReadBlockAsync(a, 0, 1);
+            int w = 2;
             throw new NotImplementedException();
         }
     }

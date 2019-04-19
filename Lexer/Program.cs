@@ -1,13 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Lexer
 {
     class Program
     {
+        static async void writerAsync(string str)
+        {
+            await Task.Run(() => writer(str));
+        }
+
+        static void writer(string str)
+        {
+            do
+            {
+                Console.WriteLine(str);
+                System.Threading.Thread.Sleep(100);
+            } while (true);
+        }
+
+        static void fun2()
+        {
+            writerAsync("1");
+            writer("2");
+        }
+
         static int Main(string[] args)
         {
+
+            fun2();
+
+
+
+
+
+
+
+
             FileInfo input;
             if (args.Length != 1)
             {
@@ -36,15 +67,15 @@ namespace Lexer
             List<Token> tokens;
             try
             {
-                tokens = new Lang().SearchTokens(bStream);
+                //tokens = new Lang().SearchTokens(bStream); TODO
             }
             catch(LexerException e)
             {
                 Console.WriteLine(e + "\n" + e.StackTrace);
                 return 5;
             }
-            foreach (Token token in tokens)
-                Console.WriteLine(token);
+            //foreach (Token token in tokens)
+            //    Console.WriteLine(token);
             return 0;
         }
     }
