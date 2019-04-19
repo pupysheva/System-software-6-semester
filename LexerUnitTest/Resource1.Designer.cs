@@ -79,5 +79,14 @@ namespace LexerUnitTest {
                 return ResourceManager.GetString("assign_op_multiline", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на a = 1 + 2 * b / s - 2.
+        /// </summary>
+        internal static string op {
+            get {
+                return ResourceManager.GetString("op", resourceCulture);
+            }
+        }
     }
 }

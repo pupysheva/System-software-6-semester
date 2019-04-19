@@ -79,6 +79,7 @@
     <Content Include="Resources\assign_op_multiline.txt">
       <LastGenOutput>assign_op_multiline1.cs</LastGenOutput>
     </Content>
+    <None Include="Resources\op.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

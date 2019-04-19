@@ -21,6 +21,7 @@ namespace Lexer
                 new Terminal("ASSIGN_OP", "^=$"),
                 new Terminal("VAR", "^[a-zA-Z]+$"),
                 new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
+                new Terminal("OP", "^\\+|-|\\*|/"),
 
                 /*
                  Те терминалы, которые ниже, по-сути нужны парсеру.
