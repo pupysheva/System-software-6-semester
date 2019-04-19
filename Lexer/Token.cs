@@ -8,24 +8,34 @@
         /// <summary>
         /// Создание экземпляра токена.
         /// </summary>
-        /// <param name="type">Транслятор, с помощью которого
+        /// <param name="Type">Транслятор, с помощью которого
         /// был найден токен.</param>
-        /// <param name="value">Подстрока, которая была найдена
+        /// <param name="Value">Подстрока, которая была найдена
         /// транслятором.</param>
-        public Token(Terminal type, string value)
+        public Token(Terminal Type, object Value)
         {
-            this.type = type;
-            this.value = value;
+            this.Type = Type;
+            this.Value = Value;
         }
 
         /// <summary>
         /// Тип токена.
         /// </summary>
-        public readonly Terminal type;
+        public Terminal Type { get; }
 
         /// <summary>
         /// Значение токена.
         /// </summary>
-        public readonly string value;
+        public virtual object Value { get; }
+    }
+
+    public class Token<T> : Token
+    {
+        public Token(Terminal Type, T Value) : base(Type, Value) { }
+
+        /// <summary>
+        /// Значение токена.
+        /// </summary>
+        public override T Value { get; }
     }
 }
