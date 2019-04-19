@@ -20,7 +20,7 @@ namespace LexerUnitTest
                     Encoding.UTF8.GetBytes(Resource1.assign_op.ToCharArray())
                 ));
             List<Token> tokens = lang.SearchTokens(input);
-            Assert.AreEqual(tokens.Count, 3);
+            Assert.AreEqual(3, tokens.Count);
         }
     }
 }

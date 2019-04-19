@@ -15,7 +15,7 @@ namespace Lexer
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
         public Terminal(string Name, string RegularExpression)
-            : this(Name, new Regex(RegularExpression)) { }
+            : this(Name, new Regex(RegularExpression, RegexOptions.Multiline)) { }
 
         /// <summary>
         /// Создание экземпляра терминала.
@@ -63,6 +63,11 @@ namespace Lexer
         {
             // 539060726 - visual studio сгенерировала.
             return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+        }
+
+        public override string ToString()
+        {
+            return $"{Name}: \"{RegularExpression.ToString()}\"";
         }
     }
 }

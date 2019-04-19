@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Lexer
 {
@@ -21,7 +22,7 @@ namespace Lexer
            {
                new Terminal("ASSIGN_OP", "^=$"),
                new Terminal("VAR", "^[a-zA-Z]+$"),
-               new Terminal("DIGIT", "^0|([1-9][0-9]+)$"),
+               new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
                new Terminal("SPACE", "^ $")
            }
             );
@@ -34,10 +35,17 @@ namespace Lexer
             StringBuilder bufferList = new StringBuilder(); // Строка из файла.
             char[] buffer = new char[1]; // Сюда попадает символ перед тем, как попасть в строку.
             List<Terminal> termsFound; // Сюда помещаются подходящие терминалы к строке bufferList.
-            while (!input.EndOfStream)
+
+            // True, если последняя итерация была с добавлением элемента в output. Иначе - False.
+            bool lastAdd = false; 
+            while (!input.EndOfStream || bufferList.Length != 0)
             {
-                input.Read(buffer, 0, 1); // Чтение символа.
-                bufferList.Append(buffer[0]); // Запись символа в строку.
+                if (!lastAdd)
+                {
+                    input.Read(buffer, 0, 1); // Чтение символа.
+                    bufferList.Append(buffer[0]); // Запись символа в строку.
+                }
+                lastAdd = false;
                 // Получение списка подходящих терминалов:
                 termsFound = SearchInTerminals(bufferList.ToString());
 
@@ -47,7 +55,7 @@ namespace Lexer
                     if (termsFound.Count == 1 && !input.EndOfStream)
                         // Это ещё не конец файла и есть 1 прецидент. Ищем дальше.
                         continue;
-                    char last = '\0';
+                    int last = char.MaxValue + 1;
                     if (termsFound.Count == 0)
                     {
                         last = bufferList[bufferList.Length - 1]; // Запоминаем последний символ.
@@ -65,8 +73,9 @@ namespace Lexer
                         bufferList.ToString()
                         ));
                     bufferList.Clear();
-                    if (termsFound.Count == 0)
-                        bufferList.Append(last);
+                    lastAdd = true;
+                    if (last != char.MaxValue + 1)
+                        bufferList.Append((char)last);
                 }
             }
             output.RemoveAll((Token t) => t.Type.Name == "SPACE");
@@ -78,7 +87,8 @@ namespace Lexer
             List<Terminal> output = new List<Terminal>();
             foreach (Terminal ter in avalibleTerminals)
             {
-                if (ter.RegularExpression.IsMatch(expression))
+                Match mat = ter.RegularExpression.Match(expression);
+                if (mat.Length == 1 && mat.Value.Equals(expression))
                     output.Add(ter);
             }
             return output;
