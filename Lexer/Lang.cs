@@ -21,7 +21,8 @@ namespace Lexer
            {
                new Terminal("ASSIGN_OP", "^=$"),
                new Terminal("VAR", "^[a-zA-Z]+$"),
-               new Terminal("DIGIT", "^0|([1-9][0-9]+)$")
+               new Terminal("DIGIT", "^0|([1-9][0-9]+)$"),
+               new Terminal("SPACE", "^ $")
            }
             );
 
@@ -68,6 +69,7 @@ namespace Lexer
                         bufferList.Append(last);
                 }
             }
+            output.RemoveAll((Token t) => t.Type.Name == "SPACE");
             return output;
         }
 
