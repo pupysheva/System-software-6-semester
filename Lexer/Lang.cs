@@ -10,23 +10,45 @@ namespace Lexer
 {
     public class Lang
     {
+        /// <summary>
+        /// Создание экземпляра обработчика.
+        /// </summary>
         public Lang()
         {
+            avalibleTerminals = new List<Terminal>(
+            new Terminal[]
+            {
+                new Terminal("ASSIGN_OP", "^=$"),
+                new Terminal("VAR", "^[a-zA-Z]+$"),
+                new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
+                new Terminal("CH_SPACE", "^ $"),
+                new Terminal("CH_LEFTLINE", "^\r$"),
+                new Terminal("CH_NEWLINE", "^\n$")
+            }
+            );
+        }
+
+        /// <summary>
+        /// Создание экземпляра обработчика.
+        /// </summary>
+        /// <param name="avalibleTerminals">Набор разрешённых терминалов.</param>
+        public Lang(List<Terminal> avalibleTerminals)
+        {
+            this.avalibleTerminals = avalibleTerminals
+                ?? throw new ArgumentNullException();
         }
 
         /// <summary>
         /// Список поддерживаемых терминалов.
         /// </summary>
-        private readonly List<Terminal> avalibleTerminals = new List<Terminal>(
-           new Terminal[]
-           {
-               new Terminal("ASSIGN_OP", "^=$"),
-               new Terminal("VAR", "^[a-zA-Z]+$"),
-               new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
-               new Terminal("SPACE", "^ $")
-           }
-            );
+        private readonly List<Terminal> avalibleTerminals;
 
+        /// <summary>
+        /// Переобразование входного текста в лист токенов на основе
+        /// правил терминалов.
+        /// </summary>
+        /// <param name="input">Входной поток текста.</param>
+        /// <returns>Список найденных токенов.</returns>
         public List<Token> SearchTokens(StreamReader input)
         {
             if (input == null)
@@ -37,7 +59,7 @@ namespace Lexer
             List<Terminal> termsFound; // Сюда помещаются подходящие терминалы к строке bufferList.
 
             // True, если последняя итерация была с добавлением элемента в output. Иначе - False.
-            bool lastAdd = false; 
+            bool lastAdd = false;
             while (!input.EndOfStream || bufferList.Length != 0)
             {
                 if (!lastAdd)
@@ -78,7 +100,6 @@ namespace Lexer
                         bufferList.Append((char)last);
                 }
             }
-            output.RemoveAll((Token t) => t.Type.Name == "SPACE");
             return output;
         }
 
@@ -88,7 +109,7 @@ namespace Lexer
             foreach (Terminal ter in avalibleTerminals)
             {
                 Match mat = ter.RegularExpression.Match(expression);
-                if (mat.Length == 1 && mat.Value.Equals(expression))
+                if (mat.Length > 0 && mat.Value.Equals(expression))
                     output.Add(ter);
             }
             return output;

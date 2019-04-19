@@ -68,5 +68,16 @@ namespace LexerUnitTest {
                 return ResourceManager.GetString("assign_op", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Abs = 3
+        ///Tri = 4
+        ///.
+        /// </summary>
+        internal static string assign_op_multiline {
+            get {
+                return ResourceManager.GetString("assign_op_multiline", resourceCulture);
+            }
+        }
     }
 }

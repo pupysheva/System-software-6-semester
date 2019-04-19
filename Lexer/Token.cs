@@ -32,5 +32,10 @@
         /// Значение токена.
         /// </summary>
         public T Value { get; }
+
+        public override string ToString()
+        {
+            return $"{Type}: {Value}";
+        }
     }
 }
