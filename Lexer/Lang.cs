@@ -58,7 +58,7 @@ namespace Lexer
         /// </summary>
         /// <param name="input">Входной поток текста.</param>
         /// <returns>Список найденных токенов.</returns>
-        public List<Token> SearchTokens(StreamReader input)
+        public virtual List<Token> SearchTokens(StreamReader input)
         {
             if (input == null)
                 throw new ArgumentNullException("BufferedStream input = null");
