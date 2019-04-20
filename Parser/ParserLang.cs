@@ -21,7 +21,7 @@ namespace Parser
         /// <returns>Отчёт об ошибках.</returns>
         public ReportParser Check(List<Token> tokens)
         {
-
+            throw new NotImplementedException();
         }
     }
 }

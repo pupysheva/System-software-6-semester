@@ -25,7 +25,15 @@ namespace LexerUnitTest
 
         [TestMethod]
         public void op()
-            => TestOnResurseCount(Resource1.op, 11);
+        {
+            TestOnResurseCount(Resource1.op, 11);
+        }
+
+        [TestMethod]
+        public void while_kw(){
+            TestOnResurseCount(Resource1._while, 14);
+        }
+
 
         /// <summary>
         /// Функция запускает тестирование на основание текста программы.

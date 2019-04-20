@@ -61,6 +61,16 @@ namespace LexerUnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на a=0
+        ///while(a==0){a=a+1}.
+        /// </summary>
+        internal static string _while {
+            get {
+                return ResourceManager.GetString("while", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на a = 2.
         /// </summary>
         internal static string assign_op {
