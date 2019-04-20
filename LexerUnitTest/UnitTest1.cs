@@ -65,11 +65,11 @@ namespace LexerUnitTest
             StreamReader input = OpenFile(text);
             List<Token> tokens = lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            Assert.AreEqual(count, tokens.Count);
             input.Close();
             foreach (Token token in tokens)
                 // Печатаем токины.
                 Console.WriteLine(token);
+            Assert.AreEqual(count, tokens.Count);
             return tokens;
         }
 

@@ -15,7 +15,7 @@ namespace Lexer
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
         public Terminal(string Name, string RegularExpression, uint priority = uint.MaxValue / 2)
-            : this(Name, new Regex(RegularExpression, RegexOptions.Multiline)) { }
+            : this(Name, new Regex(RegularExpression, RegexOptions.Multiline), priority) { }
 
         /// <summary>
         /// Создание экземпляра терминала.

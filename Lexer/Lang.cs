@@ -109,6 +109,7 @@ namespace Lexer
                                 throw new LexerException
                                 ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
                             Terminal need = termsFound.First();
+                            Terminal oldNeed = null;
                             bool unical = true; // True, если необходимый терминал имеет самый высокий приоритет.
                             for (int i = 1; i < termsFound.Count; i++)
                             {
@@ -119,12 +120,14 @@ namespace Lexer
                                 }
                                 else if(Terminal.PriorityEquals(termsFound[i], need))
                                 {
+                                    oldNeed = termsFound[i];
                                     unical = false;
                                 }
                             }
                             if(!unical)
                                 throw new LexerException
-                                    ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
+                                    ($"Количество подходящих терменалов не равно 1: {termsFound.Count}" +
+                                    $", возможно был конфликт между: {oldNeed} и {need}");
                             termsFound.Clear();
                             termsFound.Add(need);
                         }
