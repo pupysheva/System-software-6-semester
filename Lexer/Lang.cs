@@ -21,7 +21,7 @@ namespace Lexer
                 new Terminal("ASSIGN_OP", "^=$"),
                 new Terminal("VAR", "^[a-zA-Z]+$",uint.MaxValue),
                 new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
-                new Terminal("OP", "^\\+|-|\\*|/"),
+                new Terminal("OP", "^\\+|-|\\*|/$"),
                 new Terminal("LOGICAL_OP", "^>|<|>=|<=|==$"),
                 new Terminal("WHILE_KW", "^while$", 0),
                 new Terminal("PRINT_KW", "^print$",0),
