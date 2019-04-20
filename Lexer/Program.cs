@@ -9,31 +9,7 @@ namespace Lexer
     {
         static int Main(string[] args)
         {
-            FileInfo input;
-            if (args.Length != 1)
-            { // Если файл из аргументов программы не взят
-                Console.Write("Name file: ");
-                input = new FileInfo(Console.ReadLine());
-            }
-            else
-            { // Если есть аргументы, то берём из аргументов.
-                input = new FileInfo(args[0]);
-            }
-            if (!input.Exists)
-                // Файл не найден.
-                return 2;
-            StreamReader stream;
-            try
-            {
-                // Читаем текст.
-                stream = input.OpenText();
-            } catch (Exception e)
-            {
-                // Ошибка при чтении.
-                Console.WriteLine(e.Message);
-                Console.ReadKey(true);
-                return 3;
-            }
+            StreamReader stream = OpenFileVisualInterface(args);
             List<Token> tokens;
             try
             {
@@ -46,12 +22,34 @@ namespace Lexer
                 Console.WriteLine(e + "\n" + e.StackTrace);
                 return 5;
             }
+            stream.Close();
             foreach (Token token in tokens)
                 // Печатаем токины.
                 Console.WriteLine(token);
             Console.Write("Press eny key...");
             Console.ReadLine();
             return 0;
+        }
+
+        /// <summary>
+        /// Пытается открыть файл из аргумента командной строки.
+        /// Если не получится, спрашивает у входящего потока.
+        /// </summary>
+        /// <param name="args">Аргументы командной строки.</param>
+        /// <returns>Открытый файл для чтения.</returns>
+        static StreamReader OpenFileVisualInterface(string[] args)
+        {
+            FileInfo input;
+            if (args.Length != 1)
+            { // Если файл из аргументов программы не взят
+                Console.Write("Name file: ");
+                input = new FileInfo(Console.ReadLine());
+            }
+            else
+            { // Если есть аргументы, то берём из аргументов.
+                input = new FileInfo(args[0]);
+            }
+            return input.OpenText();
         }
     }
 }
