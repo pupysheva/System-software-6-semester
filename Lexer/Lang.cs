@@ -103,34 +103,34 @@ namespace Lexer
                         last = bufferList[bufferList.Length - 1]; // Запоминаем последний символ.
                         bufferList.Length--; // Уменьшаем длинну списка на 1.
                         termsFound = SearchInTerminals(bufferList.ToString()); // Теперь ищем терминалы.
-                        if (termsFound.Count != 1) // Ой, должен был остаться только один.
+                    }
+                    if (termsFound.Count != 1) // Ой, должен был остаться только один.
+                    {
+                        if (termsFound.Count == 0)
+                            throw new LexerException
+                            ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
+                        Terminal need = termsFound.First();
+                        Terminal oldNeed = null;
+                        bool unical = true; // True, если необходимый терминал имеет самый высокий приоритет.
+                        for (int i = 1; i < termsFound.Count; i++)
                         {
-                            if(termsFound.Count == 0)
-                                throw new LexerException
-                                ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
-                            Terminal need = termsFound.First();
-                            Terminal oldNeed = null;
-                            bool unical = true; // True, если необходимый терминал имеет самый высокий приоритет.
-                            for (int i = 1; i < termsFound.Count; i++)
+                            if (termsFound[i] > need)
                             {
-                                if(termsFound[i] > need)
-                                {
-                                    need = termsFound[i];
-                                    unical = true;
-                                }
-                                else if(Terminal.PriorityEquals(termsFound[i], need))
-                                {
-                                    oldNeed = termsFound[i];
-                                    unical = false;
-                                }
+                                need = termsFound[i];
+                                unical = true;
                             }
-                            if(!unical)
-                                throw new LexerException
-                                    ($"Количество подходящих терменалов не равно 1: {termsFound.Count}" +
-                                    $", возможно был конфликт между: {oldNeed} и {need}");
-                            termsFound.Clear();
-                            termsFound.Add(need);
+                            else if (Terminal.PriorityEquals(termsFound[i], need))
+                            {
+                                oldNeed = termsFound[i];
+                                unical = false;
+                            }
                         }
+                        if (!unical)
+                            throw new LexerException
+                                ($"Количество подходящих терменалов не равно 1: {termsFound.Count}" +
+                                $", возможно был конфликт между: {oldNeed} и {need}");
+                        termsFound.Clear();
+                        termsFound.Add(need);
                     }
                     // Всё идёт как надо
                     // Добавим в результаты
