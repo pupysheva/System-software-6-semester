@@ -39,7 +39,7 @@ namespace LexerUnitTest
         [TestMethod]
         public void print_kw()
         {
-            TestOnResurseCount(Resource1.print, 1);
+            TestOnResurseCount(Resource1.print_kw, 1);
         }
         [TestMethod]
         public void condition()
