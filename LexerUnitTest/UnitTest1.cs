@@ -40,8 +40,8 @@ namespace LexerUnitTest
         public void print_kw()
         {
             List<Token> tokens = TestOnResurseCount(Resource1.print_kw, 1);
-            tokens[0].Type.Name.Equals("PRINT");
-            Assert.AreEqual("print", tokens[0].Value);
+
+            Assert.AreEqual("PRINT_KW", tokens[0].Type.Name);
 
         }
         [TestMethod]
