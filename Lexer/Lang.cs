@@ -82,7 +82,7 @@ namespace Lexer
             bool lastAdd = false;
             while (!input.EndOfStream || bufferList.Length != 0)
             {
-                if (!lastAdd)
+                if (!lastAdd && !input.EndOfStream)
                 {
                     input.Read(buffer, 0, 1); // Чтение символа.
                     bufferList.Append(buffer[0]); // Запись символа в строку.
@@ -92,7 +92,7 @@ namespace Lexer
                 termsFound = SearchInTerminals(bufferList.ToString());
 
                 // Ура, мы что-то, кажется, нашли.
-                if (termsFound.Count <= 1)
+                if (termsFound.Count <= 1 || input.EndOfStream)
                 {
                     if (termsFound.Count == 1 && !input.EndOfStream)
                         // Это ещё не конец файла и есть 1 прецидент. Ищем дальше.
