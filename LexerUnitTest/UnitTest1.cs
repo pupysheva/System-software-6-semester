@@ -31,7 +31,7 @@ namespace LexerUnitTest
 
         [TestMethod]
         public void while_kw(){
-            TestOnResurseCount(Resource1._while, 14);
+            TestOnResurseCount(Resource1._while, 16);
         }
 
 
