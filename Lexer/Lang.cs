@@ -101,8 +101,30 @@ namespace Lexer
                         bufferList.Length--; // Уменьшаем длинну списка на 1.
                         termsFound = SearchInTerminals(bufferList.ToString()); // Теперь ищем терминалы.
                         if (termsFound.Count != 1) // Ой, должен был остаться только один.
-                            throw new LexerException
+                        {
+                            if(termsFound.Count == 0)
+                                throw new LexerException
                                 ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
+                            Terminal need = termsFound.First();
+                            bool unical = true; // True, если необходимый терминал имеет самый высокий приоритет.
+                            for (int i = 1; i < termsFound.Count; i++)
+                            {
+                                if(termsFound[i] > need)
+                                {
+                                    need = termsFound[i];
+                                    unical = true;
+                                }
+                                else if(Terminal.PriorityEquals(termsFound[i], need))
+                                {
+                                    unical = false;
+                                }
+                            }
+                            if(!unical)
+                                throw new LexerException
+                                    ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
+                            termsFound.Clear();
+                            termsFound.Add(need);
+                        }
                     }
                     // Всё идёт как надо
                     // Добавим в результаты

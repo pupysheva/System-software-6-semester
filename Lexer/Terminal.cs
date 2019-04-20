@@ -14,7 +14,7 @@ namespace Lexer
         /// <param name="Name">Имя терминала.</param>
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
-        public Terminal(string Name, string RegularExpression)
+        public Terminal(string Name, string RegularExpression, uint priority = uint.MaxValue / 2)
             : this(Name, new Regex(RegularExpression, RegexOptions.Multiline)) { }
 
         /// <summary>
@@ -23,16 +23,22 @@ namespace Lexer
         /// <param name="Name">Имя терминала.</param>
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
-        public Terminal(string Name, Regex RegularExpression)
+        public Terminal(string Name, Regex RegularExpression, uint priority = uint.MaxValue / 2)
         {
             this.Name = Name;
             this.RegularExpression = RegularExpression;
+            this.priority = priority;
         }
 
         /// <summary>
         /// Имя терминала.
         /// </summary>
         public readonly string Name;
+
+        /// <summary>
+        /// Приоритет терминала.
+        /// </summary>
+        private readonly uint priority;
 
         /// <summary>
         /// Регулярное выражение, которое соответсвует данному
@@ -69,5 +75,46 @@ namespace Lexer
         {
             return $"{Name}: \"{RegularExpression.ToString()}\"";
         }
+
+        /// <summary>
+        /// Сравнение приоритетов левого и правого терминала.
+        /// </summary>
+        /// <param name="left">Левый терминал.</param>
+        /// <param name="right">Правый терминал.</param>
+        /// <returns>True, если у левого приоритет выше (ближе к 0), чем у right.
+        /// Иначе - false.</returns>
+        public static bool operator >(Terminal left, Terminal right)
+         => left.priority < right.priority;
+
+        /// <summary>
+        /// Сравнение приоритетов левого и правого терминала.
+        /// </summary>
+        /// <param name="left">Левый терминал.</param>
+        /// <param name="right">Правый терминал.</param>
+        /// <returns>True, если у левого приоритет ниже (дальше к 0), чем у right.
+        /// Иначе - false.</returns>
+        public static bool operator <(Terminal left, Terminal right)
+         => left.priority > right.priority;
+
+        /// <summary>
+        /// Сравнение приоритетов левого и правого терминала.
+        /// </summary>
+        /// <param name="left">Левый терминал.</param>
+        /// <param name="right">Правый терминал.</param>
+        /// <returns>True, если у левого приоритет такой же, как у right.
+        /// Иначе - false.</returns>
+        public static bool PriorityEquals(Terminal left, Terminal right)
+         => left.priority == right.priority;
+
+        /// <summary>
+        /// Сравнение приоритетов левого и правого терминала.
+        /// </summary>
+        /// <param name="left">Левый терминал.</param>
+        /// <param name="right">Правый терминал.</param>
+        /// <returns>True, если у левого приоритет отличен от right.
+        /// Иначе - false.</returns>
+        public static bool PriorityNotEquals(Terminal left, Terminal right)
+         => left.priority == right.priority;
+
     }
 }
