@@ -22,6 +22,7 @@ namespace Lexer
                 new Terminal("VAR", "^[a-zA-Z]+$"),
                 new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
                 new Terminal("OP", "^\\+|-|\\*|/"),
+                new Terminal("LOGICAL_OP", "^>|<|>=|<=|==$"),
                 new Terminal("WHILE_KW", "^while$"),
                 new Terminal("PRINT_KW", "^print$"),
                 new Terminal("FOR_KW", "^for$"),
@@ -29,8 +30,10 @@ namespace Lexer
                 new Terminal("ELSE_KW", "^else$"),
                 new Terminal("L_QB", "^{$"),
                 new Terminal("R_QB", "^}$"),
-                new Terminal("L_B", "^($"),
-                new Terminal("R_B", "^)$"),
+                new Terminal("L_B", "^\\($"),
+                new Terminal("R_B", "^\\)$"),
+                new Terminal("COMMA", "^;$"),
+                new Terminal("COM", "^,$"),
                 /*
                  Те терминалы, которые ниже, по-сути нужны парсеру.
                  Для того, чтобы проанализировать выражение:

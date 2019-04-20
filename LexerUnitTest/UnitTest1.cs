@@ -39,7 +39,10 @@ namespace LexerUnitTest
         [TestMethod]
         public void print_kw()
         {
-            TestOnResurseCount(Resource1.print_kw, 1);
+            List<Token> tokens = TestOnResurseCount(Resource1.print_kw, 1);
+            tokens[0].Type.Name.Equals("PRINT");
+            Assert.AreEqual("print", tokens[0].Value);
+
         }
         [TestMethod]
         public void condition()
@@ -57,7 +60,7 @@ namespace LexerUnitTest
         /// </summary>
         /// <param name="text">Текст программы.</param>
         /// <param name="count">Количество ожидаемых терминалов.</param>
-        public void TestOnResurseCount(string text, int count)
+        public List<Token> TestOnResurseCount(string text, int count)
         {
             StreamReader input = OpenFile(text);
             List<Token> tokens = lang.SearchTokens(input);
@@ -67,6 +70,7 @@ namespace LexerUnitTest
             foreach (Token token in tokens)
                 // Печатаем токины.
                 Console.WriteLine(token);
+            return tokens;
         }
 
         public StreamReader OpenFile(string resurse)
