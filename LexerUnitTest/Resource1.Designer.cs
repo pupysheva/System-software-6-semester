@@ -19,7 +19,7 @@ namespace LexerUnitTest {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resource1 {
@@ -81,11 +81,43 @@ namespace LexerUnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на a=0
+        ///b=0
+        ///if(a==0) {b=b+1}
+        ///else {b=b-2}.
+        /// </summary>
+        internal static string condition {
+            get {
+                return ResourceManager.GetString("condition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на n=2
+        ///b=0
+        ///for(a=0,a&lt;n,a=a+1 ){b=b+1}.
+        /// </summary>
+        internal static string cycle_for {
+            get {
+                return ResourceManager.GetString("cycle_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на a = 1 + 2 * b / s - 2.
         /// </summary>
         internal static string op {
             get {
                 return ResourceManager.GetString("op", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на print.
+        /// </summary>
+        internal static string print_kw {
+            get {
+                return ResourceManager.GetString("print_kw", resourceCulture);
             }
         }
     }

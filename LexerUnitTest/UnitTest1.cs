@@ -27,6 +27,22 @@ namespace LexerUnitTest
         public void op()
             => TestOnResurseCount(Resource1.op, 11);
 
+
+        [TestMethod]
+        public void print_kw()
+        {
+            TestOnResurseCount(Resource1.print, 1);
+        }
+        [TestMethod]
+        public void condition()
+        {
+            TestOnResurseCount(Resource1.condition, 27);
+        }
+        [TestMethod]
+        public void cycle_for()
+        {
+            TestOnResurseCount(Resource1.cycle_for, 29);
+        }
         /// <summary>
         /// Функция запускает тестирование на основание текста программы.
         /// Ожидается count терминалов, не считая терминалов CH_.
