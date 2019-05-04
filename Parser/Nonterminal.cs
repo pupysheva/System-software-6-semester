@@ -21,6 +21,11 @@ namespace Parser
         public Nonterminal(params object[] operatorsWithTerminals)
             => AddRange(operatorsWithTerminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
 
+        /// <summary>
+        /// Проверяет, чтобы заданные токены соответсвовали 
+        /// </summary>
+        /// <param name="tokens">Список токенов, которые надо проверить.</param>
+        /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
         public bool CheckRule(List<Token> tokens)
         {
             throw new NotImplementedException();
