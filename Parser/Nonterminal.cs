@@ -22,7 +22,7 @@ namespace Parser
             => AddRange(operatorsWithTerminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
 
         /// <summary>
-        /// Проверяет, чтобы заданные токены соответсвовали 
+        /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
         /// </summary>
         /// <param name="tokens">Список токенов, которые надо проверить.</param>
         /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
