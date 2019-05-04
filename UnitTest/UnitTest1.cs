@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LexerUnitTest
+namespace UnitTest
 {
     [TestClass]
     public class UnitTest1

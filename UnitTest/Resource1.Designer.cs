@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LexerUnitTest {
+namespace UnitTest {
     using System;
     
     
