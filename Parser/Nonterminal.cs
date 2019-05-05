@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using static Parser.RuleOperator;
 
 namespace Parser
 {
@@ -12,6 +13,10 @@ namespace Parser
     {
         /// <summary>
         /// Лист содержит операторы нетерминалов или терминалы, образуя единый терминал.
+        /// Тут должны быть типы:
+        /// 1. <see cref="Terminal"/>;
+        /// 2. <see cref="RuleOperator"/>;
+        /// 3. <see cref="Nonterminal"/>.
         /// </summary>
         private readonly List<object> list = new List<object>();
 
@@ -26,19 +31,19 @@ namespace Parser
         public bool CheckRule(List<Token> tokens)
         {
             int i = 0;
-            List<object> lang = GetReversePolishNotationList();
-            Stack<object> mem = new Stack<object>();
-            foreach(object l in lang)
-            {
-                if(l is Terminal)
+            if (list[i] is RuleOperator)
+                switch(list[i])
                 {
-                    if (((Terminal)l).Name.Equals(tokens[i].Type.Name))
-                        mem.Push(l);
-                    else
-                        mem.Push(new ParserException(l, tokens[i].Type));
-                    i++;
+                    case ONE_AND_MORE:
+
+                        break;
+                    case ZERO_AND_MORE:
+                        break;
+                    case OR:
+                        break;
+                    case AND:
+                        break;
                 }
-            }
         }
 
         /// <summary>
@@ -53,7 +58,9 @@ namespace Parser
             if (!IsCanAdd(value))
                 throw new ArgumentException(
                     "Ожидался токен или оператор. Фактически: " + value.ToString());
-            return value is string ? new Terminal((string)value) : value;
+            return value is string ? new Terminal((string)value)
+                : value is object[] ? new Nonterminal((object[])value)
+                : value;
         }
 
         /// <summary>
@@ -67,7 +74,26 @@ namespace Parser
         /// 4. Представление названия <see cref="Terminal"/> в виде <see cref="string"/>.
         /// В противном случае, False. Если value = null, то возвращает False.</returns>
         public bool IsCanAdd(object value)
-         => value != null && (value is Terminal || value is string || value is RuleOperator || value is Nonterminal);
+         => value != null && 
+            (value is Terminal
+            || value is string
+            || value is RuleOperator
+            || value is Nonterminal
+            || (value is object[] && IsCanAddRange((object[])value))
+            );
+
+        /// <summary>
+        /// Вызывает <see cref="IsCanAdd(object)"/> для каждого элемента
+        /// множества array.
+        /// </summary>
+        /// <returns>True, если все соответсуют <see cref="IsCanAdd(object)"/>. Иначе - false.</returns>
+        public bool IsCanAddRange(IEnumerable array)
+        {
+            foreach (object o in array)
+                if (!IsCanAdd(o))
+                    return false;
+            return true;
+        }
 
         /// <summary>
         /// Добавляет множество операторов или терминалов в правило.
