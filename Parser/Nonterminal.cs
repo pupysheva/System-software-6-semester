@@ -25,7 +25,20 @@ namespace Parser
         /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
         public bool CheckRule(List<Token> tokens)
         {
-            throw new NotImplementedException();
+            int i = 0;
+            List<object> lang = GetReversePolishNotationList();
+            Stack<object> mem = new Stack<object>();
+            foreach(object l in lang)
+            {
+                if(l is Terminal)
+                {
+                    if (((Terminal)l).Name.Equals(tokens[i].Type.Name))
+                        mem.Push(l);
+                    else
+                        mem.Push(new ParserException(l, tokens[i].Type));
+                    i++;
+                }
+            }
         }
 
         /// <summary>
@@ -33,21 +46,28 @@ namespace Parser
         /// Подходят объекты только Token и RuleOperator.
         /// </summary>
         /// <param name="value">Объект на проверку.</param>
-        private void CheckSet(object value)
+        /// <returns>Обработанный объект.
+        /// Например, преобразование <see cref="string"/> в <see cref="Terminal"/>.</returns>
+        private object CheckSet(object value)
         {
             if (!IsCanAdd(value))
                 throw new ArgumentException(
                     "Ожидался токен или оператор. Фактически: " + value.ToString());
+            return value is string ? new Terminal((string)value) : value;
         }
 
         /// <summary>
         /// Определяет, может ли элемент быть добавлен в данное правило.
         /// </summary>
         /// <param name="value">Объект, рассматреть который необходимо.</param>
-        /// <returns>True, если это <see cref="RuleOperator"/> или <see cref="Terminal">.
+        /// <returns>True, если это одно из:
+        /// 1. <see cref="RuleOperator"/>;
+        /// 2. <see cref="Terminal"/>;
+        /// 3. <see cref="Nonterminal"/>;
+        /// 4. Представление названия <see cref="Terminal"/> в виде <see cref="string"/>.
         /// В противном случае, False. Если value = null, то возвращает False.</returns>
         public bool IsCanAdd(object value)
-         => value != null && (value is Terminal || value is RuleOperator);
+         => value != null && (value is Terminal || value is string || value is RuleOperator || value is Nonterminal);
 
         /// <summary>
         /// Добавляет множество операторов или терминалов в правило.
@@ -57,8 +77,18 @@ namespace Parser
         public void AddRange(IEnumerable<object> operatorsWithTerminals)
         {
             foreach (object opOrTer in operatorsWithTerminals)
-                CheckSet(opOrTer);
-            list.AddRange(operatorsWithTerminals);
+                this.Add(opOrTer);
+        }
+
+        /// <summary>
+        /// Возвращает лист в обратной польской последовательности текущего нетерминала.
+        /// </summary>
+        /// <returns>Лист в обратной польской последовательности.</returns>
+        private List<object> GetReversePolishNotationList()
+        {
+            Stack<object> stack = new Stack<object>(list.Count);
+            List<object> output = new List<object>(list.Count);
+
         }
 
         #region IList
@@ -68,8 +98,7 @@ namespace Parser
             get => list[index];
             set
             {
-                CheckSet(value);
-                list[index] = value;
+                list[index] = CheckSet(value);
             }
         }
 
@@ -89,8 +118,7 @@ namespace Parser
         /// <param name="item">Объект, соответсвующий <see cref="IsCanAdd(object)"/>.</param>
         public void Add(object item)
         {
-            CheckSet(item);
-            list.Add(item);
+            list.Add(CheckSet(item));
         }
 
         public void Clear() => list.Clear();
@@ -111,10 +139,7 @@ namespace Parser
         }
 
         public void Insert(int index, object item)
-        {
-            CheckSet(item);
-            list.Insert(index, item);
-        }
+            => list.Insert(index, CheckSet(item));
 
         public bool Remove(object item)
             => list.Remove(item);
@@ -126,10 +151,7 @@ namespace Parser
             => list.GetEnumerator();
 
         int IList.Add(object value)
-        {
-            CheckSet(value);
-            return ((IList)list).Add(value);
-        }
+            => ((IList)list).Add(CheckSet(value));
 
         void IList.Remove(object value)
             => ((IList)list).Remove(value);

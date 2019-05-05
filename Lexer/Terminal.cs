@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Lexer
@@ -9,13 +10,22 @@ namespace Lexer
     public class Terminal
     {
         /// <summary>
+        /// Создание анонимного терминала.
+        /// В отличии от обычного, в нём отсутсвует регулярное выражение,
+        /// а приоритет самый низкий (<see cref="uint.MaxValue"/>)
+        /// </summary>
+        /// <param name="Name">Имя терминала.</param>
+        public Terminal(string Name)
+            : this(Name, (Regex)null, uint.MaxValue) { }
+
+        /// <summary>
         /// Создание экземпляра терминала.
         /// </summary>
         /// <param name="Name">Имя терминала.</param>
         /// <param name="RegularExpression">Регулярное
         /// выражение терминала.</param>
         public Terminal(string Name, string RegularExpression, uint priority = uint.MaxValue / 2)
-            : this(Name, new Regex(RegularExpression, RegexOptions.Multiline), priority) { }
+            : this(Name, new Regex(RegularExpression ?? throw new ArgumentNullException(), RegexOptions.Multiline), priority) { }
 
         /// <summary>
         /// Создание экземпляра терминала.
@@ -25,7 +35,7 @@ namespace Lexer
         /// выражение терминала.</param>
         public Terminal(string Name, Regex RegularExpression, uint priority = uint.MaxValue / 2)
         {
-            this.Name = Name;
+            this.Name = Name ?? throw new ArgumentNullException();
             this.RegularExpression = RegularExpression;
             this.priority = priority;
         }

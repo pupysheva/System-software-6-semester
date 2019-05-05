@@ -23,6 +23,14 @@
         /// <summary>
         /// Соответсвует знаку *.
         /// </summary>
-        ZERO_AND_MORE
+        ZERO_AND_MORE,
+        /// <summary>
+        /// Соответсвует знаку ||.
+        /// </summary>
+        OR,
+        /// <summary>
+        /// Соответсвует знаку &&.
+        /// </summary>
+        AND
     }
 }
