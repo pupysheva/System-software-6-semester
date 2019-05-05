@@ -15,13 +15,25 @@ namespace Parser
         /// Лист содержит операторы нетерминалов или терминалы, образуя единый терминал.
         /// Тут должны быть типы:
         /// 1. <see cref="Terminal"/>;
-        /// 2. <see cref="RuleOperator"/>;
-        /// 3. <see cref="Nonterminal"/>.
+        /// 2. <see cref="Nonterminal"/>.
         /// </summary>
         private readonly List<object> list = new List<object>();
 
-        public Nonterminal(params object[] operatorsWithTerminals)
-            => AddRange(operatorsWithTerminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
+        /// <summary>
+        /// Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.
+        /// </summary>
+        private readonly RuleOperator rule;
+
+        /// <summary>
+        /// Создание экземпляра нетерминала.
+        /// </summary>
+        /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
+        /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
+        public Nonterminal(RuleOperator rule, params object[] terminalsOrNonterminals)
+        {
+            this.rule = rule;
+            AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
+        }
 
         /// <summary>
         /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
