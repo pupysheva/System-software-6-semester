@@ -8,8 +8,8 @@
     <ProjectGuid>{AC0412C6-5179-4E30-9C1D-D142BE24BD18}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LexerUnitTest</RootNamespace>
-    <AssemblyName>LexerUnitTest</AssemblyName>
+    <RootNamespace>UnitTest</RootNamespace>
+    <AssemblyName>UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LexerUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\Lexer\Lexer.csproj">
       <Project>{8d4fb903-1a85-4b29-818c-e37fd921cd57}</Project>
       <Name>Lexer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.csproj">
+      <Project>{990ac147-609f-47a8-a91b-d1dcf0ce0ef3}</Project>
+      <Name>Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +85,8 @@
     <Content Include="Resources\assign_op_multiline.txt">
       <LastGenOutput>assign_op_multiline1.cs</LastGenOutput>
     </Content>
-    <None Include="Resources\while.txt" />
+    <None Include="Resources\ParserOR_assign_op.txt" />
+    <Content Include="Resources\_while.txt" />
     <None Include="Resources\cycle_for.txt" />
     <None Include="Resources\if-else.txt" />
     <None Include="Resources\for_kw.txt" />
@@ -88,6 +94,7 @@
     <None Include="Resources\print_kw.txt" />
     <None Include="Resources\op.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

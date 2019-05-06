@@ -133,10 +133,13 @@
   <data name="op" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
-  <data name="while" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  <data name="_while" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="print_kw" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\print_kw.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="ParserOR_assign_op" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\ParserOR_assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
 </root>

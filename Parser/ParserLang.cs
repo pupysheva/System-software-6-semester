@@ -10,9 +10,14 @@ namespace Parser
     /// <summary>
     /// Представляет собой класс, который реализует парсер.
     /// </summary>
-    class ParserLang
+    public class ParserLang
     {
-        public ParserLang() { }
+        private readonly Nonterminal mainMonterminal;
+
+        public ParserLang(Nonterminal mainMonterminal)
+        {
+            this.mainMonterminal = mainMonterminal;
+        }
 
         /// <summary>
         /// Проверяет, соответсвует ли заданый язык программирования граматике.
@@ -21,7 +26,7 @@ namespace Parser
         /// <returns>Отчёт об ошибках.</returns>
         public ReportParser Check(List<Token> tokens)
         {
-            throw new NotImplementedException();
+            return mainMonterminal.CheckRule(tokens);
         }
     }
 }

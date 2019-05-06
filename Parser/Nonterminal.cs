@@ -10,7 +10,7 @@ namespace Parser
     /// <summary>
     /// Хранит в себе одно правило грамматики.
     /// </summary>
-    class Nonterminal : IList, IList<object>
+    public class Nonterminal : IList, IList<object>
     {
         /// <summary>
         /// Лист содержит операторы нетерминалов или терминалы, образуя единый терминал.

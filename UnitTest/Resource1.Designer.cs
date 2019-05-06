@@ -39,7 +39,7 @@ namespace UnitTest {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LexerUnitTest.Resource1", typeof(Resource1).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UnitTest.Resource1", typeof(Resource1).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,7 +66,7 @@ namespace UnitTest {
         /// </summary>
         internal static string _while {
             get {
-                return ResourceManager.GetString("while", resourceCulture);
+                return ResourceManager.GetString("_while", resourceCulture);
             }
         }
         
@@ -119,6 +119,15 @@ namespace UnitTest {
         internal static string op {
             get {
                 return ResourceManager.GetString("op", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на =.
+        /// </summary>
+        internal static string ParserOR_assign_op {
+            get {
+                return ResourceManager.GetString("ParserOR_assign_op", resourceCulture);
             }
         }
         

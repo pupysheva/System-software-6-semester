@@ -6,7 +6,7 @@
     /// Чтобы посмотреть, как записываются правила нетерминалов
     /// в оригинале, посетите страницу: <see cref="https://docs.google.com/document/d/1h-KmbeFRwl8RrXxn11LIQvDpanU4vgixCs36xMXBNUU/edit#heading=h.apcvldjdfwkn"/>
     /// </summary>
-    enum RuleOperator
+    public enum RuleOperator
     {
         /// <summary>
         /// Этот оператор возвращает истину, когда следующее выражение

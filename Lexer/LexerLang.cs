@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 
 namespace Lexer
 {
-    public class Lang
+    public class LexerLang
     {
         /// <summary>
         /// Создание экземпляра обработчика.
         /// </summary>
-        public Lang()
+        public LexerLang()
         {
             avalibleTerminals = new List<Terminal>(
             new Terminal[]
@@ -52,10 +52,9 @@ namespace Lexer
         /// Создание экземпляра обработчика.
         /// </summary>
         /// <param name="avalibleTerminals">Набор разрешённых терминалов.</param>
-        public Lang(List<Terminal> avalibleTerminals)
+        public LexerLang(IEnumerable<Terminal> avalibleTerminals)
         {
-            this.avalibleTerminals = avalibleTerminals
-                ?? throw new ArgumentNullException();
+            this.avalibleTerminals = new List<Terminal>(avalibleTerminals ?? throw new ArgumentNullException());
         }
 
         /// <summary>

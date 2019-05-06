@@ -10,7 +10,7 @@ namespace UnitTest
     [TestClass]
     public class UnitTest1
     {
-        Lang lang = new Lang();
+        LexerLang lang = new LexerLang();
 
         /// <summary>
         /// Тестирование assign_op.txt
@@ -73,7 +73,7 @@ namespace UnitTest
             return tokens;
         }
 
-        public StreamReader OpenFile(string resurse)
+        public static StreamReader OpenFile(string resurse)
         {
             return new StreamReader(
                new MemoryStream(

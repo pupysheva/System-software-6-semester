@@ -14,7 +14,7 @@ namespace Lexer
             try
             {
                 // Получаем токены.
-                tokens = new Lang().SearchTokens(stream);
+                tokens = new LexerLang().SearchTokens(stream);
             }
             catch(LexerException e)
             {

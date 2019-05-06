@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Parser
 {
@@ -74,6 +75,21 @@ namespace Parser
             ((List<ParserException>)errors).AddRange(toAdd);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ReportParser))
+                return false;
+            if (((ReportParser)obj).Count != this.Count)
+                return false;
+            return Enumerable.SequenceEqual(this, (ReportParser)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            // Число 993615222 сгенерировала VisualStudio
+            return 993615222 + EqualityComparer<IList<ParserException>>.Default.GetHashCode(errors);
+        }
+
         #region IList
 
         public int Count => errors.Count;
@@ -89,7 +105,6 @@ namespace Parser
         public bool Contains(ParserException item) => errors.Contains(item);
         public void CopyTo(ParserException[] array, int arrayIndex) => errors.CopyTo(array, arrayIndex);
         public bool Remove(ParserException item) => errors.Remove(item);
-
         #endregion
     }
 }
