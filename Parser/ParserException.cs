@@ -1,17 +1,22 @@
-﻿using System;
+﻿using Lexer;
+using System;
 
 namespace Parser
 {
     public class ParserException : Exception
     {
-        public ParserException(object expected, object actual) :
-            base($"expected: {expected}, actual: {actual}") { }
-        public ParserException(string messsage, int IndexTerminalError = -1)
-            : base(messsage + $"IndexTerminalError = {IndexTerminalError}") => this.IndexTerminalError = IndexTerminalError;
+        public ParserException(string message, object expected, object actual, Token TokenProblem = null)
+            : base($"{message}: expected: {expected}, actual: {actual}") => this.TokenProblem = TokenProblem;
+        public ParserException(object expected, object actual, Token TokenProblem = null)
+            : base($"expected: {expected}, actual: {actual}") => this.TokenProblem = TokenProblem;
+        public ParserException(string messsage, Token TokenProblem = null)
+            : base(messsage + $"IndexTerminalError = {TokenProblem}") => this.TokenProblem = TokenProblem;
         public ParserException()
             : base() { }
 
-        public int IndexTerminalError { get; } = -1;
-        //public List<Terminal> Expected = ;
+        /// <summary>
+        /// Токен, в котором возникла проблема.
+        /// </summary>
+        public Token TokenProblem { get; } = null;
     }
 }

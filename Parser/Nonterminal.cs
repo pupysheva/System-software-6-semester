@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using static Parser.RuleOperator;
+using static Parser.ReportParser;
 
 namespace Parser
 {
@@ -36,26 +37,96 @@ namespace Parser
         }
 
         /// <summary>
+        /// Это конструктор полностью повторяет аргументы <see cref="Nonterminal(RuleOperator, params object[])"/>.
+        /// Аргумент RuleOperator rule включён в параметр OperatorAndterminalsOrNonterminals.
+        /// </summary>
+        public Nonterminal(params object[] OperatorAndterminalsOrNonterminals)
+        {
+            IEnumerator enu = OperatorAndterminalsOrNonterminals.GetEnumerator();
+            enu.MoveNext();
+            rule = (RuleOperator)enu.Current;
+            while (enu.MoveNext())
+                if (enu.Current is RuleOperator)
+                {
+                    List<object> toAdd = new List<object>
+                    { enu.Current };
+                    while (enu.MoveNext())
+                        toAdd.Add(enu.Current);
+                    Add(new Nonterminal(toAdd));
+                    if (enu.MoveNext())
+                        throw new Exception("Ожидался конец. А его нет. " + enu + ", " + OperatorAndterminalsOrNonterminals);
+                }
+                else
+                    Add(enu.Current);
+        }
+
+        /// <summary>
         /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
         /// </summary>
         /// <param name="tokens">Список токенов, которые надо проверить.</param>
         /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
-        public bool CheckRule(List<Token> tokens)
+        public ReportParser CheckRule(List<Token> tokens)
         {
-            int i = 0;
-            if (list[i] is RuleOperator)
-                switch(list[i])
-                {
-                    case ONE_AND_MORE:
+            if (tokens == null)
+                throw new ArgumentNullException("Список токенов должен был инициализирован.");
+            switch(rule)
+            {
+                case AND:
+                    return RuleAND(tokens);
+                case ONE_AND_MORE:
+                    return RuleONE_AND_MORE(tokens);
+                case OR:
+                    return RuleOR(tokens);
+                case ZERO_AND_MORE:
+                    return RuleZERO_AND_MORE(tokens);
+                default:
+                    throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
+            }
+        }
 
-                        break;
-                    case ZERO_AND_MORE:
-                        break;
-                    case OR:
-                        break;
-                    case AND:
-                        break;
+        private ReportParser RuleZERO_AND_MORE(List<Token> tokens)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ReportParser RuleONE_AND_MORE(List<Token> tokens)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ReportParser RuleAND(List<Token> tokens)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ReportParser RuleOR(List<Token> tokens)
+        {
+            ReportParser output = new ReportParser();
+            foreach(object o in this)
+            {
+                if (o is Terminal)
+                {
+                    if (tokens.Count != 1)
+                        output.Add(new ParserException("Ожидался один терминал", 1, tokens.Count));
+                    if (!tokens[0].Type.Name.Equals(o))
+                        output.Add(new ParserException(o, tokens[0]));
+                    else
+                        return SUCCESS;
                 }
+                else if (o is Nonterminal)
+                {
+                    ReportParser buffer = ((Nonterminal)o).CheckRule(tokens);
+                    if (buffer.IsSuccess)
+                        return buffer; // Да, этот нетерминал нам подходит.
+                    else
+                        output.AddRange(buffer);
+                }
+                else
+                    throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
+            }
+            if (output.Count == 0)
+                output.Add(new ParserException("Для оператора OR не найдено ни одного истинного выражения.", list, tokens));
+            return output;
         }
 
         /// <summary>
@@ -113,20 +184,9 @@ namespace Parser
         /// <param name="operatorsWithTerminals">Перечень объектов,
         /// соответсвующих <see cref="IsCanAdd(object)"/>.</param>
         public void AddRange(IEnumerable<object> operatorsWithTerminals)
-        {
+        { // Для безопасности необходимо добавлять каждый элемент последовательно.
             foreach (object opOrTer in operatorsWithTerminals)
                 this.Add(opOrTer);
-        }
-
-        /// <summary>
-        /// Возвращает лист в обратной польской последовательности текущего нетерминала.
-        /// </summary>
-        /// <returns>Лист в обратной польской последовательности.</returns>
-        private List<object> GetReversePolishNotationList()
-        {
-            Stack<object> stack = new Stack<object>(list.Count);
-            List<object> output = new List<object>(list.Count);
-
         }
 
         #region IList
