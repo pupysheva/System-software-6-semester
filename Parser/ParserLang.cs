@@ -12,11 +12,11 @@ namespace Parser
     /// </summary>
     public class ParserLang
     {
-        private readonly Nonterminal mainMonterminal;
+        private readonly Nonterminal mainNonterminal;
 
-        public ParserLang(Nonterminal mainMonterminal)
+        public ParserLang(Nonterminal mainNonterminal)
         {
-            this.mainMonterminal = mainMonterminal;
+            this.mainNonterminal = mainNonterminal;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Parser
         /// <returns>Отчёт об ошибках.</returns>
         public ReportParser Check(List<Token> tokens)
         {
-            return mainMonterminal.CheckRule(tokens);
+            return mainNonterminal.CheckRule(tokens);
         }
     }
 }

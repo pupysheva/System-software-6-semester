@@ -61,18 +61,18 @@ namespace Lexer
         /// Стоит отметить, что идёт сравнение только по именам, так как
         /// предполагается, что имена уникальны.
         /// </summary>
-        /// <param name="translator">Объект, который сравнивается
+        /// <param name="other">Объект, который сравнивается
         /// с текущим. Если отправить null, то функция вернёт
         /// <code>false</code>.</param>
         /// <returns><code>true</code>, если объекты эквивалентны.
         /// Иначе - <code>false</code>.</returns>
-        public override bool Equals(object translator)
+        public override bool Equals(object other)
         {
-            if (translator == null)
+            if (other == null)
                 return false;
-            if (!(translator is Terminal))
+            if (!(other is Terminal))
                 return false;
-            return Name.Equals(translator);
+            return Name.Equals(((Terminal)other).Name);
         }
 
         public override int GetHashCode()
@@ -83,7 +83,7 @@ namespace Lexer
 
         public override string ToString()
         {
-            return $"{Name}: \"{RegularExpression.ToString()}\"";
+            return $"{Name}: \"{RegularExpression?.ToString()}\"";
         }
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace Parser
                 {
                     if (tokens.Count != 1)
                         output.Add(new ParserException("Ожидался один терминал", 1, tokens.Count));
-                    if (!tokens[0].Type.Name.Equals(o))
+                    if (!tokens[0].Type.Equals(o))
                         output.Add(new ParserException(o, tokens[0]));
                     else
                         return SUCCESS;
