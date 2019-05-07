@@ -43,7 +43,8 @@ namespace Lexer
                  */
                 new Terminal("CH_SPACE", "^ $"),
                 new Terminal("CH_LEFTLINE", "^\r$"),
-                new Terminal("CH_NEWLINE", "^\n$")
+                new Terminal("CH_NEWLINE", "^\n$"),
+                new Terminal("CH_TAB", "^\t$")
             }
             );
         }

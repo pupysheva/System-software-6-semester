@@ -134,6 +134,21 @@ namespace UnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на basd = 0
+        ///while(basd &lt; 10)
+        ///{
+        ///	PRINT
+        ///	basd++
+        ///}
+        ///basd = 0.
+        /// </summary>
+        internal static string Parser_var_op_while_print_var {
+            get {
+                return ResourceManager.GetString("Parser_var_op_while_print_var", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на = a = b b = a = a bsdd asdqwf bvrekb =grge=g=g=hhre=.
         /// </summary>
         internal static string ParserONE_AND_MORE_OR__ASSIGN_OP__VAR {

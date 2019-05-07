@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static Parser.RuleOperator;
 using static Parser.ReportParser;
+using System.Text;
 
 namespace Parser
 {
@@ -250,6 +251,29 @@ namespace Parser
         { // Для безопасности необходимо добавлять каждый элемент последовательно.
             foreach (object opOrTer in operatorsWithTerminals)
                 this.Add(opOrTer);
+        }
+
+#error Stack overflow
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("rule: " + rule);
+            sb.Append(", elements: ");
+            if (list != null)
+            {
+                foreach (object o in this)
+                {
+                    if (o != null)
+                        sb.Append(o.ToString() + " ");
+                    else
+                        sb.Append("element is null ");
+                }
+            }
+            else
+            {
+                sb.Append("list is null.");
+            }
+            return sb.ToString();
         }
 
         #region IList

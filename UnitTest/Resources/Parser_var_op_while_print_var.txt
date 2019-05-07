@@ -2,6 +2,6 @@ basd = 0
 while(basd < 10)
 {
 	PRINT
-	basd++
+	basd = 10
 }
 basd = 0
