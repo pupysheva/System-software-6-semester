@@ -12,6 +12,7 @@ namespace UnitTest
     {
         LexerLang lang = new LexerLang();
 
+#pragma warning disable IDE1006 // Стили именования
         /// <summary>
         /// Тестирование assign_op.txt
         /// </summary>
@@ -54,6 +55,7 @@ namespace UnitTest
         {
             TestOnResurseCount(Resource1.cycle_for, 29);
         }
+#pragma warning restore IDE1006 // Стили именования
         /// <summary>
         /// Функция запускает тестирование на основание текста программы.
         /// Ожидается count терминалов, не считая терминалов CH_.

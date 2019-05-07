@@ -40,7 +40,7 @@ namespace Parser
         /// Это конструктор полностью повторяет аргументы <see cref="Nonterminal(RuleOperator, params object[])"/>.
         /// Аргумент RuleOperator rule включён в параметр OperatorAndterminalsOrNonterminals.
         /// </summary>
-        public Nonterminal(params object[] OperatorAndterminalsOrNonterminals)
+        private Nonterminal(params object[] OperatorAndterminalsOrNonterminals)
         {
             IEnumerator enu = OperatorAndterminalsOrNonterminals.GetEnumerator();
             enu.MoveNext();

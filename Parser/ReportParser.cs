@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Parser
 {
@@ -90,6 +91,16 @@ namespace Parser
             return 993615222 + EqualityComparer<IList<ParserException>>.Default.GetHashCode(errors);
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (IsSuccess)
+                return "Success";
+            foreach (ParserException o in this)
+                sb.AppendLine(o.ToString());
+            return sb.ToString();
+        }
+
         #region IList
 
         public int Count => errors.Count;
@@ -105,6 +116,7 @@ namespace Parser
         public bool Contains(ParserException item) => errors.Contains(item);
         public void CopyTo(ParserException[] array, int arrayIndex) => errors.CopyTo(array, arrayIndex);
         public bool Remove(ParserException item) => errors.Remove(item);
+
         #endregion
     }
 }

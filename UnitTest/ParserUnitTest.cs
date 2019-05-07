@@ -48,5 +48,27 @@ namespace UnitTest
             );
         }
 
+        [TestMethod]
+        public void ParserOR_assign_op3()
+        {
+            List<Token> tokens = new LexerLang().SearchTokens(OpenFile(Resource1.ParserOR_assign_op));
+
+            // Переменная lang используется в while_body, поэтому её надо объявить раньше остальных.
+            Nonterminal lang = new Nonterminal(ZERO_AND_MORE);
+
+            Nonterminal while_body = new Nonterminal(AND, "L_QB", lang, "R_QB");
+            Nonterminal value = new Nonterminal(OR, "VAR", "DIGIT");
+            Nonterminal while_condition = new Nonterminal(AND, value, "LOGICAL_OP", value);
+            Nonterminal while_expr = new Nonterminal(AND, "WHILE_KW", while_condition, while_body);
+            Nonterminal stmt = new Nonterminal(AND, value, new Nonterminal(ZERO_AND_MORE, "OP", value));
+            Nonterminal assign_expr = new Nonterminal(AND, "VAR", "ASSIGN_OP", stmt);
+            Nonterminal expr = new Nonterminal(OR, assign_expr, while_expr, "PRINT_KW");
+            lang.Add(expr);
+
+            ReportParser output = new ParserLang(lang).Check(tokens);
+            Assert.AreEqual(1, output.Count);
+
+        }
+
     }
 }
