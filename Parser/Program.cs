@@ -10,6 +10,8 @@ namespace Parser
     {
         static void Main(string[] args)
         {
+            Console.Write("Файл: ");
+
         }
     }
 }

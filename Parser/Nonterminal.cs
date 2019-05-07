@@ -67,55 +67,92 @@ namespace Parser
         /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
         public ReportParser CheckRule(List<Token> tokens)
         {
+            int a = 0, b = tokens.Count - 1;
+            return CheckRule(tokens, ref a, ref b);
+        }
+
+        /// <summary>
+        /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
+        /// </summary>
+        /// <param name="tokens">Список токенов, которые надо проверить.</param>
+        /// <param name="begin">Первый доступный индекс в листе tokens.</param>
+        /// <param name="end">Последний доступный индекс в листе tokens.</param>
+        /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
+        public ReportParser CheckRule(List<Token> tokens, ref int begin, ref int end)
+        {
             if (tokens == null)
                 throw new ArgumentNullException("Список токенов должен был инициализирован.");
-            switch(rule)
+            switch (rule)
             {
                 case AND:
-                    return RuleAND(tokens);
+                    return RuleAND(tokens, ref begin, ref end);
                 case ONE_AND_MORE:
-                    return RuleONE_AND_MORE(tokens);
+                    return RuleONE_AND_MORE(tokens, ref begin, ref end);
                 case OR:
-                    return RuleOR(tokens);
+                    return RuleOR(tokens, ref begin, ref end);
                 case ZERO_AND_MORE:
-                    return RuleZERO_AND_MORE(tokens);
+                    return RuleZERO_AND_MORE(tokens, ref begin, ref end);
                 default:
                     throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
             }
         }
 
-        private ReportParser RuleZERO_AND_MORE(List<Token> tokens)
+        private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
-            throw new NotImplementedException();
+            while (RuleAND(tokens, ref begin, ref end).IsSuccess) ;
+            return SUCCESS;
         }
 
-        private ReportParser RuleONE_AND_MORE(List<Token> tokens)
+        private ReportParser RuleONE_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
-            throw new NotImplementedException();
+            ReportParser output = new ReportParser();
+            output.AddRange(RuleAND(tokens, ref begin, ref end));
+            if (!output.IsSuccess)
+                return output;
+            return RuleZERO_AND_MORE(tokens, ref begin, ref end);
         }
 
-        private ReportParser RuleAND(List<Token> tokens)
+        private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
         {
-            throw new NotImplementedException();
+            ReportParser output = new ReportParser();
+            foreach(object o in this)
+            {
+                if(o is Terminal)
+                {
+                    if (begin > end)
+                        output.Add(new ParserException(
+                            "Входные токены закончились", o, null));
+                    else if (!o.Equals(tokens[begin++]))
+                        output.Add(new ParserException(o, tokens[--begin]));
+                }
+                else if(o is Nonterminal)
+                {
+                    output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                }
+                if (!output.IsSuccess)
+                    return output;
+            }
+            return output;
         }
 
-        private ReportParser RuleOR(List<Token> tokens)
+        private ReportParser RuleOR(List<Token> tokens, ref int begin, ref int end)
         {
             ReportParser output = new ReportParser();
             foreach(object o in this)
             {
                 if (o is Terminal)
                 {
-                    if (tokens.Count != 1)
-                        output.Add(new ParserException("Ожидался один терминал", 1, tokens.Count));
-                    if (!tokens[0].Type.Equals(o))
-                        output.Add(new ParserException(o, tokens[0]));
+                    if (begin > end)
+                        output.Add(new ParserException(
+                            "Входные токены закончились", o, null));
+                    else if (!tokens[begin++].Type.Equals(o))
+                        output.Add(new ParserException(o, tokens[--begin]));
                     else
                         return SUCCESS;
                 }
                 else if (o is Nonterminal)
                 {
-                    ReportParser buffer = ((Nonterminal)o).CheckRule(tokens);
+                    ReportParser buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
                         return buffer; // Да, этот нетерминал нам подходит.
                     else

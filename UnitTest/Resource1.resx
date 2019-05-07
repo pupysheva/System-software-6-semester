@@ -142,4 +142,7 @@
   <data name="ParserOR_assign_op" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\ParserOR_assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="ParserONE_AND_MORE_OR__ASSIGN_OP__VAR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\ParserONE_AND_MORE_OR__ASSIGN_OP__VAR.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
 </root>
