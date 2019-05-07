@@ -99,7 +99,15 @@ namespace Parser
 
         private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
-            while (RuleAND(tokens, ref begin, ref end).IsSuccess) ;
+            ReportParser output = new ReportParser();
+            ReportParser buffer;
+            do
+            {
+                buffer = RuleAND(tokens, ref begin, ref end);
+                output.AddRange(buffer);
+            }
+            while (buffer.IsSuccess) ;
+            output.IsSuccess = true;
             return SUCCESS;
         }
 
@@ -115,6 +123,8 @@ namespace Parser
         private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
         {
             ReportParser output = new ReportParser();
+            int b = begin;
+            int e = end;
             foreach(object o in this)
             {
                 if(o is Terminal)
@@ -122,7 +132,7 @@ namespace Parser
                     if (begin > end)
                         output.Add(new ParserException(
                             "Входные токены закончились", o, null));
-                    else if (!o.Equals(tokens[begin++]))
+                    else if (!o.Equals(tokens[begin++].Type))
                         output.Add(new ParserException(o, tokens[--begin]));
                 }
                 else if(o is Nonterminal)
@@ -130,7 +140,16 @@ namespace Parser
                     output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
                 }
                 if (!output.IsSuccess)
+                {
+                    begin = b;
+                    end = e;
                     return output;
+                }
+            }
+            if(!output.IsSuccess)
+            {
+                begin = b;
+                end = e;
             }
             return output;
         }
@@ -145,16 +164,23 @@ namespace Parser
                     if (begin > end)
                         output.Add(new ParserException(
                             "Входные токены закончились", o, null));
-                    else if (!tokens[begin++].Type.Equals(o))
+                    else if (!o.Equals(tokens[begin++].Type))
                         output.Add(new ParserException(o, tokens[--begin]));
                     else
-                        return SUCCESS;
+                    {
+                        output.IsSuccess = true;
+                        return output;
+                    }
                 }
                 else if (o is Nonterminal)
                 {
                     ReportParser buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
-                        return buffer; // Да, этот нетерминал нам подходит.
+                    {
+                        output.AddRange(buffer);
+                        output.IsSuccess = true;
+                        return output; // Да, этот нетерминал нам подходит.
+                    }
                     else
                         output.AddRange(buffer);
                 }

@@ -39,7 +39,11 @@ namespace Parser
         /// <returns>Отчёт об ошибках.</returns>
         public ReportParser Check(List<Token> tokens)
         {
-            return mainNonterminal.CheckRule(tokens);
+            int begin = 0, end = tokens.Count - 1;
+            ReportParser output = mainNonterminal.CheckRule(tokens, ref begin, ref end);
+            if (output.IsSuccess && begin <= end)
+                return new ReportParser(new ParserException("Весь входной текст не подходит к граматике.", tokens[begin]));
+            return output;
         }
     }
 }

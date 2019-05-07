@@ -13,11 +13,18 @@ namespace Parser
         static void Main(string[] args)
         {
             Console.Write("Файл: ");
+            string filename;
+            if (args.Length > 0)
+                filename = args[0];
+            else
+                filename = Console.ReadLine();
             try
             {
-                using (StreamReader file = new StreamReader(Console.ReadLine()))
+                using (StreamReader file = new StreamReader(filename))
                 {
-                    Console.WriteLine(new ParserLang().Check(new LexerLang().SearchTokens(file)).ToString());
+                    List<Token> tokens = new LexerLang().SearchTokens(file);
+                    tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+                    Console.WriteLine(new ParserLang().Check(tokens).ToString());
                 }
             }
             catch(Exception e)

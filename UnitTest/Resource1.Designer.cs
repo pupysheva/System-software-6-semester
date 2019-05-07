@@ -123,6 +123,17 @@ namespace UnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на abs = 3
+        ///bsa = 3 + 2
+        ///aaa = aaa + aaa - 2 + aaa.
+        /// </summary>
+        internal static string Parser_assign_op_full {
+            get {
+                return ResourceManager.GetString("Parser_assign_op_full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на = a = b b = a = a bsdd asdqwf bvrekb =grge=g=g=hhre=.
         /// </summary>
         internal static string ParserONE_AND_MORE_OR__ASSIGN_OP__VAR {

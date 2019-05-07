@@ -62,17 +62,28 @@ namespace Parser
         /// <summary>
         /// Возвращает true, если ошибки не найдены.
         /// </summary>
-        public bool IsSuccess => Count == 0;
+        public bool IsSuccess { get; set; } = true;
 
         /// <summary>
         /// Возвращает отчёт с флагом SUCCESS.
         /// </summary>
         public static ReportParserReadOnly SUCCESS { get; } = new ReportParserReadOnly();
 
+        public void AddRange(ReportParser report)
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException("Read only report.");
+            ((List<ParserException>)errors).AddRange(report);
+            if (!report.IsSuccess)
+                IsSuccess = false;
+        }
+
         public void AddRange(IEnumerable<ParserException> toAdd)
         {
             if (IsReadOnly)
                 throw new NotSupportedException("Read only report.");
+            if (toAdd.Count() > 0)
+                IsSuccess = false;
             ((List<ParserException>)errors).AddRange(toAdd);
         }
 
@@ -95,7 +106,11 @@ namespace Parser
         {
             StringBuilder sb = new StringBuilder();
             if (IsSuccess)
-                return "Success";
+            {
+                sb.Append("Success");
+                if (Count > 0)
+                    sb.AppendLine(", но есть неточности:");
+            }
             foreach (ParserException o in this)
                 sb.AppendLine(o.ToString());
             return sb.ToString();
@@ -111,7 +126,11 @@ namespace Parser
         public int IndexOf(ParserException item) => errors.IndexOf(item);
         public void Insert(int index, ParserException item) => errors.Insert(index, item);
         public void RemoveAt(int index) => errors.RemoveAt(index);
-        public void Add(ParserException item) => errors.Add(item);
+        public void Add(ParserException item)
+        {
+            IsSuccess = false;
+            errors.Add(item);
+        }
         public void Clear() => errors.Clear();
         public bool Contains(ParserException item) => errors.Contains(item);
         public void CopyTo(ParserException[] array, int arrayIndex) => errors.CopyTo(array, arrayIndex);
