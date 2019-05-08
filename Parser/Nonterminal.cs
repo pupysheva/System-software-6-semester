@@ -109,7 +109,7 @@ namespace Parser
             }
             while (buffer.IsSuccess) ;
             output.IsSuccess = true;
-            return SUCCESS;
+            return output;
         }
 
         private ReportParser RuleONE_AND_MORE(List<Token> tokens, ref int begin, ref int end)
@@ -130,15 +130,15 @@ namespace Parser
             {
                 if(o is Terminal)
                 {
-                    if (begin > end)
+                    if (b > e)
                         output.Add(new ParserException(
                             "Входные токены закончились", o, null));
-                    else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ParserException(o, tokens[--begin]));
+                    else if (!o.Equals(tokens[b++].Type))
+                        output.Add(new ParserException(o, tokens[--e]));
                 }
                 else if(o is Nonterminal)
                 {
-                    output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                    output.AddRange(((Nonterminal)o).CheckRule(tokens, ref b, ref e));
                 }
                 if (!output.IsSuccess)
                 {
@@ -253,8 +253,10 @@ namespace Parser
                 this.Add(opOrTer);
         }
 
-#error Stack overflow
         public override string ToString()
+            => ToString(); // Как это работает?
+
+        public string ToString(uint depth = 1)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("rule: " + rule);
@@ -264,9 +266,17 @@ namespace Parser
                 foreach (object o in this)
                 {
                     if (o != null)
-                        sb.Append(o.ToString() + " ");
+                    {
+                        if (o is Nonterminal)
+                            if (depth != 0)
+                                sb.Append("{ " + ((Nonterminal)o).ToString(depth - 1) + " }");
+                            else
+                                sb.Append("{ ... }");
+                        else
+                            sb.Append("{ " + o.ToString() + " } ");
+                    }
                     else
-                        sb.Append("element is null ");
+                        sb.Append("{ element is null }");
                 }
             }
             else
