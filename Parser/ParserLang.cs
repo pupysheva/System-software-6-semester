@@ -17,15 +17,25 @@ namespace Parser
             {
                 // Переменная lang используется в while_body, поэтому её надо объявить раньше остальных.
                 Nonterminal lang = new Nonterminal(ZERO_AND_MORE);
+                Nonterminal value = new Nonterminal(OR);
 
-                Nonterminal while_body = new Nonterminal(AND, "L_QB", lang, "R_QB");
-                Nonterminal value = new Nonterminal(OR, "VAR", "DIGIT");
-                Nonterminal while_condition = new Nonterminal(AND, value, "LOGICAL_OP", value);
-                Nonterminal while_expr = new Nonterminal(AND, "WHILE_KW", while_condition, while_body);
-                Nonterminal stmt = new Nonterminal(AND, value, new Nonterminal(ZERO_AND_MORE, "OP", value));
-                Nonterminal assign_expr = new Nonterminal(AND, "VAR", "ASSIGN_OP", stmt);
-                Nonterminal expr = new Nonterminal(OR, assign_expr, while_expr, "PRINT_KW");
+                Nonterminal func_expr = new Nonterminal(AND);
+                Nonterminal stmt = new Nonterminal(OR, new Nonterminal(AND, value, new Nonterminal(ZERO_AND_MORE, "OP", value)), func_expr);
+                Nonterminal arguments_expr = new Nonterminal(OR, new Nonterminal(ONE_AND_MORE,stmt,"COM"),stmt);
+                Nonterminal b_val_expr = new Nonterminal(OR,stmt, new Nonterminal(AND,"LB", stmt, "R_B"));
+                Nonterminal body = new Nonterminal(AND, "L_QB", lang, "R_QB");
+                Nonterminal condition = new Nonterminal(AND,"L_B", value, "LOGICAL_OP", value,"R_B");
+                Nonterminal while_expr = new Nonterminal(AND, "WHILE_KW", condition, body);
+                Nonterminal assign_expr = new Nonterminal(AND, "VAR", "ASSIGN_OP", b_val_expr);
+
+                Nonterminal if_expr = new Nonterminal(AND, "IF_KW", condition, body, "ELSE_KW",body);
+                Nonterminal for_expr = new Nonterminal(AND, "FOR_KW", "L_B", assign_expr, "COMMA", condition, "COMMA", assign_expr, "R_B", body);
+                
+                Nonterminal expr = new Nonterminal(OR, assign_expr, while_expr, "PRINT_KW", if_expr, for_expr, func_expr);
+
                 lang.Add(expr);
+                value.AddRange(new object[] { "VAR", "DIGIT", b_val_expr });
+                func_expr.AddRange(new object[] { "VAR", "L_B", arguments_expr, "R_B" });
 
                 mainNonterminal = lang;
             }

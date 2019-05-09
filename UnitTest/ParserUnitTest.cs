@@ -59,7 +59,7 @@ namespace UnitTest
 
             ReportParser report = parserLang.Check(tokens);
             Console.WriteLine(report);
-            Assert.AreEqual(6, report.Count); // Мол, есть ошибки
+            Assert.IsFalse(report.IsSuccess); // Мол, есть ошибки
 
         }
 
