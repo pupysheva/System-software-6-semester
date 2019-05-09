@@ -51,6 +51,7 @@ namespace Parser
             : this(errors, previous) { }
 
         protected IList<ParserException> errors;
+        private bool _isSuccess = true;
 
         /// <summary>
         /// Получение номера ошибки.
@@ -62,8 +63,16 @@ namespace Parser
         /// <summary>
         /// Возвращает true, если ошибки не найдены.
         /// </summary>
-        public bool IsSuccess { get; set; } = true;
-
+        public bool IsSuccess
+        {
+            get => _isSuccess;
+            set
+            {
+                if (_isSuccess == false && value == true)
+                    Add(new ParserException("OK"));
+                _isSuccess = value;
+            }
+        }
         /// <summary>
         /// Возвращает отчёт с флагом SUCCESS.
         /// </summary>
@@ -109,7 +118,7 @@ namespace Parser
             {
                 sb.Append("Success");
                 if (Count > 0)
-                    sb.AppendLine(", но есть неточности:");
+                    sb.AppendLine(", но в отчёте есть информация:");
             }
             foreach (ParserException o in this)
                 sb.AppendLine(o.ToString());

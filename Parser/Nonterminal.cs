@@ -133,13 +133,17 @@ namespace Parser
                 {
                     if (begin > end)
                         output.Add(new ParserException(
-                            "Входные токены закончились", o, null));
+                            "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ParserException(o, tokens[--begin]));
+                        output.Add(new ParserException(o, tokens[--begin], tokens, begin));
                 }
                 else if(o is Nonterminal)
                 {
                     output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                    if(!output.IsSuccess)
+                    {
+                        output.Add(new ParserException(o, null, tokens, begin));
+                    }
                 }
                 if (!output.IsSuccess)
                 {
@@ -165,9 +169,9 @@ namespace Parser
                 {
                     if (begin > end)
                         output.Add(new ParserException(
-                            "Входные токены закончились", o, null));
+                            "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ParserException(o, tokens[--begin]));
+                        output.Add(new ParserException(o, tokens[--begin], tokens, begin));
                     else
                     {
                         output.IsSuccess = true;
@@ -190,7 +194,7 @@ namespace Parser
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
             }
             if (output.Count == 0)
-                output.Add(new ParserException("Для оператора OR не найдено ни одного истинного выражения.", list, tokens));
+                output.Add(new ParserException("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
             return output;
         }
 

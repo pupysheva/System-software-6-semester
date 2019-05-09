@@ -42,7 +42,7 @@ namespace Parser
             int begin = 0, end = tokens.Count - 1;
             ReportParser output = mainNonterminal.CheckRule(tokens, ref begin, ref end);
             if (output.IsSuccess && begin <= end)
-                output.Add(new ParserException("Входной текст не полностью подходит к грамматике.", tokens[begin]));
+                output.Add(new ParserException("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
             return output;
         }
     }
