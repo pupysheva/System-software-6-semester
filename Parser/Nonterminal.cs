@@ -118,7 +118,8 @@ namespace Parser
             output.AddRange(RuleAND(tokens, ref begin, ref end));
             if (!output.IsSuccess)
                 return output;
-            return RuleZERO_AND_MORE(tokens, ref begin, ref end);
+            output.AddRange(RuleZERO_AND_MORE(tokens, ref begin, ref end));
+            return output;
         }
 
         private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
@@ -130,15 +131,15 @@ namespace Parser
             {
                 if(o is Terminal)
                 {
-                    if (b > e)
+                    if (begin > end)
                         output.Add(new ParserException(
                             "Входные токены закончились", o, null));
-                    else if (!o.Equals(tokens[b++].Type))
-                        output.Add(new ParserException(o, tokens[--e]));
+                    else if (!o.Equals(tokens[begin++].Type))
+                        output.Add(new ParserException(o, tokens[--begin]));
                 }
                 else if(o is Nonterminal)
                 {
-                    output.AddRange(((Nonterminal)o).CheckRule(tokens, ref b, ref e));
+                    output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
                 }
                 if (!output.IsSuccess)
                 {
