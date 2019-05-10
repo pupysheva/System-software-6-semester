@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Lexer
@@ -83,7 +84,14 @@ namespace Lexer
 
         public override string ToString()
         {
-            return $"{Name}: \"{RegularExpression?.ToString()}\"";
+            StringBuilder sb = new StringBuilder(Name);
+            if(RegularExpression != null)
+            {
+                sb.Append(": \"");
+                sb.Append(RegularExpression.ToString());
+                sb.Append('\"');
+            }
+            return sb.ToString();
         }
 
         /// <summary>

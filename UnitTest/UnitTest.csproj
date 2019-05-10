@@ -57,6 +57,7 @@
     <Compile Include="LexerUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ParserUnitTest.cs" />
+    <Compile Include="StackMachineTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

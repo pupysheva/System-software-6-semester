@@ -49,6 +49,7 @@
     <Compile Include="Nonterminal.cs" />
     <Compile Include="ReportParserReadOnly.cs" />
     <Compile Include="RuleOperator.cs" />
+    <Compile Include="RunnableToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
