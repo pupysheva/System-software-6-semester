@@ -11,7 +11,7 @@ namespace Parser
     /// <summary>
     /// Хранит в себе одно правило грамматики.
     /// </summary>
-    public class Nonterminal : IList, IList<object>
+    public class Nonterminal : IList, IList<ILanguageUnit>
     {
         /// <summary>
         /// Лист содержит операторы нетерминалов или терминалы, образуя единый терминал.
@@ -19,7 +19,7 @@ namespace Parser
         /// 1. <see cref="Terminal"/>;
         /// 2. <see cref="Nonterminal"/>.
         /// </summary>
-        private readonly List<object> list = new List<object>();
+        private readonly List<ILanguageUnit> list = new List<ILanguageUnit>();
 
         /// <summary>
         /// Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.
@@ -222,14 +222,15 @@ namespace Parser
         /// <param name="value">Объект на проверку.</param>
         /// <returns>Обработанный объект.
         /// Например, преобразование <see cref="string"/> в <see cref="Terminal"/>.</returns>
-        private object CheckSet(object value)
+        private ILanguageUnit CheckSet(object value)
         {
             if (!IsCanAdd(value))
                 throw new ArgumentException(
                     "Ожидался токен или оператор. Фактически: " + value.ToString());
-            return value is string ? new Terminal((string)value)
-                : value is object[] ? new Nonterminal((object[])value)
-                : value;
+            return value is string ? (ILanguageUnit)new Terminal((string)value)
+                : value is ILanguageUnit[] ? (ILanguageUnit)new Nonterminal((ILanguageUnit[]) value)
+                : value is object[] ? (ILanguageUnit)new Nonterminal((object[])value)
+                : (ILanguageUnit)value;
         }
 
         /// <summary>
@@ -248,6 +249,7 @@ namespace Parser
             || value is string
             || value is RuleOperator
             || value is Nonterminal
+            || value is ILanguageUnit
             || (value is object[] && IsCanAddRange((object[])value))
             );
 

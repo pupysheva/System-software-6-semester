@@ -7,7 +7,7 @@ namespace Parser
     /// <summary>
     /// Представляет собой класс, который реализует парсер.
     /// </summary>
-    public class ParserLang
+    public class ParserLang : ILanguageUnit
     {
         private readonly Nonterminal mainNonterminal;
 
@@ -28,7 +28,7 @@ namespace Parser
                 Nonterminal while_expr = new Nonterminal("while_expr", AND, "WHILE_KW", condition, body);
                 Nonterminal assign_expr = new Nonterminal("assign_expr", AND, "VAR", "ASSIGN_OP", b_val_expr);
 
-                Nonterminal if_expr = new Nonterminal("if_expr", AND, "IF_KW", condition, body, "ELSE_KW",body);
+                Nonterminal if_expr = new Nonterminal("if_expr", AND, "IF_KW", condition, body, "ELSE_KW", body);
                 Nonterminal for_expr = new Nonterminal("for_expr", AND, "FOR_KW", "L_B", assign_expr, "COMMA", condition, "COMMA", assign_expr, "R_B", body);
                 
                 Nonterminal expr = new Nonterminal("expr", OR, assign_expr, while_expr, "PRINT_KW", if_expr, for_expr, func_expr);

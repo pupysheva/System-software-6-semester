@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Lexer
 {
-    public class LexerLang
+    public class LexerLang : ILanguageUnit
     {
         /// <summary>
         /// Создание экземпляра обработчика.
