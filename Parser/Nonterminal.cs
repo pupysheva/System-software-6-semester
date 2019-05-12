@@ -16,7 +16,9 @@ namespace Parser
     /// <param name="IndexToAdd">-1 используется для OR, так
     /// как он там единственный. Для остальных - порядковый номер
     /// начиная с 0 нужного нетерминала или терминала.</param>
-    public delegate void ActionInsert(int IndexToAdd = -1);
+    /// <returns>Возвращает true, если операция прошла успешна.
+    /// Иначе - false.</returns>
+    public delegate bool ActionInsert(int IndexToAdd = -1);
 
     /// <summary>
     /// Делегат, который представляет собой функцию, которая

@@ -53,11 +53,30 @@ namespace UnitTest
              * Извлекает из стека в v.
              */
 
-            Nonterminal lang = new Nonterminal("lang", ZERO_AND_MORE);
-            Nonterminal value = new Nonterminal("value", OR, "VAR", "DIGIT");
-            Nonterminal stmt = new Nonterminal("stmt", AND, value, new Nonterminal("(OP value)*", ZERO_AND_MORE, "OP", value));
+            Nonterminal lang = new Nonterminal("lang",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
+                    insert();
+                }, ZERO_AND_MORE);
+            Nonterminal value = new Nonterminal("value",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
+                    insert();
+                }, OR, "VAR", "DIGIT");
+            Nonterminal stmt = new Nonterminal("stmt",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
+                    insert(1);
+                    insert(0);
+                }, AND,
+                value, new Nonterminal("(OP value)*", ZERO_AND_MORE, "OP", value));
             Nonterminal assign_expr = new Nonterminal("assign_expr",
-                    new ushort[] { 0, 2, 1 }, AND,
+                    (List<string> commands, ActionInsert insert, int id) =>
+                    {
+                        insert(0);
+                        insert(2);
+                        insert(1);
+                    }, AND,
                     "VAR", "ASSIGN_OP", stmt);
             Nonterminal while_expr = new Nonterminal("while_expr",
                 // Нужно преобразовать в стековый код.
@@ -70,7 +89,7 @@ namespace UnitTest
                     commands.Add("?"); // Адрес с ложью.
                     int indexAdrrFalse = commands.Count - 1;
                     commands.Add("goto");
-                    // Сюда надо попасть, если true.
+                    // Сюда надо попасть, если true. 
                     commands[indexAddrTrue] = commands.Count.ToString();
                     insert(4); // Тело while.
                     commands.Add(indexAddrTrue.ToString());
@@ -109,6 +128,8 @@ namespace UnitTest
                 }, OR,
                 assign_expr, while_expr, "PRINT_KW");
             lang.Add(expr);
+
+            EasyParserLang = new ParserLang(lang);
         }
 
         [TestMethod]
