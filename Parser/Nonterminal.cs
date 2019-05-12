@@ -56,16 +56,9 @@ namespace Parser
         public string Name { get; } = null;
 
         /// <summary>
-        /// Создание экземпляра нетерминала.
+        /// Функция преобразвания токенов в стек-код.
         /// </summary>
-        /// <param name="Name">Устанавливает имя терминала.</param>
-        /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
-        /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
-        public Nonterminal(string Name, TransferToStackCode a, RuleOperator rule, params object[] terminalsOrNonterminals)
-            : this(Name, rule, terminalsOrNonterminals)
-        {
-            throw new NotImplementedException();
-        }
+        private readonly TransferToStackCode transferToStackCode = null;
 
         /// <summary>
         /// Создание экземпляра нетерминала.
@@ -73,10 +66,10 @@ namespace Parser
         /// <param name="Name">Устанавливает имя терминала.</param>
         /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
         /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
-        public Nonterminal(string Name, ushort[] switchOnStackCode, RuleOperator rule, params object[] terminalsOrNonterminals)
+        public Nonterminal(string Name, TransferToStackCode transferToStackCode, RuleOperator rule, params object[] terminalsOrNonterminals)
             : this(Name, rule, terminalsOrNonterminals)
         {
-            throw new NotImplementedException();
+            this.transferToStackCode = transferToStackCode;
         }
 
         /// <summary>
@@ -100,30 +93,6 @@ namespace Parser
         {
             this.rule = rule;
             AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
-        }
-
-        /// <summary>
-        /// Это конструктор полностью повторяет аргументы <see cref="Nonterminal(RuleOperator, params object[])"/>.
-        /// Аргумент RuleOperator rule включён в параметр OperatorAndterminalsOrNonterminals.
-        /// </summary>
-        private Nonterminal(params object[] OperatorAndterminalsOrNonterminals)
-        {
-            IEnumerator enu = OperatorAndterminalsOrNonterminals.GetEnumerator();
-            enu.MoveNext();
-            rule = (RuleOperator)enu.Current;
-            while (enu.MoveNext())
-                if (enu.Current is RuleOperator)
-                {
-                    List<object> toAdd = new List<object>
-                    { enu.Current };
-                    while (enu.MoveNext())
-                        toAdd.Add(enu.Current);
-                    Add(new Nonterminal(toAdd));
-                    if (enu.MoveNext())
-                        throw new Exception("Ожидался конец. А его нет. " + enu + ", " + OperatorAndterminalsOrNonterminals);
-                }
-                else
-                    Add(enu.Current);
         }
 
         /// <summary>
@@ -276,7 +245,6 @@ namespace Parser
                 throw new ArgumentException(
                     "Ожидался токен или оператор. Фактически: " + value.ToString());
             return value is string ? new Terminal((string)value)
-                : value is object[] ? new Nonterminal((object[])value)
                 : value;
         }
 

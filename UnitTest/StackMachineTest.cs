@@ -69,7 +69,12 @@ namespace UnitTest
                     insert(1);
                     insert(0);
                 }, AND,
-                value, new Nonterminal("(OP value)*", ZERO_AND_MORE, "OP", value));
+                value, new Nonterminal("(OP value)*",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
+                    insert(1);
+                    insert(0);
+                }, ZERO_AND_MORE, "OP", value));
             Nonterminal assign_expr = new Nonterminal("assign_expr",
                     (List<string> commands, ActionInsert insert, int id) =>
                     {
@@ -116,19 +121,13 @@ namespace UnitTest
                             break;
                         case 2:
                             {
-                                commands.Add("?");
-                                int indexOfBack = commands.Count - 1;
-                                commands.Add("push");
                                 commands.Add("print");
-                                commands.Add("goto");
-                                commands[indexOfBack] = commands.Count.ToString();
                             }
                             break;
                     }
                 }, OR,
                 assign_expr, while_expr, "PRINT_KW");
             lang.Add(expr);
-
             EasyParserLang = new ParserLang(lang);
         }
 
