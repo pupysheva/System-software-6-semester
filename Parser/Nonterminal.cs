@@ -3,11 +3,33 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using static Parser.RuleOperator;
-using static Parser.ReportParser;
 using System.Text;
 
 namespace Parser
 {
+
+    /// <summary>
+    /// Делегат хранит функцию, которая вставляет
+    /// значение терминала или вызывает
+    /// формирование стэк-кода у нетерминала.
+    /// </summary>
+    /// <param name="IndexToAdd">-1 используется для OR, так
+    /// как он там единственный. Для остальных - порядковый номер
+    /// начиная с 0 нужного нетерминала или терминала.</param>
+    public delegate void ActionInsert(int IndexToAdd = -1);
+
+    /// <summary>
+    /// Делегат, который представляет собой функцию, которая
+    /// служит для преобразования токенов в стек-код.
+    /// </summary>
+    /// <param name="commands">Сюда вставляются команды
+    /// для стековой машины.</param>
+    /// <param name="insert">Функция вызывает вставку либо значение токена,
+    /// либо вызывает функцию вставки кода входящего нетерминала.</param>
+    /// <param name="id">Используется для OR. Символизирует номер,
+    /// начиная с 0, какой терминал или нетерминал был выбран.</param>
+    public delegate void TransferToStackCode(List<string> commands, ActionInsert insert, int id = 0);
+
     /// <summary>
     /// Хранит в себе одно правило грамматики.
     /// </summary>
@@ -37,7 +59,7 @@ namespace Parser
         /// <param name="Name">Устанавливает имя терминала.</param>
         /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
         /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
-        public Nonterminal(string Name, Func<IEnumerator<object>, Stack<Token>, object> a, ushort[] switchOnStackCode, RuleOperator rule, params object[] terminalsOrNonterminals)
+        public Nonterminal(string Name, TransferToStackCode a, RuleOperator rule, params object[] terminalsOrNonterminals)
             : this(Name, rule, terminalsOrNonterminals)
         {
             throw new NotImplementedException();
