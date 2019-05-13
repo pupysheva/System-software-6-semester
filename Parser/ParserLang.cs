@@ -18,11 +18,11 @@ namespace Parser
                 // Переменная lang используется в while_body, поэтому её надо объявить раньше остальных.
                 Nonterminal lang = new Nonterminal(ZERO_AND_MORE);
                 Nonterminal value = new Nonterminal(OR);
-
                 Nonterminal func_expr = new Nonterminal(AND);
+
                 Nonterminal stmt = new Nonterminal(OR, new Nonterminal(AND, value, new Nonterminal(ZERO_AND_MORE, "OP", value)), func_expr);
-                Nonterminal arguments_expr = new Nonterminal(OR, new Nonterminal(ONE_AND_MORE,stmt,"COM"),stmt);
-                Nonterminal b_val_expr = new Nonterminal(OR,stmt, new Nonterminal(AND,"L_B", stmt, "R_B"));
+                Nonterminal arguments_expr = new Nonterminal(OR, new Nonterminal(ONE_AND_MORE, stmt, "COM"), stmt);
+                Nonterminal b_val_expr = new Nonterminal(OR, stmt, new Nonterminal(AND,"L_B", stmt, "R_B"));
                 Nonterminal body = new Nonterminal(AND, "L_QB", lang, "R_QB");
                 Nonterminal condition = new Nonterminal(AND,"L_B", value, "LOGICAL_OP", value,"R_B");
                 Nonterminal while_expr = new Nonterminal(AND, "WHILE_KW", condition, body);
