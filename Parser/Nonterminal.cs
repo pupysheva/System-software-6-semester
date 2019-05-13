@@ -95,6 +95,11 @@ namespace Parser
             AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
         }
 
+        public List<string> Compile(List<Token> tokens)
+        {
+
+        }
+
         /// <summary>
         /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
         /// </summary>
