@@ -3,7 +3,6 @@ while(basd < 10)
 {
 	print
 	basd = 1 + basd
-	abs()
 	while(aaa < 2) { aaa = aaa + 1 }
 }
 basd = 0
