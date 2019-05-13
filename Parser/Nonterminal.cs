@@ -27,6 +27,23 @@ namespace Parser
         private readonly RuleOperator rule;
 
         /// <summary>
+        /// Имя нетерминала.
+        /// </summary>
+        public string Name { get; } = null;
+
+        /// <summary>
+        /// Создание экземпляра нетерминала.
+        /// </summary>
+        /// <param name="Name">Устанавливает имя терминала.</param>
+        /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
+        /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
+        public Nonterminal(string Name, RuleOperator rule, params object[] terminalsOrNonterminals)
+            : this(rule, terminalsOrNonterminals)
+        {
+            this.Name = Name;
+        }
+
+        /// <summary>
         /// Создание экземпляра нетерминала.
         /// </summary>
         /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
@@ -264,6 +281,8 @@ namespace Parser
         public string ToString(uint depth = 1)
         {
             StringBuilder sb = new StringBuilder();
+            if (Name != null)
+                sb.Append($"name: {Name}, ");
             sb.Append("rule: " + rule);
             sb.Append(", elements: ");
             if (list != null)
