@@ -134,11 +134,30 @@ namespace UnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на a = 0
+        ///do
+        ///{
+        ///	print
+        ///	a = a + 1
+        ///} while(a &lt; 10)
+        ///for(a = 0; a &lt; 10; a = a + 1)
+        ///{
+        ///	print
+        ///}
+        ///.
+        /// </summary>
+        internal static string Parser_do_while {
+            get {
+                return ResourceManager.GetString("Parser_do_while", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на basd = 0
         ///while(basd &lt; 10)
         ///{
-        ///	PRINT
-        ///	basd++
+        ///	print
+        ///	basd = 10
         ///}
         ///basd = 0.
         /// </summary>

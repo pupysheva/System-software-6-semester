@@ -98,5 +98,16 @@ namespace UnitTest
             Console.WriteLine(report);
             Assert.IsTrue(report.IsSuccess);
         }
+
+        [TestMethod]
+        public void Parser_do_while()
+        {
+            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.Parser_do_while));
+            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            ReportParser report = parserLang.Check(tokens);
+            Console.WriteLine(report);
+            Assert.AreEqual(37, tokens.Count);
+            Assert.IsTrue(report.IsSuccess);
+        }
     }
 }

@@ -90,6 +90,7 @@
     <None Include="Resources\ParserONE_AND_MORE_OR__ASSIGN_OP__VAR.txt" />
     <None Include="Resources\Parser_assign_op_full.txt" />
     <None Include="Resources\Parser_var_op_while_print_var.txt" />
+    <None Include="Resources\Parser_do_while.txt" />
     <Content Include="Resources\_while.txt" />
     <None Include="Resources\cycle_for.txt" />
     <None Include="Resources\if-else.txt" />
