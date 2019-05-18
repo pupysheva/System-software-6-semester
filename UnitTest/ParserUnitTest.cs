@@ -23,91 +23,75 @@ namespace UnitTest
         [TestMethod]
         public void ParserOR_assign_op()
         {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.ParserOR_assign_op));
-            Assert.AreEqual(1, tokens.Count);
-            Assert.AreEqual(
-                ReportParser.SUCCESS,
-                new ParserLang(new Nonterminal(OR, "ASSIGN_OP")).Check(tokens)
-            );
+            Nonterminal lang = new Nonterminal(OR, "ASSIGN_OP");
+            CheckTest(Resource1.ParserOR_assign_op, true, 1, lang);
         }
         [TestMethod]
         public void ParserOR_assign_op2()
         {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.ParserOR_assign_op));
-            Assert.AreEqual(1, tokens.Count);
-            Assert.IsTrue(new ParserLang(new Nonterminal(OR, "абвгд", "ASSIGN_OP")).Check(tokens).IsSuccess);
+            Nonterminal lang = new Nonterminal(OR, "абвгд", "ASSIGN_OP");
+            CheckTest(Resource1.ParserOR_assign_op, true, 1, new ParserLang(lang));
         }
 
         [TestMethod]
         public void ParserONE_AND_MORE_OR__ASSIGN_OP__VAR()
         {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.ParserONE_AND_MORE_OR__ASSIGN_OP__VAR));
-            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            Assert.AreEqual(21, tokens.Count);
-
             Nonterminal expr = new Nonterminal(OR, "ASSIGN_OP", "VAR");
             Nonterminal lang = new Nonterminal(ONE_AND_MORE, expr);
-            ReportParser report = new ParserLang(lang).Check(tokens);
-            Console.WriteLine(report);
-            Assert.IsTrue(report.IsSuccess);
+            CheckTest(Resource1.ParserONE_AND_MORE_OR__ASSIGN_OP__VAR, true, 21, new ParserLang(lang));
         }
 
         [TestMethod]
         public void ParserOR_assign_op3()
-        {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.ParserOR_assign_op));
-
-            ReportParser report = parserLang.Check(tokens);
-            Console.WriteLine(report);
-            Assert.IsFalse(report.IsSuccess); // Мол, есть ошибки
-
-        }
+            // Напомню: входная строка: "="
+            => CheckTest(Resource1.ParserOR_assign_op, false, 1);
 
         [TestMethod]
         public void Parser_assign_op_full()
-        {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.Parser_assign_op_full));
-            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            Assert.AreEqual(17, tokens.Count);
-
-            ReportParser report = parserLang.Check(tokens);
-            Console.WriteLine(report);
-            Assert.IsTrue(report.IsSuccess);
-        }
+            => CheckTest(Resource1.Parser_assign_op_full, true, 17);
 
         [TestMethod]
         public void _while()
-        {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1._while));
-            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            Assert.AreEqual(16, tokens.Count);
-
-            ReportParser report = parserLang.Check(tokens);
-            Console.WriteLine(report);
-            Assert.IsTrue(report.IsSuccess);
-        }
+            => CheckTest(Resource1._while, true, 16);
 
         [TestMethod]
         public void Parser_var_op_while_print_var()
-        {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.Parser_var_op_while_print_var));
-            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            Assert.AreEqual(18, tokens.Count);
-
-            ReportParser report = parserLang.Check(tokens);
-            Console.WriteLine(report);
-            Assert.IsTrue(report.IsSuccess);
-        }
+            => CheckTest(Resource1.Parser_var_op_while_print_var, true, 18);
 
         [TestMethod]
         public void Parser_do_while()
+            => CheckTest(Resource1.Parser_do_while, true, 10);
+
+        /// <summary>
+        /// Быстрое проведение тестирования <see cref="Parser.ParserLang"/>.
+        /// Удаляет токены с CH_.
+        /// </summary>
+        /// <param name="resource">Текст тестирования.</param>
+        /// <param name="isSuccess">True, если ожидается успех парсирования.</param>
+        /// <param name="tokens">Количество ожидаемых токенов. Установите -1 для игнорирования.</param>
+        /// <param name="parser">Особые правила парсера. Оставьте null, если нужен язык <see cref="parserLang"/>.</param>
+        /// <param name="lexer">Особые правила лексера. Оставьте null, если нужен язык <see cref="lexerLang"/>.</param>
+        public void CheckTest(string resource, bool isSuccess = true, int tokens = -1, ParserLang parser = null, LexerLang lexer = null)
         {
-            List<Token> tokens = lexerLang.SearchTokens(OpenFile(Resource1.Parser_do_while));
-            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-            ReportParser report = parserLang.Check(tokens);
+            if (parser == null)
+                parser = parserLang;
+            if (lexer == null)
+                lexer = lexerLang;
+            List<Token> listT = lexerLang.SearchTokens(StringToStream(resource));
+            Assert.IsNotNull(listT);
+            Console.WriteLine("Count tokens: " + listT.Count);
+            foreach (Token token in listT)
+                Console.WriteLine(token);
+            Console.WriteLine("\n ---- Without CH_:");
+            listT.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            Console.WriteLine("Count tokens: " + listT.Count);
+            foreach (Token token in listT)
+                Console.WriteLine(token);
+            if (tokens != -1)
+                Assert.AreEqual(tokens, listT.Count);
+            ReportParser report = parserLang.Check(listT);
             Console.WriteLine(report);
-            Assert.AreEqual(37, tokens.Count);
-            Assert.IsTrue(report.IsSuccess);
+            Assert.AreEqual(report.IsSuccess, isSuccess);
         }
     }
 }

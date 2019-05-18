@@ -64,7 +64,7 @@ namespace UnitTest
         /// <param name="count">Количество ожидаемых терминалов.</param>
         public List<Token> TestOnResurseCount(string text, int count)
         {
-            StreamReader input = OpenFile(text);
+            StreamReader input = StringToStream(text);
             List<Token> tokens = lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
@@ -75,7 +75,7 @@ namespace UnitTest
             return tokens;
         }
 
-        public static StreamReader OpenFile(string resurse)
+        public static StreamReader StringToStream(string resurse)
         {
             return new StreamReader(
                new MemoryStream(
