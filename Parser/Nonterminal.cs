@@ -122,19 +122,27 @@ namespace Parser
         {
             if (tokens == null)
                 throw new ArgumentNullException("Список токенов должен был инициализирован.");
+            ReportParser output = new ReportParser();
+            output.AddInfo("Зашёл в нетерминал: " + ToString());
             switch (rule)
             {
                 case AND:
-                    return RuleAND(tokens, ref begin, ref end);
+                    output.AddRange(RuleAND(tokens, ref begin, ref end));
+                    break;
                 case ONE_AND_MORE:
-                    return RuleONE_AND_MORE(tokens, ref begin, ref end);
+                    output.AddRange(RuleONE_AND_MORE(tokens, ref begin, ref end));
+                    break;
                 case OR:
-                    return RuleOR(tokens, ref begin, ref end);
+                    output.AddRange(RuleOR(tokens, ref begin, ref end));
+                    break;
                 case ZERO_AND_MORE:
-                    return RuleZERO_AND_MORE(tokens, ref begin, ref end);
+                    output.AddRange(RuleZERO_AND_MORE(tokens, ref begin, ref end));
+                    break;
                 default:
                     throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
             }
+            output.AddInfo("Cостояние отчёта: " + output.IsSuccess + ", выхожу из нетерминала: " + ToString());
+            return output;
         }
 
         private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
@@ -147,7 +155,7 @@ namespace Parser
                 output.AddRange(buffer);
             }
             while (buffer.IsSuccess) ;
-            output.IsSuccess = true;
+            output.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
             return output;
         }
 
@@ -171,17 +179,17 @@ namespace Parser
                 if(o is Terminal)
                 {
                     if (begin > end)
-                        output.Add(new ParserException(
+                        output.Add(new ParserLineReport(
                             "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ParserException(o, tokens[--begin], tokens, begin));
+                        output.Add(new ParserLineReport(o, tokens[--begin], tokens, begin));
                 }
                 else if(o is Nonterminal)
                 {
                     output.AddRange(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
                     if(!output.IsSuccess)
                     {
-                        output.Add(new ParserException(o, null, tokens, begin));
+                        output.Add(new ParserLineReport(o, null, tokens, begin));
                     }
                 }
                 if (!output.IsSuccess)
@@ -207,13 +215,13 @@ namespace Parser
                 if (o is Terminal)
                 {
                     if (begin > end)
-                        output.Add(new ParserException(
+                        output.Add(new ParserLineReport(
                             "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ParserException(o, tokens[--begin], tokens, begin));
+                        output.Add(new ParserLineReport(o, tokens[--begin], tokens, begin));
                     else
                     {
-                        output.IsSuccess = true;
+                        output.Success(o.ToString());
                         return output;
                     }
                 }
@@ -223,7 +231,7 @@ namespace Parser
                     if (buffer.IsSuccess)
                     {
                         output.AddRange(buffer);
-                        output.IsSuccess = true;
+                        output.Success(o.ToString());
                         return output; // Да, этот нетерминал нам подходит.
                     }
                     else
@@ -233,7 +241,7 @@ namespace Parser
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
             }
             if (output.Count == 0)
-                output.Add(new ParserException("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
+                output.Add(new ParserLineReport("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
             return output;
         }
 
@@ -301,9 +309,9 @@ namespace Parser
 
         public string ToString(uint depth = 1)
         {
-            StringBuilder sb = new StringBuilder();
             if (Name != null)
-                sb.Append($"name: {Name}, ");
+                return $"name: {Name}";
+            StringBuilder sb = new StringBuilder();
             sb.Append("rule: " + rule);
             sb.Append(", elements: ");
             if (list != null)

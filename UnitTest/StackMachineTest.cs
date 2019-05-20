@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Lexer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Parser;
@@ -134,7 +136,15 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            
+            EasyParserLang.Compile(EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print)));
+        }
+
+        public static StreamReader StringToStream(string resurse)
+        {
+            return new StreamReader(
+               new MemoryStream(
+                   Encoding.UTF8.GetBytes(resurse)
+               ));
         }
     }
 }

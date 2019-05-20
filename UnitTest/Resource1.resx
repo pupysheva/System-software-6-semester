@@ -154,4 +154,10 @@
   <data name="Parser_do_while" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Parser_do_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="Parser_for" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Parser_for.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="Stack_var_print" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Stack_var_print.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
 </root>

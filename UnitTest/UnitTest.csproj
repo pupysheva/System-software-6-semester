@@ -91,6 +91,8 @@
     <None Include="Resources\Parser_assign_op_full.txt" />
     <None Include="Resources\Parser_var_op_while_print_var.txt" />
     <None Include="Resources\Parser_do_while.txt" />
+    <None Include="Resources\Parser_for.txt" />
+    <None Include="Resources\Stack_var_print.txt" />
     <Content Include="Resources\_while.txt" />
     <None Include="Resources\cycle_for.txt" />
     <None Include="Resources\if-else.txt" />

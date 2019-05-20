@@ -22,9 +22,9 @@ namespace Parser
                 Nonterminal func_expr = new Nonterminal("func_expr", AND);
                 Nonterminal stmt = new Nonterminal("stmt", OR, new Nonterminal("value (OP value)*", AND, value, new Nonterminal("(OP value)*", ZERO_AND_MORE, "OP", value)), func_expr);
                 Nonterminal arguments_expr = new Nonterminal("arguments_expr", OR, new Nonterminal("(stmt COM)+", ONE_AND_MORE, stmt, "COM"), stmt);
-                Nonterminal b_val_expr = new Nonterminal("b_val_expr", OR,stmt, new Nonterminal("L_B stmt R_B", AND,"L_B", stmt, "R_B"));
+                Nonterminal b_val_expr = new Nonterminal("b_val_expr", OR, stmt, new Nonterminal("L_B stmt R_B", AND, "L_B", stmt, "R_B"));
                 Nonterminal body = new Nonterminal("body", AND, "L_QB", lang, "R_QB");
-                Nonterminal condition = new Nonterminal("condition", AND,"L_B", value, "LOGICAL_OP", value,"R_B");
+                Nonterminal condition = new Nonterminal("condition", AND, "L_B", value, "LOGICAL_OP", value,"R_B");
                 Nonterminal while_expr = new Nonterminal("while_expr", AND, "WHILE_KW", condition, body);
                 Nonterminal assign_expr = new Nonterminal("assign_expr", AND, "VAR", "ASSIGN_OP", b_val_expr);
 
@@ -52,7 +52,7 @@ namespace Parser
             int begin = 0, end = tokens.Count - 1;
             ReportParser output = mainNonterminal.CheckRule(tokens, ref begin, ref end);
             if (output.IsSuccess && begin <= end)
-                output.Add(new ParserException("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
+                output.Add(new ParserLineReport("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
             return output;
         }
     }

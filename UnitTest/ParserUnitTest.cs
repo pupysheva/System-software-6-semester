@@ -24,7 +24,7 @@ namespace UnitTest
         public void ParserOR_assign_op()
         {
             Nonterminal lang = new Nonterminal(OR, "ASSIGN_OP");
-            CheckTest(Resource1.ParserOR_assign_op, true, 1, lang);
+            CheckTest(Resource1.ParserOR_assign_op, true, 1, new ParserLang(lang));
         }
         [TestMethod]
         public void ParserOR_assign_op2()
@@ -62,6 +62,10 @@ namespace UnitTest
         public void Parser_do_while()
             => CheckTest(Resource1.Parser_do_while, true, 10);
 
+        [TestMethod]
+        public void Parser_for()
+            => CheckTest(Resource1.Parser_for, true, 19);
+
         /// <summary>
         /// Быстрое проведение тестирования <see cref="Parser.ParserLang"/>.
         /// Удаляет токены с CH_.
@@ -77,7 +81,7 @@ namespace UnitTest
                 parser = parserLang;
             if (lexer == null)
                 lexer = lexerLang;
-            List<Token> listT = lexerLang.SearchTokens(StringToStream(resource));
+            List<Token> listT = lexer.SearchTokens(StringToStream(resource));
             Assert.IsNotNull(listT);
             Console.WriteLine("Count tokens: " + listT.Count);
             foreach (Token token in listT)
@@ -87,11 +91,11 @@ namespace UnitTest
             Console.WriteLine("Count tokens: " + listT.Count);
             foreach (Token token in listT)
                 Console.WriteLine(token);
+            ReportParser report = parser.Check(listT);
+            Console.WriteLine(report);
             if (tokens != -1)
                 Assert.AreEqual(tokens, listT.Count);
-            ReportParser report = parserLang.Check(listT);
-            Console.WriteLine(report);
-            Assert.AreEqual(report.IsSuccess, isSuccess);
+            Assert.AreEqual(isSuccess, report.IsSuccess);
         }
     }
 }
