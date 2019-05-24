@@ -16,7 +16,7 @@ namespace UnitTest
     {
         private readonly ParserLang EasyParserLang;
         private readonly LexerLang EasyLexerLang;
-        private readonly IStackLang EasyStackLang;
+        private readonly IExecuteLang EasyStackLang;
 
         public StackMachineTest()
         {
@@ -31,7 +31,6 @@ namespace UnitTest
                 new Terminal("R_QB", "^}$"),
                 new Terminal("L_B", "^\\($"),
                 new Terminal("R_B", "^\\)$"),
-                new Terminal("COM", "^,$"),
 
                 new Terminal("CH_SPACE", "^ $"),
                 new Terminal("CH_LEFTLINE", "^\r$"),
@@ -51,11 +50,6 @@ namespace UnitTest
              * {value addr, "goto"}
              * Переход к адресу addr.
              * 
-             * {digit v, "push"}
-             * Добавляет v в стек.
-             * 
-             * {var v, "pull"}
-             * Извлекает из стека в v.
              */
              
             Nonterminal lang = new Nonterminal("lang",
@@ -92,7 +86,7 @@ namespace UnitTest
                 // Нужно преобразовать в стековый код.
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
-                    insert(1);
+                    insert(2);
                     commands.Add("?"); // Адрес с истиной.
                     int indexAddrTrue = commands.Count - 1;
                     commands.Add("if");
@@ -101,13 +95,13 @@ namespace UnitTest
                     commands.Add("goto");
                     // Сюда надо попасть, если true. 
                     commands[indexAddrTrue] = commands.Count.ToString();
-                    insert(4); // Тело while.
+                    insert(5); // Тело while.
                     commands.Add(indexAddrTrue.ToString());
                     commands.Add("goto"); // Команда перехода в if к while.
                     // Надо выйти из цикла, если false:
                     commands[indexAdrrFalse] = commands.Count.ToString();
                 }, AND,
-                "L_B", stmt, "R_B", "L_QB", lang, "R_QB");
+                "WHILE_KW", "L_B", stmt, "R_B", "L_QB", lang, "R_QB");
             Nonterminal expr = new Nonterminal("expr",
                 // Нужно преобразовать в стековый код.
                 (List<string> commands, ActionInsert insert, int id) =>
@@ -134,7 +128,7 @@ namespace UnitTest
                 assign_expr, while_expr, "PRINT_KW");
             lang.Add(expr);
             EasyParserLang = new ParserLang(lang);
-            EasyStackLang = new MyYeasyStackLang();
+            EasyStackLang = new MyEeasyStackLang();
         }
 
         [TestMethod]
@@ -154,53 +148,81 @@ namespace UnitTest
         }
     }
 
-    internal class MyYeasyStackLang : IStackLang
-    {
-        public MyYeasyStackLang()
+    internal class MyEeasyStackLang : AbstractStackExecuteLang
+    {        
+        protected override void ExecuteCommand(string command)
         {
-
-        }
-
-        private readonly IDictionary<string, double> Variables
-            = new Dictionary<string, double>();
-
-        private readonly IDictionary<string, Action<string>> asd = new Dictionary<string, Action<string>>();
-
-        private Stack<string> stack =
-            new Stack<string>();
-
-        private int InstructionPointer = -1;
-
-        public override void Execute(IList<string> code)
-        {
-            while (++InstructionPointer < code.Count)
-                ExecuteCommand(code[InstructionPointer]);
-        }
-
-        public void ExecuteCommand(string command)
-        {
-            switch(command)
+            switch (command)
             {
                 case "print":
-                    StringBuilder sb = new StringBuilder();
-                    foreach(var pair in Variables)
                     {
-                        sb.Append(pair.Key);
-                        sb.Append(" = ");
-                        sb.Append(pair.Value);
-                        sb.AppendLine();
+                        StringBuilder sb = new StringBuilder();
+                        foreach (var pair in Variables)
+                        {
+                            sb.Append(pair.Key);
+                            sb.Append(" = ");
+                            sb.Append(pair.Value);
+                            sb.AppendLine();
+                        }
+                        Console.Write(sb.ToString());
                     }
-                    Console.Write(sb.ToString());
                     break;
                 case "goto":
-                    InstructionPointer =
-                        (int)GetValueOfVarOrDigit(stack.Pop()) - 1;
+                    {
+                        InstructionPointer =
+                            (int)PopStk() - 1;
+                    }
+                    break;
+                case "if":
+                    {
+                        int addr = (int)PopStk();
+                        int logical = (int)PopStk();
+                        if (logical != 0) // В нашем языке всё, что не 0 - true.
+                            InstructionPointer = addr - 1;
+                    }
                     break;
                 case "=":
-                    double stmt = GetVarOrDigit();
+                    {
+                        double stmt = PopStk();
+                        string var = Stack.Pop();
+                        Variables[var] = stmt;
+                    }
+                    break;
+                case "+":
+                    {
+                        Stack.Push(
+                            (PopStk() + PopStk())
+                            .ToString());
+                    }
+                    break;
+                case "-":
+                    {
+                        Stack.Push(
+                            (PopStk() - PopStk())
+                            .ToString());
+                    }
+                    break;
+                case "*":
+                    {
+                        Stack.Push(
+                            (PopStk() * PopStk())
+                            .ToString());
+                    }
+                    break;
+                case "/":
+                    {
+                        Stack.Push(
+                            (PopStk() / PopStk())
+                            .ToString());
+                    }
                     break;
             }
         }
+
+        /// <summary>
+        /// Получает с стэка значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
+        /// </summary>
+        private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
 
         private double GetValueOfVarOrDigit(string VarOrDigit)
         {

@@ -2,7 +2,7 @@
 
 namespace StackMachine
 {
-    public interface IStackLang
+    public interface IExecuteLang
     {
         void Execute(IList<string> code);
     }
