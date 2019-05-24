@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Text;
 using Lexer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Parser;
+using StackMachine;
 using static Parser.RuleOperator;
 
 namespace UnitTest
@@ -14,6 +16,7 @@ namespace UnitTest
     {
         private readonly ParserLang EasyParserLang;
         private readonly LexerLang EasyLexerLang;
+        private readonly IStackLang EasyStackLang;
 
         public StackMachineTest()
         {
@@ -54,7 +57,7 @@ namespace UnitTest
              * {var v, "pull"}
              * Извлекает из стека в v.
              */
-
+             
             Nonterminal lang = new Nonterminal("lang",
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
@@ -109,7 +112,7 @@ namespace UnitTest
                 // Нужно преобразовать в стековый код.
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
-                    switch(id)
+                    switch (id)
                     {
                         case 0:
                             {
@@ -131,12 +134,15 @@ namespace UnitTest
                 assign_expr, while_expr, "PRINT_KW");
             lang.Add(expr);
             EasyParserLang = new ParserLang(lang);
+            EasyStackLang = new MyYeasyStackLang();
         }
 
         [TestMethod]
         public void TestMethod1()
         {
-            EasyParserLang.Compile(EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print)));
+            List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print));
+            IEnumerable<string> StackCode = EasyParserLang.Compile(tokens);
+
         }
 
         public static StreamReader StringToStream(string resurse)
@@ -147,4 +153,88 @@ namespace UnitTest
                ));
         }
     }
+
+    internal class MyYeasyStackLang : IStackLang
+    {
+        public MyYeasyStackLang()
+        {
+
+        }
+
+        private readonly IDictionary<string, double> Variables
+            = new Dictionary<string, double>();
+
+        private readonly IDictionary<string, Action<string>> asd = new Dictionary<string, Action<string>>();
+
+        private Stack<string> stack =
+            new Stack<string>();
+
+        private int InstructionPointer = -1;
+
+        public override void Execute(IList<string> code)
+        {
+            while (++InstructionPointer < code.Count)
+                ExecuteCommand(code[InstructionPointer]);
+        }
+
+        public void ExecuteCommand(string command)
+        {
+            switch(command)
+            {
+                case "print":
+                    StringBuilder sb = new StringBuilder();
+                    foreach(var pair in Variables)
+                    {
+                        sb.Append(pair.Key);
+                        sb.Append(" = ");
+                        sb.Append(pair.Value);
+                        sb.AppendLine();
+                    }
+                    Console.Write(sb.ToString());
+                    break;
+                case "goto":
+                    InstructionPointer =
+                        (int)GetValueOfVarOrDigit(stack.Pop()) - 1;
+                    break;
+                case "=":
+                    double stmt = GetVarOrDigit();
+                    break;
+            }
+        }
+
+        private double GetValueOfVarOrDigit(string VarOrDigit)
+        {
+            if (double.TryParse(VarOrDigit, out double result))
+                return result;
+            return Variables[VarOrDigit];
+        }
+    }
+}
+
+class PrinterMachine : IActionMachine
+{
+    public PrinterMachine(IDictionary<string, double> Variables)
+    {
+        this.Variables = Variables;
+    }
+
+    private readonly IDictionary<string, double> Variables;
+
+    public void Action()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var pair in Variables)
+        {
+            sb.Append(pair.Key);
+            sb.Append(" = ");
+            sb.Append(pair.Value);
+            sb.AppendLine();
+        }
+        Console.Write(sb.ToString());
+    }
+}
+
+interface IActionMachine
+{
+    void Action();
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackMachine", "StackMachine\StackMachine.csproj", "{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
