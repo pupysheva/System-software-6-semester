@@ -9,7 +9,7 @@ namespace Parser
 {
     public class ReportParserCompile : IList<ReportParserCompileLine>
     {
-        private IList<ReportParserCompileLine> list;
+        private readonly IList<ReportParserCompileLine> list;
 
         public ReportParserCompile(IList<ReportParserCompileLine> listManager)
         {
@@ -22,6 +22,15 @@ namespace Parser
                 list = new List<ReportParserCompileLine>(toAdd);
             else
                 list = new List<ReportParserCompileLine>();
+        }
+
+        internal void AddRange(IEnumerable<ReportParserCompileLine> compile)
+        {
+            if (list is List<ReportParserCompileLine>)
+                ((List<ReportParserCompileLine>)list).AddRange(compile);
+            else
+                foreach (ReportParserCompileLine line in compile)
+                    list.Add(line);
         }
 
         #region IList

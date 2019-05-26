@@ -1,4 +1,6 @@
-﻿namespace Parser
+﻿using System;
+
+namespace Parser
 {
     public class ReportParser
     {
@@ -18,5 +20,11 @@
         /// </summary>
         public bool IsSuccess =>
             Info.IsSuccess;
+
+        public void Merge(ReportParser reportParser)
+        {
+            reportParser.Compile.AddRange(reportParser.Compile);
+            reportParser.Info.AddRange(reportParser.Info);
+        }
     }
 }

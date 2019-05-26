@@ -48,20 +48,50 @@ namespace Parser
         /// </summary>
         /// <param name="tokens">Список терминалов входного файла.</param>
         /// <returns>Отчёт об ошибках.</returns>
-        public ReportParserInfo Check(List<Token> tokens)
+        public ReportParser Check(List<Token> tokens)
         {
             int begin = 0, end = tokens.Count - 1;
-            ReportParserInfo output = mainNonterminal.CheckRule(tokens, ref begin, ref end);
+            ReportParser output = mainNonterminal.CheckRule(tokens, ref begin, ref end);
             if (output.IsSuccess && begin <= end)
-                output.Add(new ReportParserInfoLine("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
+                output.Info.Add(new ReportParserInfoLine("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
             return output;
         }
 
         public IEnumerable<string> Compile(List<Token> tokens)
         {
-            List<string> commands;
-
+            List<string> commands = new List<string>(tokens.Count);
+            ReportParser report = Check(tokens);
+            foreach (ReportParserCompileLine comp in report.Compile)
+            {
+                comp.Source.TransferToStackCode(commands, (i) => Catcher(i, comp, commands), comp.Helper);
+            }
             throw new NotImplementedException();
+            
+        }
+
+        private bool Catcher(int i, ReportParserCompileLine comp, List<string> commands)
+        {
+            if (i < 0 && comp.CurrentRule == OR)
+            {
+                return Inserter(comp.Source[comp.Helper], commands);
+            }
+            else if (i >= 0 && comp.CurrentRule != OR)
+            {
+                foreach (object subTerminals in comp.Source)
+                {
+                    if (!Inserter(subTerminals, commands))
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private bool Inserter(object elementToInsert, List<string> commands)
+        {
+            if(elementToInsert is Terminal)
+                ((Terminal)elementToInsert)
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Parser
         /// <summary>
         /// Функция преобразвания токенов в стек-код.
         /// </summary>
-        private readonly TransferToStackCode transferToStackCode = null;
+        public readonly TransferToStackCode TransferToStackCode = null;
 
         /// <summary>
         /// Создание экземпляра нетерминала.
@@ -66,10 +66,10 @@ namespace Parser
         /// <param name="Name">Устанавливает имя терминала.</param>
         /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
         /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
-        public Nonterminal(string Name, TransferToStackCode transferToStackCode, RuleOperator rule, params object[] terminalsOrNonterminals)
+        public Nonterminal(string Name, TransferToStackCode TransferToStackCode, RuleOperator rule, params object[] terminalsOrNonterminals)
             : this(Name, rule, terminalsOrNonterminals)
         {
-            this.transferToStackCode = transferToStackCode;
+            this.TransferToStackCode = TransferToStackCode;
         }
 
         /// <summary>
@@ -93,12 +93,6 @@ namespace Parser
         {
             this.rule = rule;
             AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
-        }
-
-        public List<string> Compile(List<Token> tokens, IEnumerator<int> CompilerHelper)
-        {
-            transferToStackCode(,,)
-            throw new NotImplementedException(); // TODO
         }
 
         /// <summary>
@@ -149,7 +143,7 @@ namespace Parser
         private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
             ReportParser output = new ReportParser();
-            ReportParserCompileLine compile = new ReportParserCompileLine(this, -1);
+            ReportParserCompileLine compile = new ReportParserCompileLine(this, ZERO_AND_MORE, -1);
             output.Compile.Add(compile);
             ReportParser buffer;
             do
@@ -159,16 +153,21 @@ namespace Parser
                 output.Merge(buffer);
             }
             while (buffer.IsSuccess) ;
-            output.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
+            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
             return output;
         }
 
         private ReportParser RuleONE_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
             ReportParser output = new ReportParser();
+            ReportParserCompileLine compile = new ReportParserCompileLine(this, ONE_AND_MORE);
+            output.Compile.Add(compile);
             output.Merge(RuleAND(tokens, ref begin, ref end));
             if (!output.IsSuccess)
+            {
+                output.Compile.Remove(compile);
                 return output;
+            }
             output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end));
             return output;
         }
@@ -176,7 +175,7 @@ namespace Parser
         private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
         {
             ReportParser output = new ReportParser();
-            ReportParserCompileLine compile = new ReportParserCompileLine(this);
+            ReportParserCompileLine compile = new ReportParserCompileLine(this, AND);
             output.Compile.Add(compile);
             int b = begin;
             int e = end;
@@ -202,6 +201,7 @@ namespace Parser
                 {
                     begin = b;
                     end = e;
+                    output.Compile.Remove(compile);
                     return output;
                 }
             }
@@ -214,41 +214,44 @@ namespace Parser
             return output;
         }
 
-        private ReportParserInfo RuleOR(List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleOR(List<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserInfo output = new ReportParserInfo();
-            foreach(object o in this)
+            ReportParser output = new ReportParser();
+            ReportParserCompileLine compile = new ReportParserCompileLine(this, OR, -1);
+            output.Compile.Add(compile);
+            foreach (object o in this)
             {
+                compile.Helper++;
                 if (o is Terminal)
                 {
                     if (begin > end)
-                        output.Add(new ReportParserInfoLine(
+                        output.Info.Add(new ReportParserInfoLine(
                             "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
-                        output.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
+                        output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
                     {
-                        output.Success(o.ToString());
+                        output.Info.Success(o.ToString());
                         return output;
                     }
                 }
                 else if (o is Nonterminal)
                 {
-                    ReportParserInfo buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
+                    ReportParser buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
                     {
-                        output.AddRange(buffer);
-                        output.Success(o.ToString());
+                        output.Merge(buffer);
+                        output.Info.Success(o.ToString());
                         return output; // Да, этот нетерминал нам подходит.
                     }
                     else
-                        output.AddRange(buffer);
+                        output.Merge(buffer);
                 }
                 else
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
             }
-            if (output.Count == 0)
-                output.Add(new ReportParserInfoLine("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
+            output.Info.Add(new ReportParserInfoLine("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
+            output.Compile.Remove(compile);
             return output;
         }
 
