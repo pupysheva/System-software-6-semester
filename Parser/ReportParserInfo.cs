@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Parser
 {
-    public partial class ReportParser : IEnumerable<ParserLineReport>, IList<ParserLineReport>
+    public class ReportParserInfo : IEnumerable<ReportParserInfoLine>, IList<ReportParserInfoLine>
     {
         /// <summary>
         /// Создание отчёта об ошибках в коде для парсера.
         /// </summary>
         /// <param name="error">Ошибка</param>
         /// <param name="previous">Предыдущий отчёт об ошибках.</param>
-        public ReportParser(ParserLineReport error = null, ReportParser previous = null)
+        public ReportParserInfo(ReportParserInfoLine error = null, ReportParserInfo previous = null)
         {
-            errors = new List<ParserLineReport>();
+            errors = new List<ReportParserInfoLine>();
             if (previous != null)
                 AddRange(previous);
             if (error != null)
@@ -27,16 +27,16 @@ namespace Parser
         /// </summary>
         /// <param name="errors">Список ошибок.</param>
         /// <param name="previous">Предыдущий отчёт об ошибках.</param>
-        public ReportParser(IEnumerable<ParserLineReport> errors, ReportParser previous = null)
+        public ReportParserInfo(IEnumerable<ReportParserInfoLine> errors, ReportParserInfo previous = null)
         {
             if (previous == null)
                 if (errors == null)
-                    this.errors = new List<ParserLineReport>();
+                    this.errors = new List<ReportParserInfoLine>();
                 else
-                    this.errors = new List<ParserLineReport>(errors);
+                    this.errors = new List<ReportParserInfoLine>(errors);
             else
             {
-                this.errors = new List<ParserLineReport>(previous);
+                this.errors = new List<ReportParserInfoLine>(previous);
                 if (errors != null)
                     AddRange(errors);
             }
@@ -47,10 +47,10 @@ namespace Parser
         /// </summary>
         /// <param name="previous">Предыдущий отчёт об ошибках.</param>
         /// <param name="errors">Список ошибок.</param>
-        public ReportParser(ReportParser previous, params ParserLineReport[] errors)
+        public ReportParserInfo(ReportParserInfo previous, params ReportParserInfoLine[] errors)
             : this(errors, previous) { }
 
-        protected IList<ParserLineReport> errors;
+        protected IList<ReportParserInfoLine> errors;
         private bool _isSuccess = true;
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Parser
         /// </summary>
         /// <param name="index">Инджекс ошибки.</param>
         /// <returns>Вощвращает ошибку парсера.</returns>
-        public ParserLineReport this[int index] => errors[index];
+        public ReportParserInfoLine this[int index] => errors[index];
 
         /// <summary>
         /// Добавить дополнительную информацию для пользователя в отчёт.
@@ -66,7 +66,7 @@ namespace Parser
         /// <param name="message">Текст сообщения.</param>
         public void AddInfo(string message)
         {
-            errors.Add(new ParserLineReport("info: " + message));
+            errors.Add(new ReportParserInfoLine("info: " + message));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Parser
         /// <param name="message">Сообщение, аргументирующее успех.</param>
         public void Success(string message)
         {
-            Add(new ParserLineReport("OK: " + message));
+            Add(new ReportParserInfoLine("OK: " + message));
             _isSuccess = true;
         }
 
@@ -88,7 +88,7 @@ namespace Parser
             set
             {
                 if (_isSuccess == false && value == true)
-                    Add(new ParserLineReport("OK"));
+                    Add(new ReportParserInfoLine("OK"));
                 _isSuccess = value;
             }
         }
@@ -97,37 +97,37 @@ namespace Parser
         /// </summary>
         public static ReportParserReadOnly SUCCESS { get; } = new ReportParserReadOnly();
 
-        public void AddRange(ReportParser report)
+        public void AddRange(ReportParserInfo report)
         {
             if (IsReadOnly)
                 throw new NotSupportedException("Read only report.");
-            ((List<ParserLineReport>)errors).AddRange(report);
+            ((List<ReportParserInfoLine>)errors).AddRange(report);
             if (!report.IsSuccess)
                 IsSuccess = false;
         }
 
-        public void AddRange(IEnumerable<ParserLineReport> toAdd)
+        public void AddRange(IEnumerable<ReportParserInfoLine> toAdd)
         {
             if (IsReadOnly)
                 throw new NotSupportedException("Read only report.");
             if (toAdd.Count() > 0)
                 IsSuccess = false;
-            ((List<ParserLineReport>)errors).AddRange(toAdd);
+            ((List<ReportParserInfoLine>)errors).AddRange(toAdd);
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ReportParser))
+            if (!(obj is ReportParserInfo))
                 return false;
-            if (((ReportParser)obj).Count != this.Count)
+            if (((ReportParserInfo)obj).Count != this.Count)
                 return false;
-            return Enumerable.SequenceEqual(this, (ReportParser)obj);
+            return Enumerable.SequenceEqual(this, (ReportParserInfo)obj);
         }
 
         public override int GetHashCode()
         {
             // Число 993615222 сгенерировала VisualStudio
-            return 993615222 + EqualityComparer<IList<ParserLineReport>>.Default.GetHashCode(errors);
+            return 993615222 + EqualityComparer<IList<ReportParserInfoLine>>.Default.GetHashCode(errors);
         }
 
         public override string ToString()
@@ -139,7 +139,7 @@ namespace Parser
                 if (Count > 0)
                     sb.AppendLine(", но в отчёте есть информация:");
             }
-            foreach (ParserLineReport o in this)
+            foreach (ReportParserInfoLine o in this)
                 sb.AppendLine(o.ToString());
             return sb.ToString();
         }
@@ -148,21 +148,21 @@ namespace Parser
 
         public int Count => errors.Count;
         public bool IsReadOnly => errors.IsReadOnly;
-        ParserLineReport IList<ParserLineReport>.this[int index] { get => errors[index]; set => errors[index] = value; }
-        public IEnumerator<ParserLineReport> GetEnumerator() => errors.GetEnumerator();
+        ReportParserInfoLine IList<ReportParserInfoLine>.this[int index] { get => errors[index]; set => errors[index] = value; }
+        public IEnumerator<ReportParserInfoLine> GetEnumerator() => errors.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => errors.GetEnumerator();
-        public int IndexOf(ParserLineReport item) => errors.IndexOf(item);
-        public void Insert(int index, ParserLineReport item) => errors.Insert(index, item);
+        public int IndexOf(ReportParserInfoLine item) => errors.IndexOf(item);
+        public void Insert(int index, ReportParserInfoLine item) => errors.Insert(index, item);
         public void RemoveAt(int index) => errors.RemoveAt(index);
-        public void Add(ParserLineReport item)
+        public void Add(ReportParserInfoLine item)
         {
             IsSuccess = false;
             errors.Add(item);
         }
         public void Clear() => errors.Clear();
-        public bool Contains(ParserLineReport item) => errors.Contains(item);
-        public void CopyTo(ParserLineReport[] array, int arrayIndex) => errors.CopyTo(array, arrayIndex);
-        public bool Remove(ParserLineReport item) => errors.Remove(item);
+        public bool Contains(ReportParserInfoLine item) => errors.Contains(item);
+        public void CopyTo(ReportParserInfoLine[] array, int arrayIndex) => errors.CopyTo(array, arrayIndex);
+        public bool Remove(ReportParserInfoLine item) => errors.Remove(item);
 
         #endregion
     }

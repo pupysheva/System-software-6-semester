@@ -2,12 +2,12 @@
 
 namespace Parser
 {
-    public class ReportParserReadOnly : ReportParser, IReadOnlyList<ParserLineReport>
+    public class ReportParserReadOnly : ReportParserInfo, IReadOnlyList<ReportParserInfoLine>
     {
-        internal ReportParserReadOnly(ReportParser parent = null)
+        internal ReportParserReadOnly(ReportParserInfo parent = null)
             : base(parent)
         {
-            errors = ((List<ParserLineReport>)errors).AsReadOnly();
+            errors = ((List<ReportParserInfoLine>)errors).AsReadOnly();
         }
     }
 }

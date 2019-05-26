@@ -41,11 +41,14 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParserLineReport.cs" />
+    <Compile Include="ParserReport.cs" />
+    <Compile Include="ReportParserCompile.cs" />
+    <Compile Include="ReportParserCompileLine.cs" />
+    <Compile Include="ReportParserInfoLine.cs" />
     <Compile Include="ParserLang.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportParser.cs" />
+    <Compile Include="ReportParserInfo.cs" />
     <Compile Include="Nonterminal.cs" />
     <Compile Include="ReportParserReadOnly.cs" />
     <Compile Include="RuleOperator.cs" />

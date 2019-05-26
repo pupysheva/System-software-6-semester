@@ -91,7 +91,7 @@ namespace UnitTest
             Console.WriteLine("Count tokens: " + listT.Count);
             foreach (Token token in listT)
                 Console.WriteLine(token);
-            ReportParser report = parser.Check(listT);
+            ReportParserInfo report = parser.Check(listT);
             Console.WriteLine(report);
             if (tokens != -1)
                 Assert.AreEqual(tokens, listT.Count);
