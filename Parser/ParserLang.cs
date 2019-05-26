@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lexer;
 using static Parser.RuleOperator;
 
@@ -54,6 +55,13 @@ namespace Parser
             if (output.IsSuccess && begin <= end)
                 output.Add(new ParserLineReport("Входной текст не полностью подходит к грамматике.", null, tokens, tokens, begin));
             return output;
+        }
+
+        public IEnumerable<string> Compile(List<Token> tokens)
+        {
+            List<string> commands;
+
+            throw new NotImplementedException();
         }
     }
 }
