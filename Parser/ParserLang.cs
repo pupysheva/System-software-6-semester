@@ -57,7 +57,7 @@ namespace Parser
             return output;
         }
 
-        public IEnumerable<string> Compile(List<Token> tokens)
+        public List<string> Compile(List<Token> tokens)
         {
             List<string> commands = new List<string>(tokens.Count);
             ReportParser report = Check(tokens);
@@ -65,13 +65,12 @@ namespace Parser
             {
                 comp.Source.TransferToStackCode(commands, (i) => Catcher(i, comp, commands), comp.Helper);
             }
-            throw new NotImplementedException();
-            
+            return commands;
         }
 
         private bool Catcher(int i, ReportParserCompileLine comp, List<string> commands)
         {
-            if (i < 0 && comp.CurrentRule == OR)
+            if (i == -1 && comp.CurrentRule == OR)
             {
                 return Inserter(comp, comp.Helper, commands);
             }
@@ -79,16 +78,13 @@ namespace Parser
             {
                 for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 1; repeat >= 1; repeat--)
                 {
-                    for (int iSubTermAndNonterm = 0; iSubTermAndNonterm < comp.Source.Count; iSubTermAndNonterm++)
-                    {
-                        if (!Inserter(comp, iSubTermAndNonterm, commands))
-                            return false;
-                    }
+                    if (!Inserter(comp, i, commands))
+                        return false;
                 }
                 return true;
             }
             else
-                return false;
+                throw new NotSupportedException();
         }
 
         private bool Inserter(ReportParserCompileLine context, int idCurrent, List<string> commands)

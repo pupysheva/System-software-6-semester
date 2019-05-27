@@ -188,6 +188,8 @@ namespace Parser
                             "Входные токены закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
+                    else
+                        compile.Tokens[begin - b - 1] = tokens[begin - 1];
                 }
                 else if(o is Nonterminal)
                 {
@@ -232,6 +234,7 @@ namespace Parser
                     else
                     {
                         output.Info.Success(o.ToString());
+                        compile.Tokens[compile.Helper] = tokens[begin - 1];
                         return output;
                     }
                 }

@@ -135,8 +135,11 @@ namespace UnitTest
         public void TestMethod1()
         {
             List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print));
-            IEnumerable<string> StackCode = EasyParserLang.Compile(tokens);
-
+            tokens.RemoveAll((s) => s.Type.Name.Contains("CH_"));
+            tokens.WriteAll();
+            List<string> StackCode = EasyParserLang.Compile(tokens);
+            StackCode.WriteAll();
+            EasyStackLang.Execute(StackCode);
         }
 
         public static StreamReader StringToStream(string resurse)
@@ -231,32 +234,15 @@ namespace UnitTest
             return Variables[VarOrDigit];
         }
     }
-}
 
-class PrinterMachine : IActionMachine
-{
-    public PrinterMachine(IDictionary<string, double> Variables)
+    internal static class Writer
     {
-        this.Variables = Variables;
-    }
-
-    private readonly IDictionary<string, double> Variables;
-
-    public void Action()
-    {
-        StringBuilder sb = new StringBuilder();
-        foreach (var pair in Variables)
+        public static void WriteAll<T>(this IEnumerable<T> list)
         {
-            sb.Append(pair.Key);
-            sb.Append(" = ");
-            sb.Append(pair.Value);
-            sb.AppendLine();
+            StringBuilder sb = new StringBuilder();
+            foreach (var e in list)
+                sb.AppendLine(e.ToString());
+            Console.Write(sb.ToString());
         }
-        Console.Write(sb.ToString());
     }
-}
-
-interface IActionMachine
-{
-    void Action();
 }
