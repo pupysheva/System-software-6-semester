@@ -77,22 +77,25 @@ namespace Parser
         private bool Inserter(int i, ReportParserCompile comp, List<string> commands)
         {
             if (i >= 0)
-            {
+            { // AND, MORE
                 if (comp.CurrentRule == OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
-                if (comp.Tokens.ContainsKey(i))
-                { // Это терминал.
-                    commands.Add(comp.Tokens[i].Value);
+                for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 0; repeat >= 0; repeat--)
+                {
+                    if (comp.Tokens.ContainsKey(i))
+                    { // Это терминал.
+                        commands.Add(comp.Tokens[i].Value);
+                    }
+                    else if (comp.deepList.ContainsKey(i))
+                    { // Это нетерминал.
+                        comp.deepList[i].Source.TransferToStackCode(commands, (j) => Inserter(j, comp.deepList[i], commands), comp.Helper);
+                    }
+                    else
+                        throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {comp} с id {i}");
                 }
-                else if (comp.deepList.ContainsKey(i))
-                { // Это нетерминал.
-                    comp.deepList[i].Source.TransferToStackCode(commands, (j) => Inserter(j, comp, commands), comp.Helper);
-                }
-                else
-                    throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {comp} с id {i}");
             }
             else // if(i < 0)
-            {
+            { // OR
                 if (comp.CurrentRule != OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
                 if ((comp.Tokens.Count > 0 && comp.deepList.Count > 0)
@@ -104,7 +107,8 @@ namespace Parser
                 }
                 else
                 { // Это нетерминал.
-                    comp.deepList.First().Value.Source.TransferToStackCode(commands, (j) => Inserter(j, comp, commands), comp.Helper);
+                    ReportParserCompile deep = comp.deepList.First().Value;
+                    deep.Source.TransferToStackCode(commands, (j) => Inserter(j, deep, commands), comp.Helper);
                 }
             }
             return true;

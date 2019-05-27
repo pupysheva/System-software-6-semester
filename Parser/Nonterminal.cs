@@ -142,12 +142,13 @@ namespace Parser
 
         private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
-            ReportParser output = new ReportParser();
+            ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1);
+            ReportParser output = new ReportParser(compile);
             ReportParser buffer;
             do
             {
                 buffer = RuleAND(tokens, ref begin, ref end);
-                output.Merge(buffer);
+                output.Merge(buffer, ++compile.Helper);
             }
             while (buffer.IsSuccess) ;
             output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
@@ -156,13 +157,15 @@ namespace Parser
 
         private ReportParser RuleONE_AND_MORE(List<Token> tokens, ref int begin, ref int end)
         {
-            ReportParser output = new ReportParser();
-            output.Merge(RuleAND(tokens, ref begin, ref end));
+            ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
+            ReportParser output = new ReportParser(compile);
+            output.Merge(RuleAND(tokens, ref begin, ref end), ++compile.Helper);
             if (!output.IsSuccess)
             {
+                output.CompileCancel();
                 return output;
             }
-            output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end));
+            output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end), ++compile.Helper);
             return output;
         }
 
