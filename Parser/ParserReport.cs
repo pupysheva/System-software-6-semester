@@ -31,8 +31,10 @@ namespace Parser
             if (this.Compile != null)
                 if (id == int.MinValue)
                     throw new ArgumentNullException("Корень дерева уже занят, необходимо указать id.");
-                else if(reportParser.Compile != null)
+                else if (reportParser.Compile != null)
                     this.Compile.deepList[id] = reportParser.Compile;
+                else
+                    this.Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {this.Compile}");
             else
                 this.Compile = reportParser.Compile;
             this.Info.AddRange(reportParser.Info);
