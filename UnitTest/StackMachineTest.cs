@@ -55,7 +55,7 @@ namespace UnitTest
             Nonterminal lang = new Nonterminal("lang",
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
-                    insert();
+                    insert(0);
                 }, ZERO_AND_MORE);
             Nonterminal value = new Nonterminal("value",
                 (List<string> commands, ActionInsert insert, int id) =>
@@ -139,6 +139,7 @@ namespace UnitTest
             tokens.WriteAll();
             List<string> StackCode = EasyParserLang.Compile(tokens);
             StackCode.WriteAll();
+            CollectionAssert.AreEqual(new string[] { "a", "2", "=", "print" }, StackCode);
             EasyStackLang.Execute(StackCode);
         }
 

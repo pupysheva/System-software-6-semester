@@ -83,6 +83,8 @@ namespace Parser
                 }
                 return true;
             }
+            else if (i == -1 && comp.CurrentRule != OR)
+                throw new ArgumentOutOfRangeException("Поддержка insert по-умолчанию во время компиляции поддерживается только для правил нетерминалов OR. Пожалуйста, проверьте правила компиляции в:" + this);
             else
                 throw new NotSupportedException();
         }
@@ -94,8 +96,11 @@ namespace Parser
             else if (context.Source[idCurrent] is Nonterminal) ;
             //((Nonterminal)context.Source[idCurrent]).Compile(); Ай, ладно. Пусть foreach на compile разбирается.
             else
-                throw new NotSupportedException();
+                throw new NotSupportedException($"Поддерживаются только {typeof(Terminal)} и {typeof(Nonterminal)}.");
             return true;
         }
+
+        public override string ToString()
+            => $"{base.ToString()}: main nonterminal: {mainNonterminal}";
     }
 }
