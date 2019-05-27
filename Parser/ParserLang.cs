@@ -73,14 +73,17 @@ namespace Parser
         {
             if (i < 0 && comp.CurrentRule == OR)
             {
-                return Inserter(comp.Source[comp.Helper], commands);
+                return Inserter(comp, comp.Helper, commands);
             }
             else if (i >= 0 && comp.CurrentRule != OR)
             {
-                foreach (object subTerminals in comp.Source)
+                for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 1; repeat >= 1; repeat--)
                 {
-                    if (!Inserter(subTerminals, commands))
-                        return false;
+                    for (int iSubTermAndNonterm = 0; iSubTermAndNonterm < comp.Source.Count; iSubTermAndNonterm++)
+                    {
+                        if (!Inserter(comp, iSubTermAndNonterm, commands))
+                            return false;
+                    }
                 }
                 return true;
             }
@@ -88,10 +91,15 @@ namespace Parser
                 return false;
         }
 
-        private bool Inserter(object elementToInsert, List<string> commands)
+        private bool Inserter(ReportParserCompileLine context, int idCurrent, List<string> commands)
         {
-            if(elementToInsert is Terminal)
-                ((Terminal)elementToInsert)
+            if (context.Source[idCurrent] is Terminal)
+                commands.Add(context.Tokens[idCurrent].Value);
+            else if (context.Source[idCurrent] is Nonterminal) ;
+            //((Nonterminal)context.Source[idCurrent]).Compile(); Ай, ладно. Пусть foreach на compile разбирается.
+            else
+                throw new NotSupportedException();
+            return true;
         }
     }
 }

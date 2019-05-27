@@ -1,4 +1,7 @@
-﻿namespace Parser
+﻿using Lexer;
+using System.Collections.Generic;
+
+namespace Parser
 {
     public class ReportParserCompileLine
     {
@@ -20,8 +23,12 @@
         public readonly Nonterminal Source;
         /// <summary>
         /// Список токенов, которые понадобятся при компиляции.
+        /// Соответсвие id <see cref="Nonterminal.list"/> с <see cref="Token"/>.
+        /// В случае, если id <see cref="Nonterminal.list"/> = null, то
+        /// <see cref="Tokens"/>[id] не найдёт соответсвия.
         /// </summary>
-        public List<Token> Tokens;
+        public readonly Dictionary<int, Token> Tokens
+            = new Dictionary<int, Token>();
         /// <summary>
         /// Конкретное правило, которое использует нетерминал.
         /// Несмотря на то, что у нетерминала присваевается одно правило,
@@ -29,7 +36,7 @@
         /// Так, при использовании <see cref="RuleOperator.ONE_AND_MORE"/> также используются правила:
         /// <see cref="RuleOperator.ZERO_AND_MORE"/> и <see cref="RuleOperator.AND"/>.
         /// </summary>
-        public RuleOperator CurrentRule;
+        public readonly RuleOperator CurrentRule;
         /// <summary>
         /// Для AND не нужен.
         /// Для OR - идентификатор следующего шага.

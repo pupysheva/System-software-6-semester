@@ -23,8 +23,8 @@ namespace Parser
 
         public void Merge(ReportParser reportParser)
         {
-            reportParser.Compile.AddRange(reportParser.Compile);
-            reportParser.Info.AddRange(reportParser.Info);
+            this.Compile.AddRange(reportParser.Compile);
+            this.Info.AddRange(reportParser.Info);
         }
     }
 }

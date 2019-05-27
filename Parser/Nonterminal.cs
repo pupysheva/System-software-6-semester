@@ -250,7 +250,8 @@ namespace Parser
                 else
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
             }
-            output.Info.Add(new ReportParserInfoLine("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
+            if(begin < tokens.Count)
+                output.Info.Add(new ReportParserInfoLine("Для оператора OR не найдено ни одного истинного выражения.", this, tokens[begin], tokens, -1));
             output.Compile.Remove(compile);
             return output;
         }
