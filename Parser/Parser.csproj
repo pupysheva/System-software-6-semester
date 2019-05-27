@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="ParserReport.cs" />
     <Compile Include="ReportParserCompile.cs" />
-    <Compile Include="ReportParserCompileLine.cs" />
     <Compile Include="ReportParserInfoLine.cs" />
     <Compile Include="ParserLang.cs" />
     <Compile Include="Program.cs" />

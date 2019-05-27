@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,74 +8,55 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    public class ReportParserCompile : IList<ReportParserCompileLine>
+    public class ReportParserCompile
     {
-        private readonly IList<ReportParserCompileLine> list;
+        /// <summary>
+        /// int - соответсвие int в <see cref="Nonterminal.list"/>.
+        /// </summary>
+        public readonly Dictionary<int, ReportParserCompile> deepList
+            = new Dictionary<int, ReportParserCompile>();
 
-        public ReportParserCompile(IList<ReportParserCompileLine> listManager)
+        /// <summary>
+        /// Создание нового эксемпляра инструкции компилятору.
+        /// </summary>
+        /// <param name="Source">Источник, кто добавил в компилятор запись.</param>
+        /// <param name="Helper">Дополнительная информация о результатах парсера.</param>
+        public ReportParserCompile(Nonterminal Source, RuleOperator CurrentRule, int Helper = int.MinValue)
         {
-            list = listManager;
+            this.Source = Source;
+            this.CurrentRule = CurrentRule;
+            this.Helper = Helper;
         }
 
-        public ReportParserCompile(IEnumerable<ReportParserCompileLine> toAdd = null)
-        {
-            if (toAdd != null)
-                list = new List<ReportParserCompileLine>(toAdd);
-            else
-                list = new List<ReportParserCompileLine>();
-        }
+        /// <summary>
+        /// Кто добавил?
+        /// </summary>
+        public readonly Nonterminal Source;
+        /// <summary>
+        /// Список токенов, которые понадобятся при компиляции.
+        /// Соответсвие id <see cref="Nonterminal.list"/> с <see cref="Token"/>.
+        /// В случае, если <see cref="Nonterminal.list"/>[id] = null, то
+        /// <see cref="Tokens"/>[id] не найдёт соответсвия.
+        /// </summary>
+        public readonly Dictionary<int, Token> Tokens
+            = new Dictionary<int, Token>();
 
-        internal void AddRange(IEnumerable<ReportParserCompileLine> compile)
-        {
-            if (list is List<ReportParserCompileLine>)
-                ((List<ReportParserCompileLine>)list).AddRange(compile);
-            else
-                foreach (ReportParserCompileLine line in compile)
-                    list.Add(line);
-        }
+        /// <summary>
+        /// Конкретное правило, которое использует нетерминал.
+        /// Несмотря на то, что у нетерминала присваевается одно правило,
+        /// использовать он может несколько.
+        /// Так, при использовании <see cref="RuleOperator.ONE_AND_MORE"/> также используются правила:
+        /// <see cref="RuleOperator.ZERO_AND_MORE"/> и <see cref="RuleOperator.AND"/>.
+        /// </summary>
+        public readonly RuleOperator CurrentRule;
+        /// <summary>
+        /// Для AND не нужен.
+        /// Для OR - идентификатор следующего шага.
+        /// Для MORE - количество повторов.
+        /// </summary>
+        public int Helper;
 
-        #region IList
-
-        public ReportParserCompileLine this[int index] { get => list[index]; set => list[index] = value; }
-
-        public int Count
-            => list.Count;
-
-        public bool IsReadOnly
-            => list.IsReadOnly;
-
-        public void Add(ReportParserCompileLine item)
-            => list.Add(item);
-
-        public void Clear()
-            => list.Clear();
-
-        public bool Contains(ReportParserCompileLine item)
-            => list.Contains(item);
-
-        public void CopyTo(ReportParserCompileLine[] array, int arrayIndex)
-        {
-            list.CopyTo(array, arrayIndex);
-        }
-
-        public IEnumerator<ReportParserCompileLine> GetEnumerator()
-            => list.GetEnumerator();
-
-        public int IndexOf(ReportParserCompileLine item)
-            => list.IndexOf(item);
-
-        public void Insert(int index, ReportParserCompileLine item)
-            => list.Insert(index, item);
-
-        public bool Remove(ReportParserCompileLine item)
-            => list.Remove(item);
-
-        public void RemoveAt(int index)
-            => list.RemoveAt(index);
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => list.GetEnumerator();
-
-        #endregion IList
+        public override string ToString()
+            => $"{base.ToString()}: Source: {Source} Rule: {CurrentRule} Helper: {Helper} Tokens: [{string.Join(", ", Tokens)}] deepList: [{string.Join(", ", deepList)}]";
     }
 }

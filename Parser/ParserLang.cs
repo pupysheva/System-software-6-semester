@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Lexer;
 using static Parser.RuleOperator;
+using System.Linq;
 
 namespace Parser
 {
@@ -61,42 +62,51 @@ namespace Parser
         {
             List<string> commands = new List<string>(tokens.Count);
             ReportParser report = Check(tokens);
-            foreach (ReportParserCompileLine comp in report.Compile)
-            {
-                comp.Source.TransferToStackCode(commands, (i) => Catcher(i, comp, commands), comp.Helper);
-            }
+            ReportParserCompile comp = report.Compile;
+            comp.Source.TransferToStackCode(commands, (i) => Inserter(i, comp, commands), comp.Helper);
             return commands;
         }
 
-        private bool Catcher(int i, ReportParserCompileLine comp, List<string> commands)
+        /// <summary>
+        /// Занимается вставкой в стекый код.
+        /// </summary>
+        /// <param name="i">Какой объект из <see cref="Nonterminal.list"/> просит вставить.</param>
+        /// <param name="comp">Информация о компиляции, которая запрашивает вставку.</param>
+        /// <param name="commands">Список команд, куда надо вставить команду.</param>
+        /// <returns></returns>
+        private bool Inserter(int i, ReportParserCompile comp, List<string> commands)
         {
-            if (i == -1 && comp.CurrentRule == OR)
+            if (i >= 0)
             {
-                return Inserter(comp, comp.Helper, commands);
-            }
-            else if (i >= 0 && comp.CurrentRule != OR)
-            {
-                for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 1; repeat >= 1; repeat--)
-                {
-                    if (!Inserter(comp, i, commands))
-                        return false;
+                if (comp.CurrentRule == OR)
+                    throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
+                if (comp.Tokens.ContainsKey(i))
+                { // Это терминал.
+                    commands.Add(comp.Tokens[i].Value);
                 }
-                return true;
+                else if (comp.deepList.ContainsKey(i))
+                { // Это нетерминал.
+                    comp.deepList[i].Source.TransferToStackCode(commands, (j) => Inserter(j, comp, commands), comp.Helper);
+                }
+                else
+                    throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {comp} с id {i}");
             }
-            else if (i == -1 && comp.CurrentRule != OR)
-                throw new ArgumentOutOfRangeException("Поддержка insert по-умолчанию во время компиляции поддерживается только для правил нетерминалов OR. Пожалуйста, проверьте правила компиляции в:" + this);
-            else
-                throw new NotSupportedException();
-        }
-
-        private bool Inserter(ReportParserCompileLine context, int idCurrent, List<string> commands)
-        {
-            if (context.Source[idCurrent] is Terminal)
-                commands.Add(context.Tokens[idCurrent].Value);
-            else if (context.Source[idCurrent] is Nonterminal) ;
-            //((Nonterminal)context.Source[idCurrent]).Compile(); Ай, ладно. Пусть foreach на compile разбирается.
-            else
-                throw new NotSupportedException($"Поддерживаются только {typeof(Terminal)} и {typeof(Nonterminal)}.");
+            else // if(i < 0)
+            {
+                if (comp.CurrentRule != OR)
+                    throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
+                if ((comp.Tokens.Count > 0 && comp.deepList.Count > 0)
+                    || (comp.Tokens.Count > 1 || comp.deepList.Count > 1))
+                    throw new ArgumentException($"Ошибка при настройке компиляции. Ожидался только один правильный элемент в нетерминале: {comp}");
+                if(comp.Tokens.Count > 0)
+                { // Это терминал.
+                    commands.Add(comp.Tokens.First().Value.Value);
+                }
+                else
+                { // Это нетерминал.
+                    comp.deepList.First().Value.Source.TransferToStackCode(commands, (j) => Inserter(j, comp, commands), comp.Helper);
+                }
+            }
             return true;
         }
 
