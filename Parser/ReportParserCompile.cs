@@ -32,5 +32,8 @@
             this.CurrentRule = CurrentRule;
             this.Helper = Helper;
         }
+
+        public override string ToString()
+            => $"ReportParserCompile: {{{(Helper == int.MinValue ? "" : $"h: {Helper}, ")}rule: {CurrentRule}, src: {Source}}}";
     }
 }

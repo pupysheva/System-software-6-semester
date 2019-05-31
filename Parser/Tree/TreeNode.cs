@@ -18,6 +18,13 @@ namespace Parser.Tree
         }
 
         /// <summary>
+        /// True, если при вызове <see cref="Add(T)"/> нужно проверять,
+        /// является ли это деревом и тогда отправлять аргумент в <see cref="Add(ITreeNode{T})"/>.
+        /// По умолчанию: true.
+        /// </summary>
+        public bool IsNeedAddSwap { get; set; } = true;
+
+        /// <summary>
         /// Возвращает потомков данной ветви.
         /// </summary>
         /// <param name="index">Номер потомка, который вам нужен.</param>
@@ -45,12 +52,18 @@ namespace Parser.Tree
 
         public void Add(T item)
         {
-            Children.Add(new TreeNode<T>(item));
+            if (IsNeedAddSwap && item is ITreeNode<T> itemTree)
+                Add(itemTree);
+            else
+                Children.Add(new TreeNode<T>(item));
         }
 
         public void Add(ITreeNode<T> item)
         {
-            Children.Add(item);
+            if (IsNeedAddSwap && item.Current is ITreeNode<T>)
+                throw new NotSupportedException($"Операция не поддерживается. Отключите {nameof(IsNeedAddSwap)}");
+            else
+                Children.Add(item);
         }
 
         public void Clear()

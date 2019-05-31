@@ -67,7 +67,6 @@ namespace Parser
                 return null;
             ITreeNode<object> compileTree = report.Compile;
             ReportParserCompile currentComp = (ReportParserCompile)compileTree.Current;
-            Console.Write(compileTree.ToString());
             currentComp.Source.TransferToStackCode(commands, (i) => Inserter(i, compileTree, commands), currentComp.Helper);
             return commands;
         }
@@ -86,21 +85,18 @@ namespace Parser
             { // AND, MORE
                 if (comp.CurrentRule == OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
-                for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 0; repeat >= 0; repeat--)
-                {
-                    if (i >= compileTree.Count)
-                        throw new IndexOutOfRangeException($"Был запрошен индекс вне границ. Индекс: {i}, коллекция: {compileTree}");
-                    if (compileTree[i] is Token)
-                    { // Это терминал.
-                        commands.Add(((Token)compileTree[i].Current).Value);
-                    }
-                    else if (compileTree[i] is ReportParserCompile)
-                    { // Это нетерминал.
-                        ((ReportParserCompile)compileTree[i].Current).Source.TransferToStackCode(commands, (j) => Inserter(j, compileTree[i], commands), ((ReportParserCompile)compileTree[i].Current).Helper);
-                    }
-                    else
-                        throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {compileTree} с id {i}: {compileTree[i].GetType()}");
+                if (i >= compileTree.Count)
+                    throw new IndexOutOfRangeException($"Был запрошен индекс вне границ. Индекс: {i}, коллекция: {compileTree}");
+                if (compileTree[i].Current is Token token)
+                { // Это терминал.
+                    commands.Add(token.Value);
                 }
+                else if (compileTree[i].Current is ReportParserCompile deep)
+                { // Это нетерминал.
+                    deep.Source.TransferToStackCode(commands, (j) => Inserter(j, compileTree[i], commands), deep.Helper);
+                }
+                else
+                    throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {compileTree} с id {i}: {compileTree[i].GetType()}");
             }
             else // if(i < 0)
             { // OR
@@ -108,7 +104,7 @@ namespace Parser
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
                 if (compileTree.Count != 1)
                     throw new ArgumentException($"Ошибка при настройке компиляции. Ожидался только один правильный элемент в нетерминале: {comp}");
-                if(compileTree[0].Current is Token token)
+                if (compileTree[0].Current is Token token)
                 { // Это терминал.
                     commands.Add(token.Value);
                 }

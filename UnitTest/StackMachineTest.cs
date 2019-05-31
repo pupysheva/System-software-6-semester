@@ -55,7 +55,8 @@ namespace UnitTest
             Nonterminal lang = new Nonterminal("lang",
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
-                    insert(0);
+                    for(int i = 0; i < id; i++)
+                        insert(i);
                 }, ZERO_AND_MORE);
             Nonterminal value = new Nonterminal("value",
                 (List<string> commands, ActionInsert insert, int id) =>
@@ -71,9 +72,14 @@ namespace UnitTest
                 value, new Nonterminal("(OP value)*",
                 (List<string> commands, ActionInsert insert, int id) =>
                 {
+                    for (int i = 0; i < id; i++)
+                        insert(i);
+                }, ZERO_AND_MORE, new Nonterminal("OP & value",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
                     insert(1);
                     insert(0);
-                }, ZERO_AND_MORE, "OP", value));
+                }, AND, "OP", value)));
             Nonterminal assign_expr = new Nonterminal("assign_expr",
                     (List<string> commands, ActionInsert insert, int id) =>
                     {
@@ -137,6 +143,7 @@ namespace UnitTest
             List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print));
             tokens.RemoveAll((s) => s.Type.Name.Contains("CH_"));
             tokens.WriteAll();
+            Console.WriteLine(EasyParserLang.Check(tokens).Compile);
             List<string> StackCode = EasyParserLang.Compile(tokens);
             StackCode.WriteAll();
             CollectionAssert.AreEqual(new string[] { "a", "2", "=", "print" }, StackCode);
@@ -243,7 +250,10 @@ namespace UnitTest
             StringBuilder sb = new StringBuilder();
             foreach (var e in list)
                 sb.AppendLine(e.ToString());
-            Console.Write(sb.ToString());
+            if (sb.Length == 0)
+                Console.WriteLine("length = 0");
+            else
+                Console.Write(sb.ToString());
         }
     }
 }

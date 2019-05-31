@@ -382,6 +382,9 @@ namespace Parser
         /// <param name="item">Объект, соответсвующий <see cref="IsCanAdd(object)"/>.</param>
         public void Add(object item)
         {
+            if ((rule == ZERO_AND_MORE || rule == ONE_AND_MORE)
+                && Count > 0)
+                throw new NotSupportedException($"В нетерминалах с правилом {nameof(ZERO_AND_MORE)} или {nameof(ONE_AND_MORE)} можно добавить только один элемент.");
             list.Add(CheckSet(item));
         }
 

@@ -35,7 +35,7 @@
 
         public override string ToString()
         {
-            return $"{Type}: {Value}";
+            return $"{nameof(Token<T>)} {Type}: {Value}";
         }
     }
 }
