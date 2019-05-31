@@ -98,7 +98,7 @@ namespace Parser.Tree
             => new TreeEnumerator(this);
 
         public override string ToString()
-            => this.ToString(StringFormat.Default);
+            => this.ToString(StringFormat.NewLine);
 
         public IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors()
             => Children;

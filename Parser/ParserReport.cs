@@ -35,7 +35,12 @@ namespace Parser
             if (Compile != null)
             {
                 if (reportParser.Compile != null)
-                    Compile.Add(reportParser.Compile);
+                {
+                    if (Compile.Current == null)
+                        Compile = reportParser.Compile;
+                    else
+                        Compile.Add(reportParser.Compile);
+                }
                 else
                     Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {this.Compile}");
             }

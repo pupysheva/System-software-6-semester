@@ -67,6 +67,7 @@ namespace Parser
                 return null;
             ITreeNode<object> compileTree = report.Compile;
             ReportParserCompile currentComp = (ReportParserCompile)compileTree.Current;
+            Console.Write(compileTree.ToString());
             currentComp.Source.TransferToStackCode(commands, (i) => Inserter(i, compileTree, commands), currentComp.Helper);
             return commands;
         }

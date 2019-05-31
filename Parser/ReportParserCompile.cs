@@ -1,13 +1,4 @@
-﻿using Lexer;
-using Parser.Tree;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Parser
+﻿namespace Parser
 {
     public class ReportParserCompile
     {
@@ -41,6 +32,5 @@ namespace Parser
             this.CurrentRule = CurrentRule;
             this.Helper = Helper;
         }
-
     }
 }
