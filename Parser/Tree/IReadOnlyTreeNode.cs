@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parser.Tree
 {
-    interface IReadOnlyTreeNode<out T> : IReadOnlyList<IReadOnlyTreeNode<T>>
+    public interface IReadOnlyTreeNode<out T> : IReadOnlyList<IReadOnlyTreeNode<T>>
     {
         T Current { get; }
     }

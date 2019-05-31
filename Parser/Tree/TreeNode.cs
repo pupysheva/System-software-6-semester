@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Text;
 
 namespace Parser.Tree
 {
@@ -19,9 +21,19 @@ namespace Parser.Tree
         /// Возвращает потомков данной ветви.
         /// </summary>
         /// <param name="index">Номер потомка, который вам нужен.</param>
-        public ITreeNode<T> this[int index]
+        ITreeNode<T> IList<ITreeNode<T>>.this[int index]
         {
             get => Children[index];
+            set => Children[index] = value;
+        }
+
+        /// <summary>
+        /// Возвращает потомков данной ветви.
+        /// </summary>
+        /// <param name="index">Номер потомка, который вам нужен.</param>
+        public TreeNode<T> this[int index]
+        {
+            get => (TreeNode<T>)Children[index];
             set => Children[index] = value;
         }
 
@@ -30,6 +42,11 @@ namespace Parser.Tree
         public int Count => Children.Count;
 
         public bool IsReadOnly => ((IList<ITreeNode<T>>)Children).IsReadOnly;
+
+        public void Add(T item)
+        {
+            Children.Add(new TreeNode<T>(item));
+        }
 
         public void Add(ITreeNode<T> item)
         {
@@ -83,22 +100,35 @@ namespace Parser.Tree
         public override string ToString()
             => ToString(StringFormat.Default);
 
+        public string ChildrenToString(StringFormat sf = StringFormat.Default, string separator = ", ")
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(TreeNode<T> n in Children)
+            {
+                sb.Append(n.ToString(sf));
+                sb.Append(separator);
+            }
+            if(sb.Length >= separator.Length)
+                sb.Length -= separator.Length;
+            return sb.ToString();
+        }
+
         public string ToString(StringFormat sf)
         {
             switch (sf)
             {
                 case StringFormat.Default:
-                    return $"{base.ToString()}: cur: {Current}, deep: [{string.Join(", ", Children)}]";
+                    return $"{base.ToString()}: cur: {Current}, deep: [{ChildrenToString(sf, ", ")}]";
                 case StringFormat.NewLine:
                     {
-                        string[] lines = $"{Current}: \n<NEEDTAB_TreeNode>{string.Join("\n", Children)}\n</NEEDTAB_TreeNode>".Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] lines = $"{Current}{(Count > 0 ? ":" : "")}\n<NEEDTAB_TreeNode>{ChildrenToString(sf, "\n")}\n</NEEDTAB_TreeNode>".Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                         int count = 0, countOpen, countClose;
                         Regex regOpen = new Regex("<NEEDTAB_TreeNode>");
                         Regex regClose = new Regex("</NEEDTAB_TreeNode>");
                         for (long i = 0; i < lines.LongLength; i++)
                         {
-                            countOpen = regOpen.Match(lines[i]).Groups.Count;
-                            countClose = regClose.Match(lines[i]).Groups.Count;
+                            countOpen = regOpen.Matches(lines[i]).Count;
+                            countClose = regClose.Matches(lines[i]).Count;
                             count += countOpen - countClose;
                             if (count > 0)
                                 lines[i] = lines[i].Insert(0, new string('\t', count));
@@ -107,7 +137,10 @@ namespace Parser.Tree
                             if(countClose != 0)
                                 lines[i] = lines[i].Replace("</NEEDTAB_TreeNode>", "");
                         }
-                        return string.Join("\n", lines);
+                        Regex needRemove = new Regex("^[\\t| ]+$");
+                        List<string> LinesWithoutSpace = new List<string>(lines);
+                        LinesWithoutSpace.RemoveAll(str => needRemove.Match(str).Success || str.Length == 0);
+                        return string.Join("\n", LinesWithoutSpace);
                     }
                 case StringFormat.Base:
                     return base.ToString();

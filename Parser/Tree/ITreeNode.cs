@@ -9,5 +9,7 @@ namespace Parser.Tree
     public interface ITreeNode<T> : IList<ITreeNode<T>>
     {
         T Current { get; set; }
+
+        void Add(T toAdd);
     }
 }
