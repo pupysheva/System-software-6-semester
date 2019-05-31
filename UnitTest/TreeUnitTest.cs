@@ -8,9 +8,9 @@ namespace UnitTest
     public class TreeUnitTest
     {
         [TestMethod]
-        public void TestMethod1()
+        new public void ToString()
         {
-            TreeNode<string> tree = new TreeNode<string>("lol")
+            ITreeNode<string> tree = new TreeNode<string>("lol")
             {
                 "lal",
                 "kek",
@@ -20,9 +20,28 @@ namespace UnitTest
                     "Мясо"
                 }
             };
-            Console.Write(tree.ToString(TreeNode<string>.StringFormat.NewLine));
+            Console.Write(tree.ToString(StringFormat.NewLine));
             Assert.AreEqual("lol:\n\tlal\n\tkek\n\tcheburek:\n\t\tКапуста\n\t\tМясо",
-                tree.ToString(TreeNode<string>.StringFormat.NewLine));
+                tree.ToString(StringFormat.NewLine));
+        }
+
+        [TestMethod]
+        public void Deep()
+        {
+            ITreeNode<string> tree = new TreeNode<string>("lol")
+            {
+                "lal",
+                "kek",
+                new TreeNode<string>("cheburek")
+                {
+                    "Капуста",
+                    "Мясо"
+                }
+            };
+            tree.Add(tree);
+            Console.Write(tree.ToString(StringFormat.NewLine));
+            Assert.AreEqual("lol:\n\tlal\n\tkek\n\tcheburek:\n\t\tКапуста\n\t\tМясо\n\tcur: lol, deep: ...",
+                tree.ToString(StringFormat.NewLine));
         }
     }
 }

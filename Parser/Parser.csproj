@@ -41,6 +41,8 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tree\StringFormat.cs" />
+    <Compile Include="Tree\TreeEnumerator.cs" />
     <Compile Include="Tree\TreeNode.cs" />
     <Compile Include="Tree\IReadOnlyTreeNode.cs" />
     <Compile Include="ParserReport.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="RuleOperator.cs" />
     <Compile Include="RunnableToken.cs" />
     <Compile Include="Tree\ITreeNode.cs" />
+    <Compile Include="Tree\TreeTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
