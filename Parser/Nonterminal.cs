@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static Parser.RuleOperator;
 using System.Text;
+using Parser.Tree;
 
 namespace Parser
 {
@@ -148,7 +149,8 @@ namespace Parser
             do
             {
                 buffer = RuleAND(tokens, ref begin, ref end);
-                output.Merge(buffer, ++compile.Helper);
+                compile.Helper++;
+                output.Merge(buffer);
             }
             while (buffer.IsSuccess) ;
             output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
@@ -159,20 +161,22 @@ namespace Parser
         {
             ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
-            output.Merge(RuleAND(tokens, ref begin, ref end), ++compile.Helper);
+            compile.Helper++;
+            output.Merge(RuleAND(tokens, ref begin, ref end));
             if (!output.IsSuccess)
             {
                 output.CompileCancel();
                 return output;
             }
-            output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end), ++compile.Helper);
+            compile.Helper++;
+            output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end));
             return output;
         }
 
         private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserCompile compile = new ReportParserCompile(this, AND);
-            ReportParser output = new ReportParser(compile);
+            ITreeNode<object> compileTree = new TreeNode<object>(new ReportParserCompile(this, AND));
+            ReportParser output = new ReportParser(compileTree);
             int b = begin;
             int e = end;
             int i = -1;
@@ -187,11 +191,11 @@ namespace Parser
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
-                        compile.Tokens[begin - b - 1] = tokens[begin - 1];
+                        compileTree.Add(tokens[begin - 1]);
                 }
                 else if(o is Nonterminal)
                 {
-                    output.Merge(((Nonterminal)o).CheckRule(tokens, ref begin, ref end), i);
+                    output.Merge(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
                     if(!output.IsSuccess)
                     {
                         output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
@@ -216,11 +220,12 @@ namespace Parser
 
         private ReportParser RuleOR(List<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserCompile compile = new ReportParserCompile(this, OR, -1);
-            ReportParser output = new ReportParser(compile);
+            ReportParserCompile comp = new ReportParserCompile(this, OR, -1);
+            ITreeNode<object> compileTree = new TreeNode<object>(comp);
+            ReportParser output = new ReportParser(compileTree);
             foreach (object o in this)
             {
-                compile.Helper++;
+                comp.Helper++;
                 if (o is Terminal)
                 {
                     if (begin > end)
@@ -230,8 +235,8 @@ namespace Parser
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
                     {
+                        compileTree.Add(tokens[begin - 1]);
                         output.Info.Success(o.ToString());
-                        compile.Tokens[compile.Helper] = tokens[begin - 1];
                         return output;
                     }
                 }
@@ -240,12 +245,12 @@ namespace Parser
                     ReportParser buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
                     {
-                        output.Merge(buffer, compile.Helper);
+                        output.Merge(buffer);
                         output.Info.Success(o.ToString());
                         return output; // Да, этот нетерминал нам подходит.
                     }
                     else
-                        output.Merge(buffer, compile.Helper);
+                        output.Merge(buffer);
                 }
                 else
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");

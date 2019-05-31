@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Lexer;
 using static Parser.RuleOperator;
 using System.Linq;
+using Parser.Tree;
 
 namespace Parser
 {
@@ -62,8 +63,11 @@ namespace Parser
         {
             List<string> commands = new List<string>(tokens.Count);
             ReportParser report = Check(tokens);
-            ReportParserCompile comp = report.Compile;
-            comp.Source.TransferToStackCode(commands, (i) => Inserter(i, comp, commands), comp.Helper);
+            if (!report.IsSuccess)
+                return null;
+            ITreeNode<object> compileTree = report.Compile;
+            ReportParserCompile currentComp = (ReportParserCompile)compileTree.Current;
+            currentComp.Source.TransferToStackCode(commands, (i) => Inserter(i, compileTree, commands), currentComp.Helper);
             return commands;
         }
 
@@ -71,45 +75,48 @@ namespace Parser
         /// Занимается вставкой в стекый код.
         /// </summary>
         /// <param name="i">Какой объект из <see cref="Nonterminal.list"/> просит вставить.</param>
-        /// <param name="comp">Информация о компиляции, которая запрашивает вставку.</param>
+        /// <param name="compileTree">Информация о компиляции, которая запрашивает вставку.</param>
         /// <param name="commands">Список команд, куда надо вставить команду.</param>
         /// <returns></returns>
-        private bool Inserter(int i, ReportParserCompile comp, List<string> commands)
+        private bool Inserter(int i, ITreeNode<object> compileTree, List<string> commands)
         {
+            ReportParserCompile comp = (ReportParserCompile)compileTree.Current;
             if (i >= 0)
             { // AND, MORE
                 if (comp.CurrentRule == OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
                 for (int repeat = comp.CurrentRule == ZERO_AND_MORE || comp.CurrentRule == ONE_AND_MORE ? comp.Helper : 0; repeat >= 0; repeat--)
                 {
-                    if (comp.Tokens.ContainsKey(i))
+                    if (i >= compileTree.Count)
+                        throw new IndexOutOfRangeException($"Был запрошен индекс вне границ. Индекс: {i}, коллекция: {compileTree}");
+                    if (compileTree[i] is Token)
                     { // Это терминал.
-                        commands.Add(comp.Tokens[i].Value);
+                        commands.Add(((Token)compileTree[i].Current).Value);
                     }
-                    else if (comp.deepList.ContainsKey(i))
+                    else if (compileTree[i] is ReportParserCompile)
                     { // Это нетерминал.
-                        comp.deepList[i].Source.TransferToStackCode(commands, (j) => Inserter(j, comp.deepList[i], commands), comp.Helper);
+                        ((ReportParserCompile)compileTree[i].Current).Source.TransferToStackCode(commands, (j) => Inserter(j, compileTree[i], commands), ((ReportParserCompile)compileTree[i].Current).Helper);
                     }
                     else
-                        throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {comp} с id {i}");
+                        throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {compileTree} с id {i}: {compileTree[i].GetType()}");
                 }
             }
             else // if(i < 0)
             { // OR
                 if (comp.CurrentRule != OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
-                if ((comp.Tokens.Count > 0 && comp.deepList.Count > 0)
-                    || (comp.Tokens.Count > 1 || comp.deepList.Count > 1))
+                if (compileTree.Count != 1)
                     throw new ArgumentException($"Ошибка при настройке компиляции. Ожидался только один правильный элемент в нетерминале: {comp}");
-                if(comp.Tokens.Count > 0)
+                if(compileTree[0].Current is Token token)
                 { // Это терминал.
-                    commands.Add(comp.Tokens.First().Value.Value);
+                    commands.Add(token.Value);
+                }
+                else if (compileTree[0].Current is ReportParserCompile deep)
+                { // Это нетерминал.
+                    deep.Source.TransferToStackCode(commands, (j) => Inserter(j, compileTree[0], commands), deep.Helper);
                 }
                 else
-                { // Это нетерминал.
-                    ReportParserCompile deep = comp.deepList.First().Value;
-                    deep.Source.TransferToStackCode(commands, (j) => Inserter(j, deep, commands), comp.Helper);
-                }
+                    throw new ArgumentException($"Не получилось определить, терминал ли это, или нетерминал в списке {compileTree} с id {0}: {compileTree[0].GetType()}");
             }
             return true;
         }

@@ -6,7 +6,12 @@ namespace Parser
     {
         public ReportParser(ReportParserCompile Compile = null)
         {
-            this.Compile = new TreeNode(Compile);
+            this.Compile = new TreeNode<object>(Compile);
+        }
+
+        public ReportParser(ITreeNode<object> Compile)
+        {
+            this.Compile = Compile;
         }
 
         /// <summary>
@@ -18,7 +23,7 @@ namespace Parser
         /// <summary>
         /// Представляет информацию о компиляции.
         /// </summary>
-        public ITreeNode Compile { get; protected set; }
+        public ITreeNode<object> Compile { get; protected set; }
 
         /// <summary>
         /// Представляет информацию о ходе поиска ошибок в коде.

@@ -25,6 +25,4 @@ namespace Parser.Tree
         /// </summary>
         IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors();
     }
-
-    public interface ITreeNode : ITreeNode<object> { }
 }
