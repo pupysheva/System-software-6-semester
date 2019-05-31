@@ -103,4 +103,12 @@ namespace Parser.Tree
         public IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors()
             => Children;
     }
+
+    public class TreeNode : TreeNode<object>, ITreeNode
+    {
+        public TreeNode(object Current = null)
+        {
+            base.Current = Current;
+        }
+    }
 }

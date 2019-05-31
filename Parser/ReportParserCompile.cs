@@ -9,14 +9,8 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    public class ReportParserCompile : ITreeNode<object>
+    public class ReportParserCompile
     {
-        /// <summary>
-        /// Потомки.
-        /// </summary>
-        public readonly IList<object> Children
-            = new List<object>();
-
         /// <summary>
         /// Кто добавил?
         /// </summary>
@@ -48,7 +42,5 @@ namespace Parser
             this.Helper = Helper;
         }
 
-        public override string ToString()
-            => this.ToString(StringFormat.NewLine);
     }
 }

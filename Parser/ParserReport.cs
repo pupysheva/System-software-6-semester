@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Parser.Tree;
 
 namespace Parser
 {
@@ -6,7 +6,7 @@ namespace Parser
     {
         public ReportParser(ReportParserCompile Compile = null)
         {
-            this.Compile = Compile;
+            this.Compile = new TreeNode(Compile);
         }
 
         /// <summary>
@@ -18,29 +18,31 @@ namespace Parser
         /// <summary>
         /// Представляет информацию о компиляции.
         /// </summary>
-        public ReportParserCompile Compile { get; set; }
+        public ITreeNode Compile { get; protected set; }
 
         /// <summary>
         /// Представляет информацию о ходе поиска ошибок в коде.
         /// </summary>
         public ReportParserInfo Info { get; } = new ReportParserInfo();
 
-        /// <param name="id">Ид рассматриваемого элемента грамматики в нетерминале.</param>
-        public void Merge(ReportParser reportParser, int id = int.MinValue)
+        public void Merge(ReportParser reportParser)
         {
-            if (this.Compile != null)
-                if (id == int.MinValue)
-                    throw new ArgumentNullException("Корень дерева уже занят, необходимо указать id.");
-                else if (reportParser.Compile != null)
-                    this.Compile.deepList[id] = reportParser.Compile;
+            if (Compile != null)
+            {
+                if (reportParser.Compile != null)
+                    Compile.Add(reportParser.Compile);
                 else
-                    this.Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {this.Compile}");
+                    Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {this.Compile}");
+            }
             else
-                this.Compile = reportParser.Compile;
-            this.Info.AddRange(reportParser.Info);
+                Compile = reportParser.Compile;
+            Info.AddRange(reportParser.Info);
         }
 
-        internal void CompileCancel()
+        /// <summary>
+        /// Удаляет или отменяет все заметки о компиляции в данном отчёте.
+        /// </summary>
+        public void CompileCancel()
         {
             Compile = null;
         }
