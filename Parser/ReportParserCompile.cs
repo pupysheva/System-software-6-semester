@@ -1,4 +1,5 @@
 ﻿using Lexer;
+using Parser.Tree;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,39 +9,18 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    public class ReportParserCompile
+    public class ReportParserCompile : ITreeNode<object>
     {
         /// <summary>
-        /// int - соответсвие int в <see cref="Nonterminal.list"/>.
+        /// Потомки.
         /// </summary>
-        public readonly Dictionary<int, ReportParserCompile> deepList
-            = new Dictionary<int, ReportParserCompile>();
-
-        /// <summary>
-        /// Создание нового эксемпляра инструкции компилятору.
-        /// </summary>
-        /// <param name="Source">Источник, кто добавил в компилятор запись.</param>
-        /// <param name="Helper">Дополнительная информация о результатах парсера.</param>
-        public ReportParserCompile(Nonterminal Source, RuleOperator CurrentRule, int Helper = int.MinValue)
-        {
-            this.Source = Source;
-            this.CurrentRule = CurrentRule;
-            this.Helper = Helper;
-        }
+        public readonly IList<object> Children
+            = new List<object>();
 
         /// <summary>
         /// Кто добавил?
         /// </summary>
         public readonly Nonterminal Source;
-        /// <summary>
-        /// Список токенов, которые понадобятся при компиляции.
-        /// Соответсвие id <see cref="Nonterminal.list"/> с <see cref="Token"/>.
-        /// В случае, если <see cref="Nonterminal.list"/>[id] = null, то
-        /// <see cref="Tokens"/>[id] не найдёт соответсвия.
-        /// </summary>
-        public readonly Dictionary<int, Token> Tokens
-            = new Dictionary<int, Token>();
-
         /// <summary>
         /// Конкретное правило, которое использует нетерминал.
         /// Несмотря на то, что у нетерминала присваевается одно правило,
@@ -56,7 +36,19 @@ namespace Parser
         /// </summary>
         public int Helper;
 
+        /// <summary>
+        /// Создание нового эксемпляра инструкции компилятору.
+        /// </summary>
+        /// <param name="Source">Источник, кто добавил в компилятор запись.</param>
+        /// <param name="Helper">Дополнительная информация о результатах парсера.</param>
+        public ReportParserCompile(Nonterminal Source, RuleOperator CurrentRule, int Helper = int.MinValue)
+        {
+            this.Source = Source;
+            this.CurrentRule = CurrentRule;
+            this.Helper = Helper;
+        }
+
         public override string ToString()
-            => $"{base.ToString()}: Source: {Source} Rule: {CurrentRule} Helper: {Helper} Tokens: [{string.Join(", ", Tokens)}] deepList: [{string.Join(", ", deepList)}]";
+            => this.ToString(StringFormat.NewLine);
     }
 }
