@@ -23,8 +23,15 @@ namespace Parser
                 Nonterminal value = new Nonterminal("value", OR);
 
                 Nonterminal func_expr = new Nonterminal("func_expr", AND);
-                Nonterminal stmt = new Nonterminal("stmt", OR, new Nonterminal("value (OP value)*", AND, value, new Nonterminal("(OP value)*", ZERO_AND_MORE, "OP", value)), func_expr);
-                Nonterminal arguments_expr = new Nonterminal("arguments_expr", OR, new Nonterminal("(stmt COM)+", ONE_AND_MORE, stmt, "COM"), stmt);
+                Nonterminal stmt =
+                    new Nonterminal("stmt", OR, new Nonterminal("value (OP value)*", AND,
+                    value,
+                    new Nonterminal("(OP value)*", ZERO_AND_MORE,
+                        new Nonterminal("OP & value", AND,
+                            "OP",
+                            value))),
+                    func_expr);
+                Nonterminal arguments_expr = new Nonterminal("arguments_expr", OR, new Nonterminal("(stmt COM)+", ONE_AND_MORE, new Nonterminal("stmt & COM", AND, stmt, "COM")), stmt);
                 Nonterminal b_val_expr = new Nonterminal("b_val_expr", OR, stmt, new Nonterminal("L_B stmt R_B", AND, "L_B", stmt, "R_B"));
                 Nonterminal body = new Nonterminal("body", AND, "L_QB", lang, "R_QB");
                 Nonterminal condition = new Nonterminal("condition", AND, "L_B", value, "LOGICAL_OP", value,"R_B");

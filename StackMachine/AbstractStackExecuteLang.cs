@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace StackMachine
 {
     public abstract class AbstractStackExecuteLang : IExecuteLang
     {
+
+        protected AbstractStackExecuteLang()
+        {
+            Variables = new ReadOnlyDictionary<string, double>(variables);
+        }
+
         /// <summary>
         /// Таблица переменных для стековой машины.
         /// </summary>
-        protected readonly IDictionary<string, double> Variables
+        protected readonly IDictionary<string, double> variables
             = new Dictionary<string, double>();
+
+        public ReadOnlyDictionary<string, double> Variables { get; }
 
         /// <summary>
         /// Стэк, который хранит в себе исполняемый код.

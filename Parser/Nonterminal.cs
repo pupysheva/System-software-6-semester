@@ -145,14 +145,12 @@ namespace Parser
         {
             ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
-            ReportParser buffer;
             do
             {
-                buffer = RuleAND(tokens, ref begin, ref end);
+                RuleMORE(tokens, output, ref begin, ref end);
                 compile.Helper++;
-                output.Merge(buffer);
             }
-            while (buffer.IsSuccess) ;
+            while (output.IsSuccess) ;
             output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
             return output;
         }
@@ -162,15 +160,61 @@ namespace Parser
             ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
             compile.Helper++;
-            output.Merge(RuleAND(tokens, ref begin, ref end));
-            if (!output.IsSuccess)
+            if (!RuleMORE(tokens, output, ref begin, ref end))
             {
                 output.CompileCancel();
                 return output;
             }
             compile.Helper++;
-            output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end));
+            do
+            {
+                RuleMORE(tokens, output, ref begin, ref end);
+                compile.Helper++;
+            }
+            while (output.IsSuccess);
+            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
             return output;
+        }
+
+        private bool RuleMORE(List<Token> tokens, ReportParser output, ref int begin, ref int end)
+        {
+            int b = begin;
+            int e = end;
+            if (Count != 1)
+                throw new NotSupportedException($"Правило {rule} поддерживает только один элемент в нетерминале.");
+            foreach (object o in this)
+            {
+                if (o is Terminal)
+                {
+                    if (begin > end)
+                        output.Info.Add(new ReportParserInfoLine(
+                            "Входные токены закончились", o, null, begin));
+                    else if (!o.Equals(tokens[begin++].Type))
+                        output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
+                    else
+                        output.Compile.Add(tokens[begin - 1]);
+                }
+                else if (o is Nonterminal)
+                {
+                    output.Merge(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                    if (!output.IsSuccess)
+                    {
+                        output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
+                    }
+                }
+                if (!output.IsSuccess)
+                {
+                    begin = b;
+                    end = e;
+                    return output.IsSuccess;
+                }
+            }
+            if (!output.IsSuccess)
+            {
+                begin = b;
+                end = e;
+            }
+            return output.IsSuccess;
         }
 
         private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)

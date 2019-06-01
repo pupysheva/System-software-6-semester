@@ -14,9 +14,10 @@ namespace UnitTest
     [TestClass]
     public class StackMachineTest
     {
-        private readonly ParserLang EasyParserLang;
         private readonly LexerLang EasyLexerLang;
-        private readonly IExecuteLang EasyStackLang;
+        private readonly ParserLang EasyParserLang;
+        private readonly ParserLang SuperEasyParserLang;
+        private readonly AbstractStackExecuteLang EasyStackLang;
 
         public StackMachineTest()
         {
@@ -134,6 +135,15 @@ namespace UnitTest
                 assign_expr, while_expr, "PRINT_KW");
             lang.Add(expr);
             EasyParserLang = new ParserLang(lang);
+
+            SuperEasyParserLang = new ParserLang(new Nonterminal("easy lang",
+                (List<string> commands, ActionInsert insert, int id) =>
+                {
+                    insert(0);
+                    insert(2);
+                    insert(1);
+                }, AND, "VAR", "ASSIGN_OP", "DIGIT"));
+
             EasyStackLang = new MyEeasyStackLang();
         }
 
@@ -148,6 +158,20 @@ namespace UnitTest
             StackCode.WriteAll();
             CollectionAssert.AreEqual(new string[] { "a", "2", "=", "print" }, StackCode);
             EasyStackLang.Execute(StackCode);
+        }
+
+        [TestMethod]
+        public void TestSuperEasyLang()
+        {
+            List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream("a=2"));
+            tokens.RemoveAll((s) => s.Type.Name.Contains("CH_"));
+            tokens.WriteAll();
+            Console.WriteLine(SuperEasyParserLang.Check(tokens).Compile);
+            List<string> StackCode = SuperEasyParserLang.Compile(tokens);
+            StackCode.WriteAll();
+            CollectionAssert.AreEqual(new string[] { "a", "2", "=" }, StackCode);
+            EasyStackLang.Execute(StackCode);
+            Assert.AreEqual(2, EasyStackLang.Variables["a"], double.Epsilon);
         }
 
         public static StreamReader StringToStream(string resurse)
@@ -168,7 +192,7 @@ namespace UnitTest
                 case "print":
                     {
                         StringBuilder sb = new StringBuilder();
-                        foreach (var pair in Variables)
+                        foreach (var pair in variables)
                         {
                             sb.Append(pair.Key);
                             sb.Append(" = ");
@@ -196,7 +220,7 @@ namespace UnitTest
                     {
                         double stmt = PopStk();
                         string var = Stack.Pop();
-                        Variables[var] = stmt;
+                        variables[var] = stmt;
                     }
                     break;
                 case "+":
@@ -227,6 +251,13 @@ namespace UnitTest
                             .ToString());
                     }
                     break;
+                default:
+                    {
+                        if (!variables.ContainsKey(command))
+                            variables[command] = 0;
+                        Stack.Push(command);
+                    }
+                    break;
             }
         }
 
@@ -239,7 +270,7 @@ namespace UnitTest
         {
             if (double.TryParse(VarOrDigit, out double result))
                 return result;
-            return Variables[VarOrDigit];
+            return variables[VarOrDigit];
         }
     }
 
