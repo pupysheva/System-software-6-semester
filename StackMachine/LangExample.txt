@@ -1,0 +1,18 @@
+﻿a = 0
+while(a < 10)
+{
+	HASHSET_ADD a // Добавление в hashset элементов.
+	a = a + 1
+}
+test1 = 0
+if(HASHSET_IS 2) // Проверяем, что элемент 2 добавлен.
+{
+	test1 = 1 // Тест пройден.
+}
+// Проверяем удаление из hashset:
+HASHSET_DROP 2
+test2 = 0
+if((HASHSET_IS 2) == 0) // Если в hashset отсутсвует элемент "2"
+{
+	test2 = 1 // тест пройден.
+}

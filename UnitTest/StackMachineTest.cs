@@ -157,7 +157,10 @@ namespace UnitTest
             List<string> StackCode = EasyParserLang.Compile(tokens);
             StackCode.WriteAll();
             CollectionAssert.AreEqual(new string[] { "a", "2", "=", "print" }, StackCode);
+            Console.WriteLine("Выполнение стековой машины...");
             EasyStackLang.Execute(StackCode);
+            Console.WriteLine("Выполнение стековой машины завершено.");
+            Assert.AreEqual(1, EasyStackLang.Variables.Count);
         }
 
         [TestMethod]
@@ -253,7 +256,7 @@ namespace UnitTest
                     break;
                 default:
                     {
-                        if (!variables.ContainsKey(command))
+                        if (!variables.ContainsKey(command) && !double.TryParse(command, out double drop))
                             variables[command] = 0;
                         Stack.Push(command);
                     }
