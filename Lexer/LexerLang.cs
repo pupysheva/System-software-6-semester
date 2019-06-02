@@ -15,9 +15,9 @@ namespace Lexer
         /// </summary>
         public LexerLang()
         {
-            avalibleTerminals = new List<Terminal>(
-            new Terminal[]
+            avalibleTerminals = new List<Terminal>()
             {
+
                 new Terminal("ASSIGN_OP", "^=$"),
                 new Terminal("VAR", "^[a-zA-Z]+$", uint.MaxValue),
                 new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
@@ -45,8 +45,8 @@ namespace Lexer
                 new Terminal("CH_LEFTLINE", "^\r$"),
                 new Terminal("CH_NEWLINE", "^\n$"),
                 new Terminal("CH_TAB", "^\t$")
-            }
-            );
+
+            };
         }
 
         /// <summary>
