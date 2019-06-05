@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static Parser.RuleOperator;
 using System.Text;
-using Parser.Tree;
+using MyTypes.Tree;
 
 namespace Parser
 {

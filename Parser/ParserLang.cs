@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using Lexer;
 using static Parser.RuleOperator;
-using System.Linq;
-using Parser.Tree;
+using MyTypes.Tree;
 
 namespace Parser
 {

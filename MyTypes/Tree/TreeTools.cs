@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
-namespace Parser.Tree
+namespace MyTypes.Tree
 {
     public static class TreeTools
     {

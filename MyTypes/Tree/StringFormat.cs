@@ -1,4 +1,4 @@
-﻿namespace Parser.Tree
+﻿namespace MyTypes.Tree
 {
     public enum StringFormat
     {

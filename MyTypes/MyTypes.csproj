@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Parser</RootNamespace>
-    <AssemblyName>Parser</AssemblyName>
+    <ProjectGuid>{2EF8B655-128E-4AF4-A86B-C120C597CD7A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyTypes</RootNamespace>
+    <AssemblyName>MyTypes</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,39 +33,22 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParserReport.cs" />
-    <Compile Include="ReportParserCompile.cs" />
-    <Compile Include="ReportParserInfoLine.cs" />
-    <Compile Include="ParserLang.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="MyHashSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportParserInfo.cs" />
-    <Compile Include="Nonterminal.cs" />
-    <Compile Include="ReportParserReadOnly.cs" />
-    <Compile Include="RuleOperator.cs" />
-    <Compile Include="RunnableToken.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lexer\Lexer.csproj">
-      <Project>{8d4fb903-1a85-4b29-818c-e37fd921cd57}</Project>
-      <Name>Lexer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyTypes\MyTypes.csproj">
-      <Project>{2ef8b655-128e-4af4-a86b-c120c597cd7a}</Project>
-      <Name>MyTypes</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ReportParserCompile.png" />
+    <Compile Include="Tree\IReadOnlyTreeNode.cs" />
+    <Compile Include="Tree\ITreeNode.cs" />
+    <Compile Include="Tree\StringFormat.cs" />
+    <Compile Include="Tree\TreeEnumerator.cs" />
+    <Compile Include="Tree\TreeNode.cs" />
+    <Compile Include="Tree\TreeTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

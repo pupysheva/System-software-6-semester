@@ -1,4 +1,4 @@
-﻿using Parser.Tree;
+﻿using MyTypes.Tree;
 
 namespace Parser
 {

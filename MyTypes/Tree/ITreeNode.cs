@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Parser.Tree
+namespace MyTypes.Tree
 {
     public interface ITreeNode<T> : IList<ITreeNode<T>>
     {

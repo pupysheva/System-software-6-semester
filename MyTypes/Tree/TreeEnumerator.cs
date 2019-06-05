@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Parser.Tree
+namespace MyTypes.Tree
 {
     public partial class TreeNode<T>
     {
