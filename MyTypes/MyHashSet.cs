@@ -6,15 +6,38 @@ namespace MyTypes
 {
     /// <summary>
     /// Представляет набор значений.
+    /// Класс не является потокобезопасным.
     /// </summary>
     /// <typeparam name="T">Тип элементов в коллекции.</typeparam>
     public class MyHashSet<T> : ISet<T>
     {
+        private LinkedList<T>[] cards;
+
+        private DateTime lastModifed;
+
+        public MyHashSet(int countCards)
+        {
+            lastModifed = DateTime.Now;
+            cards = new LinkedList<T>[countCards];
+            for (int i = 0; i < countCards; i++)
+                cards[i] = new LinkedList<T>();
+        }
+        
+
         /// <summary>
         /// Возвращает число элементов, содержащихся в наборе.
         /// </summary>
         /// <returns>Число элементов, содержащихся в наборе.</returns>
-        public int Count => throw new NotImplementedException();
+        public int Count
+        {
+            get
+            {
+                int count = 0;
+                foreach (LinkedList<T> list in cards)
+                    count += list.Count;
+                return count;
+            }
+        }
 
         /// <summary>
         /// Возвращает, является ли коллекция только для чтения. Возвращается false.
@@ -36,7 +59,14 @@ namespace MyTypes
         /// значение false, если элемент уже присутствует в нем.</returns> 
         public bool Add(T item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+                return false;
+            if (Contains(item))
+                return false;
+            lastModifed = DateTime.Now;
+            int pos = item.GetHashCode() % cards.Length;
+            cards[pos].AddLast(item);
+            return true;
         }
 
         /// <summary>
@@ -44,7 +74,11 @@ namespace MyTypes
         /// </summary>
         public void Clear()
         {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            foreach (LinkedList<T> list in cards)
+            {
+                list.Clear();
+            }
         }
 
         /// <summary>
@@ -55,7 +89,10 @@ namespace MyTypes
         /// элемент; в противном случае — значение false.</returns>
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+                return false;
+            int pos = item.GetHashCode() % cards.Length;
+            return cards[pos].Contains(item);
         }
 
         /// <summary>
@@ -70,7 +107,7 @@ namespace MyTypes
         /// <exception cref="ArgumentException">arrayIndex больше, чем длина назначения array.</exception>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            CopyTo(array, arrayIndex, Count);
         }
 
         /// <summary>
@@ -83,10 +120,20 @@ namespace MyTypes
         /// <param name="count">Число элементов, копируемых в массив array.</param>
         /// <exception cref="ArgumentNullException">Свойство array имеет значение null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Значение параметра arrayIndex меньше 0.</exception>
-        /// <exception cref="ArgumentException">arrayIndex больше, чем длина назначения array.</exception>
+        /// <exception cref="ArgumentException">arrayIndex + count больше, чем длина назначения array.</exception>
         public void CopyTo(T[] array, int arrayIndex, int count)
         {
-            throw new NotImplementedException();
+            if (array == null)
+                throw new ArgumentNullException("Свойство array имеет значение null.");
+            if (arrayIndex < 0 || count < 0 || arrayIndex + count > array.Length)
+                if (arrayIndex < 0)
+                    throw new ArgumentOutOfRangeException("Значение параметра arrayIndex меньше 0.");
+                else
+                    throw new ArgumentException("arrayIndex + count больше, чем длина назначения array.");
+            foreach (T elm in this)
+            {
+                array[arrayIndex++] = elm;
+            }
         }
 
         /// <summary>
@@ -94,9 +141,7 @@ namespace MyTypes
         /// </summary>
         /// <param name="array">Одномерный массив, являющийся назначением элементов, копируемых из объекта <see cref="MyHashSet{T}"/>. Индекс в массиве должен начинаться с нуля.</param>
         public void CopyTo(T[] array)
-        {
-            throw new NotImplementedException();
-        }
+            => CopyTo(array, 0, Count);
 
         /// <summary>
         /// Удаляет все элементы в указанной коллекции из текущего объекта <see cref="MyHashSet{T}"/>.
@@ -105,7 +150,10 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public void ExceptWith(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            foreach(T oth in other)
+            {
+                Remove(oth);
+            }
         }
 
         /// <summary>
@@ -114,19 +162,23 @@ namespace MyTypes
         /// <returns>Объект <see cref="MyHashSet{T}.Enumerator"/> для объекта <see cref="MyHashSet{T}"/>.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return new Enumerator(this);
         }
 
         /// <summary>
         /// Изменяет текущий объект <see cref="MyHashSet{T}"/> так, чтобы он содержал
-        /// все элементы, имеющиеся в нем или в указанной коллекции либо как в нем, так и
+        /// все элементы, имеющиеся в нём или в указанной коллекции либо как в нём, так и
         /// в указанной коллекции.
         /// </summary>
         /// <param name="other">Коллекция для сравнения с текущим объектом <see cref="MyHashSet{T}"/>.</param>
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public void UnionWith(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            foreach(T oth in other)
+            {
+                Add(oth);
+            }
         }
 
         /// <summary>
@@ -137,7 +189,14 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public void IntersectWith(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            MyHashSet<T> toAdd = new MyHashSet<T>(cards.Length);
+            foreach(T oth in other)
+            {
+                if (Contains(oth))
+                    toAdd.Add(oth);
+            }
+            cards = toAdd.cards;
         }
 
         /// <summary>
@@ -149,7 +208,15 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            LinkedList<T> notNeedAdd = new LinkedList<T>();
+            foreach(T oth in other)
+            {
+                if (Remove(oth))
+                    notNeedAdd.AddLast(oth);
+                else
+                    Add(oth);
+            }
         }
 
         /// <summary>
@@ -162,7 +229,13 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool IsSubsetOf(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            int count = 0;
+            foreach(T oth in other)
+            {
+                if (Contains(oth))
+                    count++;
+            }
+            return count == Count;
         }
 
         /// <summary>
@@ -175,7 +248,7 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool IsSupersetOf(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Я не знаю, что такое супермножество");
         }
 
         /// <summary>
@@ -188,7 +261,7 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool IsProperSupersetOf(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Я не знаю, что такое супермножество.");
         }
 
         /// <summary>
@@ -201,7 +274,7 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool IsProperSubsetOf(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Я не знаю, что такое строгое подмножество.");
         }
 
         /// <summary>
@@ -214,7 +287,12 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool Overlaps(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            foreach(T oth in other)
+            {
+                if (Contains(oth))
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -227,7 +305,12 @@ namespace MyTypes
         /// <exception cref="ArgumentNullException">Свойство other имеет значение null.</exception>
         public bool SetEquals(IEnumerable<T> other)
         {
-            throw new NotImplementedException();
+            foreach(T oth in other)
+            {
+                if (!Contains(oth))
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -239,7 +322,10 @@ namespace MyTypes
         /// в объекте <see cref="MyHashSet{T}"/>.</returns>
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+                return false;
+            int pos = item.GetHashCode() % cards.Length;
+            return cards[pos].Remove(item);
         }
 
         /// <summary>
@@ -247,21 +333,30 @@ namespace MyTypes
         /// </summary>
         /// <returns>Объект <see cref="System.Collections.IEnumerator"/>, который используется для прохода по коллекции.</returns>
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+            => new Enumerator(this);
 
         //
         // Сводка:
         //     Перечисляет элементы объекта System.Collections.Generic.HashSet`1.
         public struct Enumerator : IEnumerator<T>, IEnumerator
         {
+            private MyHashSet<T> myHashSet;
+            private readonly DateTime myLastModifed;
+            private IEnumerator enumeratorCards;
+            private IEnumerator<T> enumeratorList;
+
+            public Enumerator(MyHashSet<T> myHashSet) : this()
+            {
+                this.myHashSet = myHashSet;
+                this.myLastModifed = myHashSet.lastModifed;
+            }
+
             /// <summary>
             /// Возвращает элемент, расположенный в текущей позиции перечислителя.
             /// </summary>
             /// <returns>Элемент в <see cref="MyHashSet{T}"/> коллекции, соответствующий текущей
             //  позиции перечислителя.</returns>
-            public T Current { get; }
+            public T Current => enumeratorList.Current;
 
             object IEnumerator.Current => Current;
 
@@ -271,8 +366,11 @@ namespace MyTypes
             /// </summary>
             public void Dispose()
             {
-                throw new NotImplementedException();
+                myHashSet = null;
+                enumeratorCards = null;
+                enumeratorList = null;
             }
+
             /// <summary>
             /// Перемещает перечислитель к следующему элементу <see cref="MyHashSet{T}"/>
             /// коллекции.
@@ -282,7 +380,22 @@ namespace MyTypes
             /// <exception cref="InvalidOperationException">Коллекция была изменена после создания перечислителя.</exception>
             public bool MoveNext()
             {
-                throw new NotImplementedException();
+                if (myHashSet.lastModifed != myLastModifed)
+                    throw new InvalidOperationException("Коллекция была изменена после создания перечислителя.");
+                if(enumeratorCards == null)
+                {
+                    enumeratorCards = myHashSet.cards.GetEnumerator();
+                    if (!enumeratorCards.MoveNext())
+                        return false;
+                    enumeratorList = ((LinkedList<T>)enumeratorCards.Current).GetEnumerator();
+                    return MoveNext();
+                }
+                if (enumeratorList.MoveNext())
+                    return true;
+                if (!enumeratorCards.MoveNext())
+                    return false;
+                enumeratorList = ((LinkedList<T>)enumeratorCards.Current).GetEnumerator();
+                return MoveNext();
             }
 
             /// <summary>
@@ -292,7 +405,8 @@ namespace MyTypes
             /// <exception cref="InvalidOperationException">Коллекция была изменена после создания перечислителя.</exception>
             public void Reset()
             {
-                throw new NotImplementedException();
+                enumeratorCards = null;
+                enumeratorList = null;
             }
         }
     }
