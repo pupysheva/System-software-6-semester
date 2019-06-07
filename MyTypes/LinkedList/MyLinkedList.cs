@@ -59,7 +59,7 @@ namespace MyTypes.LinkedList
         /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>.</exception>
         public LinkedListNode<T> AddAfter(MyLinkedListNode<T> node, T value)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace MyTypes.LinkedList
         /// к другому <see cref="MyLinkedListNode{T}"/>.</exception>
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -85,7 +85,10 @@ namespace MyTypes.LinkedList
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>.</exception>
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value);
+        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Добавляет указанный новый узел перед указанным узлом, существующие в <see cref="MyLinkedList{T}"/>.
@@ -95,14 +98,20 @@ namespace MyTypes.LinkedList
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null. -или- Свойство newNode имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>. -или- newNode принадлежит
         /// к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode);
+        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Добавляет новый узел, содержащий указанное значение в начале <see cref="MyLinkedList{T}"/>.
         /// </summary>
         /// <param name="value">Добавляемое значение в начале <see cref="MyLinkedList{T}"/>.</param>
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
-        public LinkedListNode<T> AddFirst(T value);
+        public LinkedListNode<T> AddFirst(T value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Добавляет указанный новый узел в начале <see cref="MyLinkedList{T}"/>.
@@ -110,14 +119,20 @@ namespace MyTypes.LinkedList
         /// <param name="node">Новый <see cref="MyLinkedListNode{T}"/> для добавления в начале <see cref="MyLinkedList{T}"/>.</param>
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node принадлежит к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddFirst(LinkedListNode<T> node);
+        public void AddFirst(LinkedListNode<T> node)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Добавляет новый узел, содержащий указанное значение в конце <see cref="MyLinkedList{T}"/>.
         /// </summary>
         /// <param name="value">Значение, добавляемое в конце <see cref="MyLinkedList{T}"/>.</param>
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
-        public LinkedListNode<T> AddLast(T value);
+        public LinkedListNode<T> AddLast(T value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Добавляет указанный новый узел в конце <see cref="MyLinkedList{T}"/>.
@@ -125,7 +140,10 @@ namespace MyTypes.LinkedList
         /// <param name="node">Новый <see cref="MyLinkedListNode{T}"/> для добавления в конце <see cref="MyLinkedList{T}"/>.</param>
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node принадлежит к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddLast(LinkedListNode<T> node);
+        public void AddLast(LinkedListNode<T> node)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Clear()
         {
@@ -150,11 +168,6 @@ namespace MyTypes.LinkedList
 
         public MyLinkedListNode<T> FindLast(T item)
         {
-
-
-
-
-
             IEnumerator<MyLinkedListNode<T>> enume = GetEnumeratorNode(true);
             while(enume.MoveNext())
             {
