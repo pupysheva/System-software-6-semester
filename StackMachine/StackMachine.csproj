@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{990AC147-609F-47A8-A91B-D1DCF0CE0EF3}</ProjectGuid>
+    <ProjectGuid>{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Parser</RootNamespace>
-    <AssemblyName>Parser</AssemblyName>
+    <RootNamespace>StackMachine</RootNamespace>
+    <AssemblyName>StackMachine</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,23 +35,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParserReport.cs" />
-    <Compile Include="ReportParserCompile.cs" />
-    <Compile Include="ReportParserInfoLine.cs" />
-    <Compile Include="ParserLang.cs" />
+    <Compile Include="AbstractStackExecuteLang.cs" />
+    <Compile Include="IExecuteLang.cs" />
+    <Compile Include="Lang.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportParserInfo.cs" />
-    <Compile Include="Nonterminal.cs" />
-    <Compile Include="ReportParserReadOnly.cs" />
-    <Compile Include="RuleOperator.cs" />
-    <Compile Include="RunnableToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -61,16 +57,13 @@
       <Project>{8d4fb903-1a85-4b29-818c-e37fd921cd57}</Project>
       <Name>Lexer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MyTypes\MyTypes.csproj">
-      <Project>{2ef8b655-128e-4af4-a86b-c120c597cd7a}</Project>
-      <Name>MyTypes</Name>
+    <ProjectReference Include="..\Parser\Parser.csproj">
+      <Project>{990ac147-609f-47a8-a91b-d1dcf0ce0ef3}</Project>
+      <Name>Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReportParserCompile.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="test\abs.txt" />
+    <Content Include="LangExample.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

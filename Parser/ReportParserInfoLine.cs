@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Parser
 {
-    public class ParserException : Exception
+    public class ReportParserInfoLine : Exception
     {
-        public ParserException(string message, object expected, object actual, IList<Token> listWhereProblem, int TokenIndex)
+        public ReportParserInfoLine(string message, object expected, object actual, IList<Token> listWhereProblem, int TokenIndex)
             : base($"{message} expected: {expected}, actual: {actual}, token at {TokenIndex} = {(listWhereProblem != null && 0 <= TokenIndex && TokenIndex < listWhereProblem.Count ? listWhereProblem[TokenIndex] : null)}")
         {
             if(listWhereProblem != null && 0 <= TokenIndex && TokenIndex < listWhereProblem.Count)
@@ -14,7 +14,7 @@ namespace Parser
             this.TokenIndex = TokenIndex;
         }
 
-        public ParserException(object expected, object actual, IList<Token> listWhereProblem, int TokenIndex)
+        public ReportParserInfoLine(object expected, object actual, IList<Token> listWhereProblem, int TokenIndex)
             : base($"expected: {expected}, actual: {actual}, token at {TokenIndex} = {(listWhereProblem != null && 0 <= TokenIndex && TokenIndex < listWhereProblem.Count ? listWhereProblem[TokenIndex] : null)}")
         {
             if (listWhereProblem != null && 0 <= TokenIndex && TokenIndex < listWhereProblem.Count)
@@ -22,9 +22,9 @@ namespace Parser
             this.TokenIndex = TokenIndex;
         }
 
-        public ParserException(string messsage)
+        public ReportParserInfoLine(string messsage)
             : base(messsage) { }
-        public ParserException()
+        public ReportParserInfoLine()
             : base() { }
 
         /// <summary>

@@ -134,11 +134,37 @@ namespace UnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на do
+        ///{
+        ///	print
+        ///}
+        ///while(a &lt; 2).
+        /// </summary>
+        internal static string Parser_do_while {
+            get {
+                return ResourceManager.GetString("Parser_do_while", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на for(a = 0; (a &lt; 2); a = a + 1)
+        ///{
+        ///	print
+        ///}
+        ///.
+        /// </summary>
+        internal static string Parser_for {
+            get {
+                return ResourceManager.GetString("Parser_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на basd = 0
         ///while(basd &lt; 10)
         ///{
-        ///	PRINT
-        ///	basd++
+        ///	print
+        ///	basd = 10
         ///}
         ///basd = 0.
         /// </summary>
@@ -172,6 +198,16 @@ namespace UnitTest {
         internal static string print_kw {
             get {
                 return ResourceManager.GetString("print_kw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на a = 2
+        ///print.
+        /// </summary>
+        internal static string Stack_var_print {
+            get {
+                return ResourceManager.GetString("Stack_var_print", resourceCulture);
             }
         }
     }
