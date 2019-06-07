@@ -142,7 +142,7 @@ namespace StackMachine
 
         internal class MyStackLang : AbstractStackExecuteLang
         {
-            private readonly MyLinkedList<double> list
+            private readonly ICollection<double> list
                 = new MyLinkedList<double>();
             private readonly ISet<double> set
                 = new MyHashSet<double>();
@@ -164,7 +164,7 @@ namespace StackMachine
                             Console.Write(sb.ToString());
                         }
                         break;
-                    case "goto":
+                    case "goto!":
                         {
                             InstructionPointer =
                                 (int)PopStk() - 1;
@@ -234,6 +234,30 @@ namespace StackMachine
                         {
                             double buffer = PopStk();
                             Stack.Push(set.Remove(buffer) ? "1" : "0");
+                        }
+                        break;
+                    case nameof(LIST_ADD):
+                        {
+                            double buffer = PopStk();
+                            list.Add(buffer);
+                            Stack.Push("1");
+                        }
+                        break;
+                    case nameof(LIST_CONTAINS):
+                        {
+                            double buffer = PopStk();
+                            Stack.Push(list.Contains(buffer) ? "1" : "0");
+                        }
+                        break;
+                    case nameof(LIST_COUNT):
+                        {
+                            Stack.Push(list.Count.ToString());
+                        }
+                        break;
+                    case nameof(LIST_REMOVE):
+                        {
+                            double buffer = PopStk();
+                            Stack.Push(list.Remove(buffer) ? "1" : "0");
                         }
                         break;
                     default:
