@@ -79,7 +79,7 @@ namespace Parser
         /// <param name="Name">Устанавливает имя терминала.</param>
         /// <param name="rule">Указывает, какая реакция должна быть на истинность всех терминалов и нетерминалов.</param>
         /// <param name="terminalsOrNonterminals">Список терминалов и нетерминалов.</param>
-        private Nonterminal(string Name, RuleOperator rule, params object[] terminalsOrNonterminals)
+        public Nonterminal(string Name, RuleOperator rule, params object[] terminalsOrNonterminals)
             : this(rule, terminalsOrNonterminals)
         {
             this.Name = Name;

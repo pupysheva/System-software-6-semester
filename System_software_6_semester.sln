@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackMachine", "StackMachin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTypes", "MyTypes\MyTypes.csproj", "{2EF8B655-128E-4AF4-A86B-C120C597CD7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTypesTests", "MyTypesTests\MyTypesTests.csproj", "{D106F35C-2A35-400B-AB1A-E353013C1628}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2EF8B655-128E-4AF4-A86B-C120C597CD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EF8B655-128E-4AF4-A86B-C120C597CD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EF8B655-128E-4AF4-A86B-C120C597CD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D106F35C-2A35-400B-AB1A-E353013C1628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D106F35C-2A35-400B-AB1A-E353013C1628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D106F35C-2A35-400B-AB1A-E353013C1628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D106F35C-2A35-400B-AB1A-E353013C1628}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

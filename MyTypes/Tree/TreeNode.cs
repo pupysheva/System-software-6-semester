@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace MyTypes.Tree
 {
+    /// <summary>
+    /// Класс реализует дерево.
+    /// Класс не является потокобезопасным.
+    /// </summary>
+    /// <typeparam name="T">Тип, который хранится в каждом узле дерева.</typeparam>
     public partial class TreeNode<T> : ITreeNode<T>
     {
         protected List<ITreeNode<T>> Children
@@ -32,21 +37,32 @@ namespace MyTypes.Tree
         }
 
         /// <summary>
-        /// Возвращает потомков данной ветви.
+        /// Получение доступа к соседним потомкам данного узла.
         /// </summary>
-        /// <param name="index">Номер потомка, который вам нужен.</param>
+        /// <param name="index">Номер соседнего потомка, который вам нужен.
+        /// Для того, чтобы узнать количество соседних потомков, воспользуйтесь <see cref="Count"/>.</param>
         public TreeNode<T> this[int index]
         {
             get => (TreeNode<T>)Children[index];
             set => Children[index] = value;
         }
 
+        /// <summary>
+        /// Значение текущего узла.
+        /// </summary>
         public T Current { get; set; }
 
+        /// <summary>
+        /// Возвращает количество соседних потомков.
+        /// </summary>
         public int Count => Children.Count;
 
-        public bool IsReadOnly => ((IList<ITreeNode<T>>)Children).IsReadOnly;
+        bool ICollection<ITreeNode<T>>.IsReadOnly => false;
 
+        /// <summary>
+        /// Добавить потомка.
+        /// </summary>
+        /// <param name="item">Значение узла, который должен стать потомком текущего дерева.</param>
         public void Add(T item)
         {
             if (IsNeedAddSwap && item is ITreeNode<T> itemTree)
@@ -55,6 +71,10 @@ namespace MyTypes.Tree
                 Children.Add(new TreeNode<T>(item));
         }
 
+        /// <summary>
+        /// Добавить узел потомка к текущему узлу.
+        /// </summary>
+        /// <param name="item">Узел, который должен стать потомком.</param>
         public void Add(ITreeNode<T> item)
         {
             if (IsNeedAddSwap && item.Current is ITreeNode<T>)
@@ -63,11 +83,19 @@ namespace MyTypes.Tree
                 Children.Add(item);
         }
 
+        /// <summary>
+        /// Очищает список потомка данного узла.
+        /// </summary>
         public void Clear()
         {
             Children.Clear();
         }
 
+        /// <summary>
+        /// Определяет, содержится ли узел среди соседей.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Contains(ITreeNode<T> item)
         {
             return Children.Contains(item);
@@ -104,12 +132,23 @@ namespace MyTypes.Tree
         IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator()
             => GetEnumerator();
 
+        /// <summary>
+        /// Получает перечеслитель, который проходится по всем узлам дерева и поддеревьев.
+        /// </summary>
         public TreeEnumerator GetEnumerator()
             => new TreeEnumerator(this);
 
+        /// <summary>
+        /// Рисование дерева в виде строки.
+        /// По факту вызывается <see cref="TreeTools.ToString{T}(ITreeNode{T}, StringFormat)"/>
+        /// с параметром <see cref="StringFormat.NewLine"/>.
+        /// </summary>
         public override string ToString()
             => this.ToString(StringFormat.NewLine);
 
+        /// <summary>
+        /// Получает перечислитель, который перечисляет только соседних потомков.
+        /// </summary>
         public IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors()
             => Children;
     }
