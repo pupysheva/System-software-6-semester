@@ -11,13 +11,8 @@ namespace StackMachine
 {
     public static class Lang
     {
-        public static readonly LexerLang lexerLang;
-        public static readonly ParserLang parserLang;
-        public static readonly AbstractStackExecuteLang stackMachine;
 
-        static Lang()
-        {
-            Terminal ASSIGN_OP   = new Terminal(nameof(ASSIGN_OP),        "^=$"               ),
+        private readonly static Terminal ASSIGN_OP   = new Terminal(nameof(ASSIGN_OP),        "^=$"               ),
                 VAR              = new Terminal(nameof(VAR),              "^[a-zA-Z]+$"       , uint.MaxValue),
                 DIGIT            = new Terminal(nameof(DIGIT),            "^0|([1-9][0-9]*)$" ),
                 OP               = new Terminal(nameof(OP),               "^\\+|-|\\*|/$"     ),
@@ -54,6 +49,14 @@ namespace StackMachine
                 CH_LEFTLINE      = new Terminal(nameof(CH_LEFTLINE),      "^\r$"              ),
                 CH_NEWLINE       = new Terminal(nameof(CH_NEWLINE),       "^\n$"              ),
                 CH_TAB           = new Terminal(nameof(CH_TAB),           "^\t$"              );
+
+
+        public static readonly LexerLang lexerLang;
+        public static readonly ParserLang parserLang;
+        public static readonly AbstractStackExecuteLang stackMachine;
+
+        static Lang()
+        {
             lexerLang = new LexerLang(new List<Terminal>()
             {
                 ASSIGN_OP, VAR, DIGIT, OP, LOGICAL_OP, WHILE_KW, DO_KW, PRINT_KW,
@@ -95,14 +98,43 @@ namespace StackMachine
             Nonterminal while_expr = new Nonterminal(nameof(while_expr), AND, "WHILE_KW", condition, body);
             Nonterminal do_while_expr = new Nonterminal(nameof(do_while_expr), AND, DO_KW, body, WHILE_KW, condition);
             Nonterminal assign_expr = new Nonterminal(nameof(assign_expr), AND, VAR, ASSIGN_OP, value);
-            Nonterminal if_expr = new Nonterminal(nameof(if_expr), AND, "IF_KW", condition, body, "ELSE_KW", body);
+            Nonterminal ifelse_expr = new Nonterminal(nameof(ifelse_expr),
+                (List<string> commands, ActionInsert insert, int helper) =>
+                {
+                    insert(1); // condition
+                    int indexAddrFalse = commands.Count;
+                    commands.Add("?"); // Адрес, который указывает на то место, куда надо перейти в случае лжи.
+                    commands.Add("!f");
+                    insert(2); // true body
+                    int indexAddrWriteToEndElse = commands.Count;
+                    commands.Add("?"); // Адрес, который указывает на конец body в else.
+                    commands.Add("goto");
+                    commands[indexAddrFalse] = commands.Count.ToString();
+                    insert(4);
+                    commands[indexAddrWriteToEndElse] = commands.Count.ToString();
+                }, AND, IF_KW, /*1*/ condition, /*2*/body, ELSE_KW, /*4*/body);
+            Nonterminal if_expr = new Nonterminal(nameof(if_expr),
+                (List<string> commands, ActionInsert insert, int helper) =>
+                {
+                    insert(1); // condition
+                    int indexAddrFalse = commands.Count;
+                    commands.Add("?"); // Адрес, который указывает на то место, куда надо перейти в случае лжи.
+                    commands.Add("!f");
+                    insert(2); // true body
+                    commands[indexAddrFalse] = commands.Count.ToString();
+                }, AND, IF_KW, /*1*/ condition, /*2*/body);
+            Nonterminal if_expr_OR_ifelse_expr = new Nonterminal(nameof(if_expr_OR_ifelse_expr),
+                (List<string> commands, ActionInsert insert, int helper) =>
+                {
+                    insert();
+                }, OR, if_expr, ifelse_expr);
             Nonterminal for_expr = new Nonterminal(nameof(for_expr), AND, "FOR_KW", "L_B", assign_expr, "COMMA", for_condition, "COMMA", assign_expr, "R_B", body);
             Nonterminal cycle_expr = new Nonterminal(nameof(cycle_expr), OR, while_expr, do_while_expr, for_expr);
             Nonterminal expr = new Nonterminal(nameof(expr),
-                (List<string> command, ActionInsert insert, int helper) =>
+                (List<string> commands, ActionInsert insert, int helper) =>
                 {
                     insert();
-                }, OR, assign_expr, if_expr, cycle_expr, command_hash_expr, command_list_expr, func_expr);
+                }, OR, assign_expr, if_expr_OR_ifelse_expr, cycle_expr, command_hash_expr, command_list_expr, func_expr);
             lang.Add(expr);
             value.AddRange(new object[] { "VAR", "DIGIT", b_val_expr });
             func_expr.AddRange(new object[] { "VAR", "L_B", arguments_expr, "R_B" });
@@ -138,11 +170,11 @@ namespace StackMachine
                                 (int)PopStk() - 1;
                         }
                         break;
-                    case "if":
+                    case "!f":
                         {
                             int addr = (int)PopStk();
                             int logical = (int)PopStk();
-                            if (logical != 0) // В нашем языке всё, что не 0 - true.
+                            if (logical == 0) // Если ложь, то пропускаем body.
                                 InstructionPointer = addr - 1;
                         }
                         break;
@@ -181,10 +213,27 @@ namespace StackMachine
                                 .ToString());
                         }
                         break;
-                    case "HASHSET_ADD":
+                    case nameof(HASHSET_ADD):
                         {
                             double buffer = PopStk();
                             Stack.Push(set.Add(buffer) ? "1" : "0");
+                        }
+                        break;
+                    case nameof(HASHSET_CONTAINS):
+                        {
+                            double buffer = PopStk();
+                            Stack.Push(set.Contains(buffer) ? "1" : "0");
+                        }
+                        break;
+                    case nameof(HASHSET_COUNT):
+                        {
+                            Stack.Push(set.Count.ToString());
+                        }
+                        break;
+                    case nameof(HASHSET_REMOVE):
+                        {
+                            double buffer = PopStk();
+                            Stack.Push(set.Remove(buffer) ? "1" : "0");
                         }
                         break;
                     default:

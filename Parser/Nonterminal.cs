@@ -29,9 +29,9 @@ namespace Parser
     /// для стековой машины.</param>
     /// <param name="insert">Функция вызывает вставку либо значение токена,
     /// либо вызывает функцию вставки кода входящего нетерминала.</param>
-    /// <param name="id">Используется для OR. Символизирует номер,
+    /// <param name="helper">Используется для OR. Символизирует номер,
     /// начиная с 0, какой терминал или нетерминал был выбран.</param>
-    public delegate void TransferToStackCode(List<string> commands, ActionInsert insert, int id = 0);
+    public delegate void TransferToStackCode(List<string> commands, ActionInsert insert, int helper = 0);
 
     /// <summary>
     /// Хранит в себе одно правило грамматики.
