@@ -61,18 +61,51 @@ namespace StackMachine
                 HASHSET_ADD, HASHSET_CONTAINS, HASHSET_REMOVE, HASHSET_COUNT, LIST_ADD, LIST_CONTAINS,
                 LIST_REMOVE, LIST_COUNT, CH_SPACE, CH_LEFTLINE, CH_NEWLINE, CH_TAB
             });
-            Nonterminal expr = new Nonterminal(nameof(expr),
-                (List<string> command, ActionInsert insert, int helper) =>
-                {
-                    insert();
-                }, OR/*, assign_expr, cycle_expr, command_expr*/);
             Nonterminal lang = new Nonterminal(nameof(lang),
                  (List<string> command, ActionInsert insert, int helper) =>
                  {
                      while (--helper != -1)
                          insert(helper);
-                 }, ZERO_AND_MORE, expr);
-            
+                 }, ZERO_AND_MORE);
+            Nonterminal value = new Nonterminal(nameof(value), OR);
+            Nonterminal func_expr = new Nonterminal(nameof(func_expr), AND);
+            Nonterminal command_hash_expr = new Nonterminal(nameof(command_hash_expr), OR,
+                new Nonterminal("HASHSET_ADD & value", AND, HASHSET_ADD, value),
+                new Nonterminal("HASHSET_CONTAINS & value", AND, HASHSET_CONTAINS, value),
+                new Nonterminal("HASHSET_REMOVE & value", AND, HASHSET_REMOVE, value),
+                new Nonterminal("HASHSET_COUNT & value", AND, HASHSET_COUNT, value));
+            Nonterminal command_list_expr = new Nonterminal(nameof(command_list_expr), OR,
+                new Nonterminal("LIST_ADD & value", AND, LIST_ADD, value),
+                new Nonterminal("LIST_CONTAINS & value", AND, LIST_CONTAINS, value),
+                new Nonterminal("LIST_REMOVE & value", AND, LIST_REMOVE, value),
+                new Nonterminal("LIST_COUNT & value", AND, LIST_COUNT, value));
+            Nonterminal stmt =
+                new Nonterminal(nameof(stmt), OR, new Nonterminal("value (OP value)*", AND,
+                value,
+                new Nonterminal("(OP value)*", ZERO_AND_MORE,
+                    new Nonterminal("OP & value", AND,
+                        "OP",
+                        value))),
+                func_expr, command_hash_expr, command_list_expr);
+            Nonterminal arguments_expr = new Nonterminal(nameof(arguments_expr), OR, new Nonterminal("(stmt COM)+", ONE_AND_MORE, new Nonterminal("stmt & COM", AND, stmt, "COM")), stmt);
+            Nonterminal b_val_expr = new Nonterminal(nameof(b_val_expr), OR, stmt, new Nonterminal("L_B stmt R_B", AND, L_B, stmt, "R_B"));
+            Nonterminal body = new Nonterminal(nameof(body), AND, "L_QB", lang, "R_QB");
+            Nonterminal condition = new Nonterminal(nameof(condition), AND, "L_B", value, "LOGICAL_OP", value, "R_B");
+            Nonterminal for_condition = new Nonterminal(nameof(condition), AND, value, "LOGICAL_OP", value);
+            Nonterminal while_expr = new Nonterminal(nameof(while_expr), AND, "WHILE_KW", condition, body);
+            Nonterminal do_while_expr = new Nonterminal(nameof(do_while_expr), AND, DO_KW, body, WHILE_KW, condition);
+            Nonterminal assign_expr = new Nonterminal(nameof(assign_expr), AND, VAR, ASSIGN_OP, value);
+            Nonterminal if_expr = new Nonterminal(nameof(if_expr), AND, "IF_KW", condition, body, "ELSE_KW", body);
+            Nonterminal for_expr = new Nonterminal(nameof(for_expr), AND, "FOR_KW", "L_B", assign_expr, "COMMA", for_condition, "COMMA", assign_expr, "R_B", body);
+            Nonterminal cycle_expr = new Nonterminal(nameof(cycle_expr), OR, while_expr, do_while_expr, for_expr);
+            Nonterminal expr = new Nonterminal(nameof(expr),
+                (List<string> command, ActionInsert insert, int helper) =>
+                {
+                    insert();
+                }, OR, assign_expr, if_expr, cycle_expr, command_hash_expr, command_list_expr, func_expr);
+            lang.Add(expr);
+            value.AddRange(new object[] { "VAR", "DIGIT", b_val_expr });
+            func_expr.AddRange(new object[] { "VAR", "L_B", arguments_expr, "R_B" });
         }
 
         internal class MyStackLang : AbstractStackExecuteLang
@@ -176,19 +209,19 @@ namespace StackMachine
                 return variables[VarOrDigit];
             }
         }
+    }
 
-        internal static class Writer
+    internal static class Writer
+    {
+        public static void WriteAll<T>(this IEnumerable<T> list)
         {
-            public static void WriteAll<T>(this IEnumerable<T> list)
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (var e in list)
-                    sb.AppendLine(e.ToString());
-                if (sb.Length == 0)
-                    Console.WriteLine("length = 0");
-                else
-                    Console.Write(sb.ToString());
-            }
+            StringBuilder sb = new StringBuilder();
+            foreach (var e in list)
+                sb.AppendLine(e.ToString());
+            if (sb.Length == 0)
+                Console.WriteLine("length = 0");
+            else
+                Console.Write(sb.ToString());
         }
     }
 }
