@@ -61,18 +61,23 @@ namespace MyTypes.LinkedList
                 throw new ArgumentNullException("Свойство node имеет значение null.");
             if (node.List != this)
                 throw new InvalidOperationException("node не в текущем list.");
+            Count++;
             MyLinkedListNode<T> toAdd = new MyLinkedListNode<T>(this, node, node.Next, value);
             if(node.Next != null)
             {
                 node.Next.Previous = toAdd;
-                node.Next = toAdd;
             }
+            else
+            {
+                Last = toAdd;
+            }
+            node.Next = toAdd;
             return toAdd;
         }
 
         /// <summary>
         /// Добавляет новый узел, содержащий указанное значение перед указанным узлом, существующие
-        /// в <see cref="LinkedList{T}"/>.
+        /// в <see cref="MyLinkedList{T}"/>.
         /// </summary>
         /// <param name="node"><see cref="MyLinkedListNode{T}"/> перед которым необходимо вставить
         /// новый <see cref="MyLinkedListNode{T}"/> содержащий value.</param>
@@ -87,12 +92,17 @@ namespace MyTypes.LinkedList
                 throw new ArgumentNullException("Свойство node имеет значение null.");
             if (node.List != this)
                 throw new InvalidOperationException("node не в текущем list.");
+            Count++;
             MyLinkedListNode<T> toAdd = new MyLinkedListNode<T>(this, node.Previous, node, value);
             if (node.Previous != null)
             {
                 node.Previous.Next = toAdd;
-                node.Previous = toAdd;
             }
+            else
+            {
+                First = toAdd;
+            }
+            node.Previous = toAdd;
             return toAdd;
         }
 
@@ -104,8 +114,16 @@ namespace MyTypes.LinkedList
         public MyLinkedListNode<T> AddFirst(T value)
         {
             lastModifed = DateTime.Now;
-            First.Previous = new MyLinkedListNode<T>(this, null, First, value);
-            First = First.Previous;
+            Count++;
+            if (First != null)
+            {
+                First.Previous = new MyLinkedListNode<T>(this, null, First, value);
+                First = First.Previous;
+            }
+            else
+            {
+                First = Last = new MyLinkedListNode<T>(this, null, First, value);
+            }
             return First;
         }
 
@@ -117,8 +135,16 @@ namespace MyTypes.LinkedList
         public MyLinkedListNode<T> AddLast(T value)
         {
             lastModifed = DateTime.Now;
-            Last.Next = new MyLinkedListNode<T>(this, Last, null, value);
-            Last = Last.Next;
+            Count++;
+            if (Last != null)
+            {
+                Last.Next = new MyLinkedListNode<T>(this, Last, null, value);
+                Last = Last.Next;
+            }
+            else
+            {
+                Last = First = new MyLinkedListNode<T>(this, Last, null, value);
+            }
             return Last;
         }
 
@@ -150,7 +176,7 @@ namespace MyTypes.LinkedList
         {
             foreach (MyLinkedListNode<T> elm in (IEnumerable<MyLinkedListNode<T>>)this)
             {
-                if (item.Equals(elm))
+                if (elm.Value.Equals(item))
                     return elm;
             }
             return null;
@@ -167,14 +193,14 @@ namespace MyTypes.LinkedList
             IEnumerator<MyLinkedListNode<T>> enume = GetEnumeratorNode(true);
             while(enume.MoveNext())
             {
-                if (item.Equals(enume.Current))
+                if (enume.Current.Value.Equals(item))
                     return enume.Current;
             }
             return null;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
-            => CopyTo(array, arrayIndex);
+            => CopyTo((Array)array, arrayIndex);
 
         public void CopyTo(Array array, int index)
         {
@@ -196,7 +222,7 @@ namespace MyTypes.LinkedList
         {
             lastModifed = DateTime.Now;
             MyLinkedListNode<T> ToRemove = Find(item);
-            if (item == null)
+            if (ToRemove == null)
                 return false;
             Remove(ToRemove);
             return true;
@@ -212,10 +238,15 @@ namespace MyTypes.LinkedList
                 throw new ArgumentNullException("Свойство node имеет значение null.");
             if (node.List != this)
                 throw new InvalidOperationException("node не в текущем list.");
+            Count--;
             if (node.Previous != null)
                 node.Previous.Next = node.Next;
-            if(node.Next != null)
+            else
+                First = node.Next;
+            if (node.Next != null)
                 node.Next.Previous = node.Previous;
+            else
+                Last = node.Previous;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

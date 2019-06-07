@@ -7,6 +7,8 @@ namespace MyTypes.Tree
 {
     public static class TreeTools
     {
+        private static int maxDeepCount = 1000;
+
         /// <summary>
         /// Возвращает количество всех потомков, включая текущий узел.
         /// Прошу заметить, что в случае, если потомков 0, то вернётся 1.
@@ -14,15 +16,21 @@ namespace MyTypes.Tree
         /// <exception cref="StackOverflowException">Найдена рекурсия или достигнут лимит размера дерева.</exception>
         public static long GetCountAll<T>(this ITreeNode<T> tree)
         {
+            if(--maxDeepCount <= 0)
+            {
+                maxDeepCount = 1000;
+                throw new StackOverflowException();
+            }
             long count = 1;
             foreach(ITreeNode<T> child in tree.GetEnumerableOnlyNeighbors())
             {
                 count += child.GetCountAll();
             }
+            maxDeepCount++;
             return count;
         }
 
-        private readonly static ISet<object> nodesWrited = new HashSet<object>();
+        private readonly static ISet<object> nodesWrited = new MyHashSet<object>();
 
         public static string ChildrenToString<T>(this ITreeNode<T> root, StringFormat sf = StringFormat.Default, string separator = ", ")
         {

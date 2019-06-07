@@ -277,7 +277,7 @@ namespace UnitTest
         }
     }
 
-    internal static class Writer
+    public static class Writer
     {
         public static void WriteAll<T>(this IEnumerable<T> list)
         {

@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyTypes.LinkedList;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnitTest;
 
 namespace MyTypes.LinkedList.Tests
 {
@@ -23,6 +19,17 @@ namespace MyTypes.LinkedList.Tests
         }
 
         [TestMethod]
+        public void FirstAndLastEqualsTest()
+        {
+            MyLinkedList<string> list = new MyLinkedList<string>();
+            list.AddLast("abs");
+            Assert.AreEqual(list.Last, list.First);
+            list.Clear();
+            list.AddFirst("aaffa");
+            Assert.AreEqual(list.First, list.Last);
+        }
+
+        [TestMethod]
         public void AddBeforeTest()
         {
             MyLinkedList<string> list = new MyLinkedList<string>();
@@ -30,6 +37,7 @@ namespace MyTypes.LinkedList.Tests
             var node = list.AddLast("abs");
             CollectionAssert.AreEqual(new string[] { "abs" }, list);
             list.AddBefore(node, "zz");
+            Writer.WriteAll<string>(list);
             CollectionAssert.AreEqual(new string[] { "zz", "abs" }, list);
         }
 
@@ -99,7 +107,7 @@ namespace MyTypes.LinkedList.Tests
             Assert.AreEqual(nodes[0], list.Find("abs"));
             Assert.AreEqual(nodes[1], list.Find("zzz"));
             Assert.AreEqual(nodes[2], list.Find("ыыыы"));
-            Assert.AreNotEqual(nodes[4], list.Find("abs"));
+            Assert.AreNotEqual(nodes[3], list.Find("abs"));
             Assert.IsNull(list.Find("iqewojf   2"));
             Assert.IsNull(list.Find(""));
             Assert.IsNull(list.Find(null));
@@ -118,7 +126,7 @@ namespace MyTypes.LinkedList.Tests
             Assert.AreNotEqual(nodes[0], list.FindLast("abs"));
             Assert.AreEqual(nodes[1], list.FindLast("zzz"));
             Assert.AreEqual(nodes[2], list.FindLast("ыыыы"));
-            Assert.AreEqual(nodes[4], list.FindLast("abs"));
+            Assert.AreEqual(nodes[3], list.FindLast("abs"));
             Assert.IsNull(list.FindLast("iqewojf   2"));
             Assert.IsNull(list.FindLast(""));
             Assert.IsNull(list.FindLast(null));
@@ -176,14 +184,35 @@ namespace MyTypes.LinkedList.Tests
         public void RemoveTest()
         {
             MyLinkedList<string> list = new MyLinkedList<string>();
+            CollectionAssert.AreEqual(new string[] { }, list);
             list.AddLast("abs");
+            CollectionAssert.AreEqual(new string[] { "abs" }, list);
             Assert.IsFalse(list.Remove("zzz"));
+            CollectionAssert.AreEqual(new string[] { "abs" }, list);
             Assert.IsFalse(list.Remove("zzz"));
+            CollectionAssert.AreEqual(new string[] { "abs" }, list);
             list.AddLast("zzz");
+            CollectionAssert.AreEqual(new string[] { "abs", "zzz" }, list);
             list.AddLast("ыыыы");
+            CollectionAssert.AreEqual(new string[] { "abs", "zzz", "ыыыы" }, list);
             Assert.IsTrue(list.Remove("zzz"));
+            CollectionAssert.AreEqual(new string[] { "abs", "ыыыы" }, list);
             Assert.IsFalse(list.Remove("zzz"));
+            CollectionAssert.AreEqual(new string[] { "abs", "ыыыы" }, list);
             Assert.IsFalse(list.Remove("zzz"));
+            CollectionAssert.AreEqual(new string[] { "abs", "ыыыы" }, list);
+            Assert.IsTrue(list.Remove("abs"));
+            CollectionAssert.AreEqual(new string[] { "ыыыы" }, list);
+            Assert.IsTrue(list.Remove("ыыыы"));
+            CollectionAssert.AreEqual(new string[] { }, list);
+            Assert.IsFalse(list.Remove("abs"));
+            CollectionAssert.AreEqual(new string[] { }, list);
+            Assert.IsFalse(list.Remove("ыыыы"));
+            CollectionAssert.AreEqual(new string[] { }, list);
+            list.AddLast("sss");
+            CollectionAssert.AreEqual(new string[] { "sss" }, list);
+            Assert.IsTrue(list.Remove("sss"));
+            CollectionAssert.AreEqual(new string[] { }, list);
         }
 
         [TestMethod]
