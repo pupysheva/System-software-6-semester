@@ -1,7 +1,8 @@
 basd = 0
 while(basd < 10)
 {
-	PRINT
-	basd++
+	print
+	basd = 1 + basd
+	while(aaa < 2) { aaa = aaa + 1 }
 }
 basd = 0

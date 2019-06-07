@@ -69,5 +69,8 @@
   <ItemGroup>
     <Content Include="ReportParserCompile.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="test\abs.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
