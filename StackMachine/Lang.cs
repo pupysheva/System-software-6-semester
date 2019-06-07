@@ -38,6 +38,7 @@ namespace StackMachine
                 HASHSET_ADD      = new Terminal(nameof(HASHSET_ADD),      "^HASHSET_ADD$"     ),
                 HASHSET_CONTAINS = new Terminal(nameof(HASHSET_CONTAINS), "^HASHSET_CONTAINS$"),
                 HASHSET_REMOVE   = new Terminal(nameof(HASHSET_REMOVE),   "^HASHSET_REMOVE$"  ),
+                HASHSET_COUNT    = new Terminal(nameof(HASHSET_COUNT),    "^HASHSET_COUNT$"   ),
                 LIST_ADD         = new Terminal(nameof(LIST_ADD),         "^LIST_ADD$"        ),
                 LIST_CONTAINS    = new Terminal(nameof(LIST_CONTAINS),    "^LIST_CONTAINS$"   ),
                 LIST_REMOVE      = new Terminal(nameof(LIST_REMOVE),      "^LIST_REMOVE$"     ),
@@ -57,11 +58,9 @@ namespace StackMachine
             {
                 ASSIGN_OP, VAR, DIGIT, OP, LOGICAL_OP, WHILE_KW, DO_KW, PRINT_KW,
                 FOR_KW, IF_KW, ELSE_KW, L_QB, R_QB, L_B, R_B, COMMA, COM, COMMENT,
-                HASHSET_ADD, HASHSET_CONTAINS, HASHSET_REMOVE, LIST_ADD, LIST_CONTAINS,
+                HASHSET_ADD, HASHSET_CONTAINS, HASHSET_REMOVE, HASHSET_COUNT, LIST_ADD, LIST_CONTAINS,
                 LIST_REMOVE, LIST_COUNT, CH_SPACE, CH_LEFTLINE, CH_NEWLINE, CH_TAB
             });
-
-            
             Nonterminal expr = new Nonterminal(nameof(expr),
                 (List<string> command, ActionInsert insert, int helper) =>
                 {
@@ -73,6 +72,7 @@ namespace StackMachine
                      while (--helper != -1)
                          insert(helper);
                  }, ZERO_AND_MORE, expr);
+            
         }
     }
 }
