@@ -68,6 +68,10 @@
       <Project>{8d4fb903-1a85-4b29-818c-e37fd921cd57}</Project>
       <Name>Lexer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyTypes\MyTypes.csproj">
+      <Project>{2ef8b655-128e-4af4-a86b-c120c597cd7a}</Project>
+      <Name>MyTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Parser\Parser.csproj">
       <Project>{990ac147-609f-47a8-a91b-d1dcf0ce0ef3}</Project>
       <Name>Parser</Name>

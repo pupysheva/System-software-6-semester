@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyHashSet.cs" />
-    <Compile Include="MyList.cs" />
+    <Compile Include="LinkedList\MyLinkedList.cs" />
+    <Compile Include="LinkedList\MyLinkedListNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tree\IReadOnlyTreeNode.cs" />
     <Compile Include="Tree\ITreeNode.cs" />

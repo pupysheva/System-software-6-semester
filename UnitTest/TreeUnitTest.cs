@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Parser.Tree;
+using MyTypes.Tree;
 
 namespace UnitTest
 {
