@@ -27,7 +27,7 @@ namespace MyTypes.LinkedList
         /// <summary>
         /// Последнее изменение этого листа.
         /// </summary>
-        private DateTime lastModifed;
+        private DateTime lastModifed = DateTime.Now;
 
         bool ICollection<T>.IsReadOnly => false;
 
@@ -57,22 +57,20 @@ namespace MyTypes.LinkedList
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>.</exception>
-        public LinkedListNode<T> AddAfter(MyLinkedListNode<T> node, T value)
+        public MyLinkedListNode<T> AddAfter(MyLinkedListNode<T> node, T value)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Добавляет указанный новый узел после указанного существующего узла в <see cref="MyLinkedList{T}"/>.
-        /// </summary>
-        /// <param name="node"><see cref="MyLinkedListNode{T}"/> После вставки newNode.</param>
-        /// <param name="newNode">Новый <see cref="MyLinkedListNode{T}"/> Добавление <see cref="MyLinkedList{T}"/>.</param>
-        /// <exception cref="ArgumentNullException">Свойство node имеет значение null. -или- Свойство newNode имеет значение null.</exception>
-        /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>. -или- newNode принадлежит
-        /// к другому <see cref="MyLinkedListNode{T}"/>.</exception>
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
-        {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            if (node == null)
+                throw new ArgumentNullException("Свойство node имеет значение null.");
+            if (node.List != this)
+                throw new InvalidOperationException("node не в текущем list.");
+            MyLinkedListNode<T> toAdd = new MyLinkedListNode<T>(this, node, node.Next, value);
+            if(node.Next != null)
+            {
+                node.Next.Previous = toAdd;
+                node.Next = toAdd;
+            }
+            return toAdd;
         }
 
         /// <summary>
@@ -85,22 +83,20 @@ namespace MyTypes.LinkedList
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
         /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
         /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>.</exception>
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value)
+        public MyLinkedListNode<T> AddBefore(MyLinkedListNode<T> node, T value)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Добавляет указанный новый узел перед указанным узлом, существующие в <see cref="MyLinkedList{T}"/>.
-        /// </summary>
-        /// <param name="node"><see cref="MyLinkedListNode{T}"/> до вставки newNode.</param>
-        /// <param name="newNode">Новый <see cref="MyLinkedListNode{T}"/> Добавление <see cref="MyLinkedList{T}"/>.</param>
-        /// <exception cref="ArgumentNullException">Свойство node имеет значение null. -или- Свойство newNode имеет значение null.</exception>
-        /// <exception cref="InvalidOperationException">node не в текущем <see cref="MyLinkedList{T}"/>. -или- newNode принадлежит
-        /// к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
-        {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            if (node == null)
+                throw new ArgumentNullException("Свойство node имеет значение null.");
+            if (node.List != this)
+                throw new InvalidOperationException("node не в текущем list.");
+            MyLinkedListNode<T> toAdd = new MyLinkedListNode<T>(this, node.Previous, node, value);
+            if (node.Previous != null)
+            {
+                node.Previous.Next = toAdd;
+                node.Previous = toAdd;
+            }
+            return toAdd;
         }
 
         /// <summary>
@@ -108,20 +104,12 @@ namespace MyTypes.LinkedList
         /// </summary>
         /// <param name="value">Добавляемое значение в начале <see cref="MyLinkedList{T}"/>.</param>
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
-        public LinkedListNode<T> AddFirst(T value)
+        public MyLinkedListNode<T> AddFirst(T value)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Добавляет указанный новый узел в начале <see cref="MyLinkedList{T}"/>.
-        /// </summary>
-        /// <param name="node">Новый <see cref="MyLinkedListNode{T}"/> для добавления в начале <see cref="MyLinkedList{T}"/>.</param>
-        /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
-        /// <exception cref="InvalidOperationException">node принадлежит к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddFirst(LinkedListNode<T> node)
-        {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            First.Previous = new MyLinkedListNode<T>(this, null, First, value);
+            First = First.Previous;
+            return First;
         }
 
         /// <summary>
@@ -129,22 +117,17 @@ namespace MyTypes.LinkedList
         /// </summary>
         /// <param name="value">Значение, добавляемое в конце <see cref="MyLinkedList{T}"/>.</param>
         /// <returns>Новый <see cref="MyLinkedListNode{T}"/> содержащий value.</returns>
-        public LinkedListNode<T> AddLast(T value)
+        public MyLinkedListNode<T> AddLast(T value)
         {
-            throw new NotImplementedException();
+            lastModifed = DateTime.Now;
+            Last.Next = new MyLinkedListNode<T>(this, Last, null, value);
+            Last = Last.Next;
+            return Last;
         }
 
         /// <summary>
-        /// Добавляет указанный новый узел в конце <see cref="MyLinkedList{T}"/>.
+        /// Очистить лист.
         /// </summary>
-        /// <param name="node">Новый <see cref="MyLinkedListNode{T}"/> для добавления в конце <see cref="MyLinkedList{T}"/>.</param>
-        /// <exception cref="ArgumentNullException">Свойство node имеет значение null.</exception>
-        /// <exception cref="InvalidOperationException">node принадлежит к другому <see cref="MyLinkedList{T}"/>.</exception>
-        public void AddLast(LinkedListNode<T> node)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Clear()
         {
             lastModifed = DateTime.Now;
@@ -153,9 +136,19 @@ namespace MyTypes.LinkedList
             Count = 0;
         }
 
+        /// <summary>
+        /// Определяет, содержится ли объект в листе.
+        /// </summary>
+        /// <param name="item">Искомый объект.</param>
+        /// <returns>True, если содержится. False - если нет.</returns>
         public bool Contains(T item)
             => Find(item) != null;
 
+        /// <summary>
+        /// Находит узел с указанным объектом.
+        /// </summary>
+        /// <param name="item">Искомый объект.</param>
+        /// <returns>Узел листа с искомым объектом.</returns>
         public MyLinkedListNode<T> Find(T item)
         {
             foreach (MyLinkedListNode<T> elm in (IEnumerable<MyLinkedListNode<T>>)this)
@@ -166,6 +159,12 @@ namespace MyTypes.LinkedList
             return null;
         }
 
+        /// <summary>
+        /// Находит узел с указанным объектом.
+        /// Поиск начинается с конца.
+        /// </summary>
+        /// <param name="item">Искомый объект.</param>
+        /// <returns>Узел листа с искомым объектом.</returns>
         public MyLinkedListNode<T> FindLast(T item)
         {
             IEnumerator<MyLinkedListNode<T>> enume = GetEnumeratorNode(true);
@@ -191,17 +190,35 @@ namespace MyTypes.LinkedList
         public IEnumerator<T> GetEnumerator()
             => new Enumerator(this);
 
+        /// <summary>
+        /// Удаляет объект из листа.
+        /// </summary>
+        /// <param name="item">объект, который надо удалить.</param>
+        /// <returns>True, если объект находился в списке. Иначе - false.</returns>
         public bool Remove(T item)
         {
             lastModifed = DateTime.Now;
             MyLinkedListNode<T> ToRemove = Find(item);
-            if (ToRemove == null)
+            if (item == null)
                 return false;
-            if(ToRemove.Previous != null)
-                ToRemove.Previous.Next = ToRemove.Next;
-            if(ToRemove.Next != null)
-                ToRemove.Next.Previous = ToRemove.Previous;
+            Remove(ToRemove);
             return true;
+        }
+
+        /// <summary>
+        /// Удаляет узел из листа.
+        /// </summary>
+        /// <param name="node">Узел, который надо удалить.</param>
+        public void Remove(MyLinkedListNode<T> node)
+        {
+            if (node == null)
+                throw new ArgumentNullException("Свойство node имеет значение null.");
+            if (node.List != this)
+                throw new InvalidOperationException("node не в текущем list.");
+            if (node.Previous != null)
+                node.Previous.Next = node.Next;
+            if(node.Next != null)
+                node.Next.Previous = node.Previous;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
