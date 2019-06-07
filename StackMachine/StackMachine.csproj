@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="AbstractStackExecuteLang.cs" />
     <Compile Include="IExecuteLang.cs" />
-    <Compile Include="Lang.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

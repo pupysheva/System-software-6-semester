@@ -15,7 +15,7 @@ namespace MyTypes
 
         private DateTime lastModifed;
 
-        public MyHashSet(int countCards)
+        public MyHashSet(int countCards = 15)
         {
             lastModifed = DateTime.Now;
             cards = new LinkedList<T>[countCards];

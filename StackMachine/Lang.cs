@@ -1,10 +1,10 @@
 ﻿using Lexer;
+using MyTypes;
+using MyTypes.LinkedList;
 using Parser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static Parser.RuleOperator;
 
 namespace StackMachine
@@ -65,7 +65,7 @@ namespace StackMachine
                 (List<string> command, ActionInsert insert, int helper) =>
                 {
                     insert();
-                }, OR, assign_expr, cycle_expr, command_expr);
+                }, OR/*, assign_expr, cycle_expr, command_expr*/);
             Nonterminal lang = new Nonterminal(nameof(lang),
                  (List<string> command, ActionInsert insert, int helper) =>
                  {
@@ -73,6 +73,122 @@ namespace StackMachine
                          insert(helper);
                  }, ZERO_AND_MORE, expr);
             
+        }
+
+        internal class MyStackLang : AbstractStackExecuteLang
+        {
+            private readonly MyLinkedList<double> list
+                = new MyLinkedList<double>();
+            private readonly ISet<double> set
+                = new MyHashSet<double>();
+
+            protected override void ExecuteCommand(string command)
+            {
+                switch (command)
+                {
+                    case "print":
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            foreach (var pair in variables)
+                            {
+                                sb.Append(pair.Key);
+                                sb.Append(" = ");
+                                sb.Append(pair.Value);
+                                sb.AppendLine();
+                            }
+                            Console.Write(sb.ToString());
+                        }
+                        break;
+                    case "goto":
+                        {
+                            InstructionPointer =
+                                (int)PopStk() - 1;
+                        }
+                        break;
+                    case "if":
+                        {
+                            int addr = (int)PopStk();
+                            int logical = (int)PopStk();
+                            if (logical != 0) // В нашем языке всё, что не 0 - true.
+                                InstructionPointer = addr - 1;
+                        }
+                        break;
+                    case "=":
+                        {
+                            double stmt = PopStk();
+                            string var = Stack.Pop();
+                            variables[var] = stmt;
+                        }
+                        break;
+                    case "+":
+                        {
+                            Stack.Push(
+                                (PopStk() + PopStk())
+                                .ToString());
+                        }
+                        break;
+                    case "-":
+                        {
+                            Stack.Push(
+                                (PopStk() - PopStk())
+                                .ToString());
+                        }
+                        break;
+                    case "*":
+                        {
+                            Stack.Push(
+                                (PopStk() * PopStk())
+                                .ToString());
+                        }
+                        break;
+                    case "/":
+                        {
+                            Stack.Push(
+                                (PopStk() / PopStk())
+                                .ToString());
+                        }
+                        break;
+                    case "HASHSET_ADD":
+                        {
+                            double buffer = PopStk();
+                            Stack.Push(set.Add(buffer) ? "1" : "0");
+                        }
+                        break;
+                    default:
+                        {
+                            if (!variables.ContainsKey(command) && !double.TryParse(command, out double drop))
+                                variables[command] = 0;
+                            Stack.Push(command);
+                        }
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// Получает с стэка значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
+            /// </summary>
+            private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
+
+            private double GetValueOfVarOrDigit(string VarOrDigit)
+            {
+                if (double.TryParse(VarOrDigit, out double result))
+                    return result;
+                return variables[VarOrDigit];
+            }
+        }
+
+        internal static class Writer
+        {
+            public static void WriteAll<T>(this IEnumerable<T> list)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var e in list)
+                    sb.AppendLine(e.ToString());
+                if (sb.Length == 0)
+                    Console.WriteLine("length = 0");
+                else
+                    Console.Write(sb.ToString());
+            }
         }
     }
 }
