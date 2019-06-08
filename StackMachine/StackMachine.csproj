@@ -66,8 +66,5 @@
       <Name>Parser</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="LangExample.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

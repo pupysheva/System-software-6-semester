@@ -114,6 +114,44 @@ namespace UnitTest {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на a = 0
+        ///while(a &lt; 10)
+        ///{
+        ///	HASHSET_ADD a // Добавление в hashset элементов по-одному.
+        ///	a = a + 1
+        ///}
+        ///test1 = 0
+        ///if(HASHSET_CONTAINS 2) // Проверяем, что элемент 2 добавлен.
+        ///{
+        ///	test1 = 1 // Тест пройден.
+        ///}
+        ///// Проверяем удаление из hashset:
+        ///HASHSET_REMOVE 2
+        ///test2 = 0
+        ///if((HASHSET_CONTAINS 2) == 0) // Если в hashset отсутсвует элемент &quot;2&quot;.
+        ///{
+        ///	test2 = 1 // тест пройден.
+        ///}
+        ///// 
+        ///// Проверяем на list.
+        ///// 
+        ///for(i = 0; i &lt; 10; i = i + 1)
+        ///{
+        ///	LIST_ADD i
+        ///}
+        ///i = 0
+        ///test3 = 1
+        ///do
+        ///{
+        ///	if((LIST_CONTAINS i) = [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string LangExample {
+            get {
+                return ResourceManager.GetString("LangExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на a = 1 + 2 * b / s - 2.
         /// </summary>
         internal static string op {

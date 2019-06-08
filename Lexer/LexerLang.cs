@@ -108,7 +108,7 @@ namespace Lexer
                     {
                         if (termsFound.Count == 0)
                             throw new LexerException
-                            ("Количество подходящих терменалов не равно 1: " + termsFound.Count);
+                            ($"Количество подходящих терменалов не равно 1: {termsFound.Count}. Последние удачные: {string.Join(", ", output)}");
                         Terminal need = termsFound.First();
                         Terminal oldNeed = null;
                         bool unical = true; // True, если необходимый терминал имеет самый высокий приоритет.

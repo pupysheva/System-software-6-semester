@@ -13,7 +13,7 @@ namespace StackMachine
     {
 
         private readonly static Terminal ASSIGN_OP   = new Terminal(nameof(ASSIGN_OP),        "^=$"               ),
-                VAR              = new Terminal(nameof(VAR),              "^[a-zA-Z]+$"       , uint.MaxValue),
+                VAR              = new Terminal(nameof(VAR),              "^[a-zA-Z][a-zA-Z0-9]*$"       , uint.MaxValue - 1),
                 DIGIT            = new Terminal(nameof(DIGIT),            "^0|([1-9][0-9]*)$" ),
                 OP               = new Terminal(nameof(OP),               "^\\+|-|\\*|/$"     ),
                 LOGICAL_OP       = new Terminal(nameof(LOGICAL_OP),       "^>|<|>=|<=|==$"    ),
@@ -29,7 +29,6 @@ namespace StackMachine
                 R_B              = new Terminal(nameof(R_B),              "^\\)$"             ),
                 COMMA            = new Terminal(nameof(COMMA),            "^;$"               ),
                 COM              = new Terminal(nameof(COM),              "^,$"               ),
-                COMMENT          = new Terminal(nameof(COMMENT),          "^\\/\\/.+$"        ),
                 HASHSET_ADD      = new Terminal(nameof(HASHSET_ADD),      "^HASHSET_ADD$"     ),
                 HASHSET_CONTAINS = new Terminal(nameof(HASHSET_CONTAINS), "^HASHSET_CONTAINS$"),
                 HASHSET_REMOVE   = new Terminal(nameof(HASHSET_REMOVE),   "^HASHSET_REMOVE$"  ),
@@ -45,6 +44,8 @@ namespace StackMachine
                  чтобы не было так:                                                           
                  a=nameof(Привет)мир!".                                                       
                  */                                                                           
+                CH_LISTORSETMAYBE= new Terminal(nameof(CH_LISTORSETMAYBE), "^[a-zA-Z_]+$"     , uint.MaxValue),
+                CH_COMMENT       = new Terminal(nameof(CH_COMMENT),       "^\\/\\/.*$"        ),
                 CH_SPACE         = new Terminal(nameof(CH_SPACE),         "^ $"               ),
                 CH_LEFTLINE      = new Terminal(nameof(CH_LEFTLINE),      "^\r$"              ),
                 CH_NEWLINE       = new Terminal(nameof(CH_NEWLINE),       "^\n$"              ),
@@ -60,9 +61,9 @@ namespace StackMachine
             lexerLang = new LexerLang(new List<Terminal>()
             {
                 ASSIGN_OP, VAR, DIGIT, OP, LOGICAL_OP, WHILE_KW, DO_KW, PRINT_KW,
-                FOR_KW, IF_KW, ELSE_KW, L_QB, R_QB, L_B, R_B, COMMA, COM, COMMENT,
+                FOR_KW, IF_KW, ELSE_KW, L_QB, R_QB, L_B, R_B, COMMA, COM,
                 HASHSET_ADD, HASHSET_CONTAINS, HASHSET_REMOVE, HASHSET_COUNT, LIST_ADD, LIST_CONTAINS,
-                LIST_REMOVE, LIST_COUNT, CH_SPACE, CH_LEFTLINE, CH_NEWLINE, CH_TAB
+                LIST_REMOVE, LIST_COUNT, CH_LISTORSETMAYBE, CH_COMMENT, CH_SPACE, CH_LEFTLINE, CH_NEWLINE, CH_TAB
             });
 
             void OrInserter(List<string> commands, ActionInsert insert, int helper)
