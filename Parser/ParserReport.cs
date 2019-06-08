@@ -1,4 +1,5 @@
 ﻿using MyTypes.Tree;
+using System;
 
 namespace Parser
 {
@@ -47,6 +48,21 @@ namespace Parser
             else
                 Compile = reportParser.Compile;
             Info.AddRange(reportParser.Info);
+            CheckTreeOf_RULEOR_Error(Compile);
+        }
+
+        private void CheckTreeOf_RULEOR_Error(ITreeNode<object> compile)
+        {
+            if (compile != null)
+                foreach (ITreeNode<object> o in compile)
+                {
+                    if (o.Current is ReportParserCompile nonterminal)
+                    {
+                        if (nonterminal.CurrentRule == RuleOperator.OR
+                            && o.Count > 1)
+                            throw new InvalidOperationException($"Можно добавить только 1 OR. Подробнее: {o}");
+                    }
+                }
         }
 
         /// <summary>

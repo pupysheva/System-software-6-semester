@@ -133,7 +133,7 @@ namespace MyTypes.Tree
             => GetEnumerator();
 
         /// <summary>
-        /// Получает перечеслитель, который проходится по всем узлам дерева и поддеревьев.
+        /// Получает перечеслитель, который проходится по всем узлам дерева и поддеревьев, включая корень дерева.
         /// </summary>
         public TreeEnumerator GetEnumerator()
             => new TreeEnumerator(this);

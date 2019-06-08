@@ -15,7 +15,7 @@ namespace StackMachine.Test
         [TestMethod]
         public void LexerTest()
         {
-            TestOnResurseCount(Resource1.LangExample, 148);
+            TestOnResurseCount(Resource1.LangExample, 154);
         }
 
         [TestMethod]
@@ -28,6 +28,18 @@ namespace StackMachine.Test
             ReportParser report = Lang.parserLang.Check(tokens);
             Console.WriteLine(string.Join("\n", report.Info));
             Assert.IsTrue(report.IsSuccess);
+        }
+
+        [TestMethod]
+        public void CompileTest()
+        {
+            StreamReader input = StringToStream(Resource1.LangExample);
+            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            input.Close();
+            Console.WriteLine(Lang.parserLang.Check(tokens).Compile);
+            List<string> Polsk = Lang.parserLang.Compile(tokens);
+            Console.WriteLine(string.Join("\n", Polsk));
         }
 
         /// <summary>

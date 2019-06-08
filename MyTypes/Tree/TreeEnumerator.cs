@@ -95,7 +95,7 @@ namespace MyTypes.Tree
 
         public bool MoveNext()
         {
-            if (MoveCount != 1)
+            if (MoveCount > 0)
                 return false;
             MoveCount += MoveCount < 2 ? (byte)1 : (byte)0;
             return true;

@@ -109,7 +109,7 @@ namespace Parser
                 if (comp.CurrentRule != OR)
                     throw new NotSupportedException($"Возможно, неправильно настроены правила компиляции в нетерминале: {comp.Source}");
                 if (compileTree.Count != 1)
-                    throw new ArgumentException($"Ошибка при настройке компиляции. Ожидался только один правильный элемент в нетерминале: {comp}");
+                    throw new ArgumentException($"Ошибка при настройке компиляции. Найдено: {compileTree.Count} Ожидался только один правильный элемент в нетерминале: {compileTree}\n");
                 if (compileTree[0].Current is Token token)
                 { // Это терминал.
                     commands.Add(token.Value);

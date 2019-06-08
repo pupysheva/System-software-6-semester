@@ -302,7 +302,10 @@ namespace Parser
                         return output; // Да, этот нетерминал нам подходит.
                     }
                     else
+                    {
+                        buffer.CompileCancel();
                         output.Merge(buffer);
+                    }
                 }
                 else
                     throw new Exception($"Unexpected type {o.GetType()} of {o} in list");
