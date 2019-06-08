@@ -71,10 +71,10 @@ namespace StackMachine
 
             TransferToStackCode AndInserter(params int[] order)
             {
-                int a = 0;
                 return (List<string> commands, ActionInsert insert, int helper) =>
                 {
-                    if (a < order.Length)
+                    int a = 0;
+                    while (a < order.Length)
                     {
                         insert(order[a++]);
                     }
@@ -83,8 +83,8 @@ namespace StackMachine
 
             void MoreInserter(List<string> commands, ActionInsert insert, int helper)
             {
-                while (--helper != -1)
-                    insert(helper);
+                for(int i = 0; i < helper; i++)
+                    insert(i);
             }
             void WordAndValue(List<string> commands, ActionInsert insert, int helper)
             {

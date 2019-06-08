@@ -39,16 +39,19 @@ namespace Parser
                 {
                     if (Compile.Current == null)
                         Compile = reportParser.Compile;
-                    else
+                    else if (reportParser.Compile.Current != null)
                         Compile.Add(reportParser.Compile);
+                    else
+                        Info.AddInfo($"Информацию компиляции пропущена при добавлении к информации: {Compile}");
                 }
                 else
-                    Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {this.Compile}");
+                    Info.AddInfo($"Не удалось добавить информацию компиляции к информации: {Compile}");
             }
             else
                 Compile = reportParser.Compile;
             Info.AddRange(reportParser.Info);
-            CheckTreeOf_RULEOR_Error(Compile);
+            if(IsSuccess)
+                CheckTreeOf_RULEOR_Error(Compile);
         }
 
         private void CheckTreeOf_RULEOR_Error(ITreeNode<object> compile)
@@ -62,6 +65,8 @@ namespace Parser
                             && o.Count > 1)
                             throw new InvalidOperationException($"Можно добавить только 1 OR. Подробнее: {o}");
                     }
+                    if (o.Current == null)
+                        throw new NullReferenceException($"В дереве найден элемент null: {o}");
                 }
         }
 
