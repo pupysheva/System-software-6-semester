@@ -5,7 +5,7 @@ while(a < 10)
 	a = a + 1
 }
 test1 = 0
-if(HASHSET_CONTAINS 2) // Проверяем, что элемент 2 добавлен.
+if((HASHSET_CONTAINS 2) == 1) // Проверяем, что элемент 2 добавлен.
 {
 	test1 = 1 // Тест пройден.
 }
@@ -30,7 +30,7 @@ do
 	if((LIST_CONTAINS i) == 0)
 	{
 		test3 = 0
-		break
+		i = 10
 	}
 	else
 	{
@@ -43,7 +43,7 @@ if(LIST_COUNT == 0)
 {
 	test4 = 1
 }
-if(test1 + test2 + test3 + test4 == 0)
+if((test1 + test2 + test3 + test4) == 0)
 {
 	test = 1
 }

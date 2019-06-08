@@ -106,16 +106,20 @@ namespace StackMachine
                 new Nonterminal("LIST_COUNT", (List<string> commands, ActionInsert insert, int helper) => insert(0), AND, LIST_COUNT));
             Nonterminal stmt =
                 new Nonterminal(nameof(stmt), OrInserter, OR,
+                    command_hash_expr,
+                    command_list_expr,
                     new Nonterminal("value (OP value)*", (List<string> commands, ActionInsert insert, int helper) => { insert(1); insert(0); }, AND,
                         value,
                         new Nonterminal("(OP value)*", MoreInserter, ZERO_AND_MORE,
                             new Nonterminal("OP & value", (List<string> commands, ActionInsert insert, int helper) => { insert(1); insert(0); }, AND,
                                 "OP",
-                                value))),
-                command_hash_expr,
-                command_list_expr);
+                                value
+                            )
+                        )
+                    )
+                );
             Nonterminal b_val_expr = new Nonterminal(nameof(b_val_expr),
-                OrInserter, OR, stmt, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B));
+                OrInserter, OR, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B), stmt);
             Nonterminal body = new Nonterminal(nameof(body), AndInserter(1), AND, "L_QB", lang, "R_QB");
             Nonterminal condition = new Nonterminal(nameof(condition), AndInserter(3, 1, 2), AND, "L_B", value, "LOGICAL_OP", value, "R_B");
             Nonterminal for_condition = new Nonterminal(nameof(condition), AndInserter(0, 2, 1), AND, value, LOGICAL_OP, value);
@@ -168,7 +172,7 @@ namespace StackMachine
                     insert(2); // true body
                     commands[indexAddrFalse] = commands.Count.ToString();
                 }, AND, IF_KW, /*1*/ condition, /*2*/body);
-            Nonterminal if_expr_OR_ifelse_expr = new Nonterminal(nameof(if_expr_OR_ifelse_expr), OrInserter, OR, if_expr, ifelse_expr);
+            Nonterminal if_expr_OR_ifelse_expr = new Nonterminal(nameof(if_expr_OR_ifelse_expr), OrInserter, OR, ifelse_expr, if_expr);
             Nonterminal for_expr = new Nonterminal(nameof(for_expr),
                 (List<string> commands, ActionInsert insert, int helper) =>
                 {
@@ -185,7 +189,7 @@ namespace StackMachine
                     commands[indexAddrFalse] = commands.Count.ToString();
                 }, AND, "FOR_KW", "L_B", /*2*/assign_expr, "COMMA", /*4*/for_condition, "COMMA", /*6*/assign_expr, "R_B", /*8*/ body);
             Nonterminal cycle_expr = new Nonterminal(nameof(cycle_expr), OrInserter, OR, while_expr, do_while_expr, for_expr);
-            Nonterminal expr = new Nonterminal(nameof(expr), OrInserter, OR, assign_expr, if_expr_OR_ifelse_expr, cycle_expr, command_hash_expr, command_list_expr);
+            Nonterminal expr = new Nonterminal(nameof(expr), OrInserter, OR, PRINT_KW, assign_expr, if_expr_OR_ifelse_expr, cycle_expr, command_hash_expr, command_list_expr);
             lang.Add(expr);
             value.AddRange(new object[] { "VAR", "DIGIT", b_val_expr });
 
