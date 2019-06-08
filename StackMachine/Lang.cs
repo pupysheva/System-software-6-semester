@@ -121,7 +121,7 @@ namespace StackMachine
             Nonterminal b_val_expr = new Nonterminal(nameof(b_val_expr),
                 OrInserter, OR, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B), stmt);
             Nonterminal body = new Nonterminal(nameof(body), AndInserter(1), AND, "L_QB", lang, "R_QB");
-            Nonterminal condition = new Nonterminal(nameof(condition), AndInserter(3, 1, 2), AND, "L_B", value, "LOGICAL_OP", value, "R_B");
+            Nonterminal condition = new Nonterminal(nameof(condition), AndInserter(3, 1, 2), AND, "L_B", stmt, "LOGICAL_OP", stmt, "R_B");
             Nonterminal for_condition = new Nonterminal(nameof(condition), AndInserter(0, 2, 1), AND, value, LOGICAL_OP, value);
             Nonterminal while_expr = new Nonterminal(nameof(while_expr),
                 (List<string> commands, ActionInsert insert, int helper) =>
