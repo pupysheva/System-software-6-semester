@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Lexer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Parser;
 using UnitTest;
 
 namespace StackMachine.Test
@@ -20,7 +21,13 @@ namespace StackMachine.Test
         [TestMethod]
         public void ParserTest()
         {
-            throw new NotImplementedException();
+            StreamReader input = StringToStream(Resource1.LangExample);
+            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            input.Close();
+            ReportParser report = Lang.parserLang.Check(tokens);
+            Console.WriteLine(string.Join("\n", report.Info));
+            Assert.IsTrue(report.IsSuccess);
         }
 
         /// <summary>

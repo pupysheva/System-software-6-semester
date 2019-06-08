@@ -104,7 +104,7 @@ namespace Parser
         public ReportParser CheckRule(List<Token> tokens)
         {
             int a = 0, b = tokens.Count - 1;
-            return CheckRule(tokens, ref a, ref b);
+            return CheckRule(500, tokens, ref a, ref b);
         }
 
         /// <summary>
@@ -114,40 +114,45 @@ namespace Parser
         /// <param name="begin">Первый доступный индекс в листе tokens.</param>
         /// <param name="end">Последний доступный индекс в листе tokens.</param>
         /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
-        public ReportParser CheckRule(List<Token> tokens, ref int begin, ref int end)
+        public ReportParser CheckRule(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             if (tokens == null)
                 throw new ArgumentNullException("Список токенов должен был инициализирован.");
             ReportParser output = new ReportParser();
             output.Info.AddInfo("Зашёл в нетерминал: " + ToString());
-            switch (rule)
+            if(--deep <= 0)
+            {
+                output.Info.Add(new ReportParserInfoLine("Обнаружена бесконечная рекурсия. Выход..."));
+            }
+            else switch (rule)
             {
                 case AND:
-                    output.Merge(RuleAND(tokens, ref begin, ref end));
+                    output.Merge(RuleAND(deep, tokens, ref begin, ref end));
                     break;
                 case ONE_AND_MORE:
-                    output.Merge(RuleONE_AND_MORE(tokens, ref begin, ref end));
+                    output.Merge(RuleONE_AND_MORE(deep, tokens, ref begin, ref end));
                     break;
                 case OR:
-                    output.Merge(RuleOR(tokens, ref begin, ref end));
+                    output.Merge(RuleOR(deep, tokens, ref begin, ref end));
                     break;
                 case ZERO_AND_MORE:
-                    output.Merge(RuleZERO_AND_MORE(tokens, ref begin, ref end));
+                    output.Merge(RuleZERO_AND_MORE(deep, tokens, ref begin, ref end));
                     break;
                 default:
                     throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
             }
             output.Info.AddInfo("Cостояние отчёта: " + output.IsSuccess + ", выхожу из нетерминала: " + ToString());
+            deep++;
             return output;
         }
 
-        private ReportParser RuleZERO_AND_MORE(List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleZERO_AND_MORE(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
             do
             {
-                RuleMORE(tokens, output, ref begin, ref end);
+                RuleMORE(deep, tokens, output, ref begin, ref end);
                 compile.Helper++;
             }
             while (output.IsSuccess) ;
@@ -155,12 +160,12 @@ namespace Parser
             return output;
         }
 
-        private ReportParser RuleONE_AND_MORE(List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleONE_AND_MORE(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
             compile.Helper++;
-            if (!RuleMORE(tokens, output, ref begin, ref end))
+            if (!RuleMORE(deep, tokens, output, ref begin, ref end))
             {
                 output.CompileCancel();
                 return output;
@@ -168,7 +173,7 @@ namespace Parser
             compile.Helper++;
             do
             {
-                RuleMORE(tokens, output, ref begin, ref end);
+                RuleMORE(deep, tokens, output, ref begin, ref end);
                 compile.Helper++;
             }
             while (output.IsSuccess);
@@ -176,7 +181,7 @@ namespace Parser
             return output;
         }
 
-        private bool RuleMORE(List<Token> tokens, ReportParser output, ref int begin, ref int end)
+        private bool RuleMORE(int deep, List<Token> tokens, ReportParser output, ref int begin, ref int end)
         {
             int b = begin;
             int e = end;
@@ -196,7 +201,7 @@ namespace Parser
                 }
                 else if (o is Nonterminal)
                 {
-                    output.Merge(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                    output.Merge(((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end));
                     if (!output.IsSuccess)
                     {
                         output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
@@ -217,7 +222,7 @@ namespace Parser
             return output.IsSuccess;
         }
 
-        private ReportParser RuleAND(List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleAND(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             ITreeNode<object> compileTree = new TreeNode<object>(new ReportParserCompile(this, AND));
             ReportParser output = new ReportParser(compileTree);
@@ -235,11 +240,14 @@ namespace Parser
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
+                    {
                         compileTree.Add(tokens[begin - 1]);
+                        output.Info.Success(tokens[begin - 1].ToString());
+                    }
                 }
                 else if(o is Nonterminal)
                 {
-                    output.Merge(((Nonterminal)o).CheckRule(tokens, ref begin, ref end));
+                    output.Merge(((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end));
                     if(!output.IsSuccess)
                     {
                         output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
@@ -262,7 +270,7 @@ namespace Parser
             return output;
         }
 
-        private ReportParser RuleOR(List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleOR(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile comp = new ReportParserCompile(this, OR, -1);
             ITreeNode<object> compileTree = new TreeNode<object>(comp);
@@ -280,13 +288,13 @@ namespace Parser
                     else
                     {
                         compileTree.Add(tokens[begin - 1]);
-                        output.Info.Success(o.ToString());
+                        output.Info.Success(tokens[begin - 1].ToString());
                         return output;
                     }
                 }
                 else if (o is Nonterminal)
                 {
-                    ReportParser buffer = ((Nonterminal)o).CheckRule(tokens, ref begin, ref end);
+                    ReportParser buffer = ((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
                     {
                         output.Merge(buffer);
