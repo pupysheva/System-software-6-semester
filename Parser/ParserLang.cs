@@ -65,10 +65,11 @@ namespace Parser
             return output;
         }
 
-        public List<string> Compile(List<Token> tokens)
+        public List<string> Compile(List<Token> tokens, ReportParser report = null)
         {
             List<string> commands = new List<string>(tokens.Count);
-            ReportParser report = Check(tokens);
+            if (report == null)
+                report = Check(tokens);
             if (!report.IsSuccess)
                 return null;
             ITreeNode<object> compileTree = report.Compile;

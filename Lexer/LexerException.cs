@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Lexer
 {
     [Serializable]
-    internal class LexerException : Exception
+    public class LexerException : Exception
     {
         public LexerException() : base()
         {
