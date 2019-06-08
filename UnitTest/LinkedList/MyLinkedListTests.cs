@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using UnitTest;
 
 namespace MyTypes.LinkedList.Tests
 {
@@ -37,7 +36,7 @@ namespace MyTypes.LinkedList.Tests
             var node = list.AddLast("abs");
             CollectionAssert.AreEqual(new string[] { "abs" }, list);
             list.AddBefore(node, "zz");
-            Writer.WriteAll<string>(list);
+            UnitTest.Writer.WriteAll<string>(list);
             CollectionAssert.AreEqual(new string[] { "zz", "abs" }, list);
         }
 

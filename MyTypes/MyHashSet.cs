@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTypes.LinkedList;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,18 +10,18 @@ namespace MyTypes
     /// Класс не является потокобезопасным.
     /// </summary>
     /// <typeparam name="T">Тип элементов в коллекции.</typeparam>
-    public class MyHashSet<T> : ISet<T>
+    public class MyHashSet<T> : ISet<T>, ICollection
     {
-        private LinkedList<T>[] cards;
+        private ICollection<T>[] cards;
 
         private DateTime lastModifed;
 
         public MyHashSet(int countCards = 15)
         {
             lastModifed = DateTime.Now;
-            cards = new LinkedList<T>[countCards];
-            for (int i = 0; i < countCards; i++)
-                cards[i] = new LinkedList<T>();
+            cards = new ICollection<T>[countCards];
+            for (int i = 0; i < cards.Length; i++)
+                cards[i] = new MyLinkedList<T>();
         }
         
 
@@ -33,7 +34,7 @@ namespace MyTypes
             get
             {
                 int count = 0;
-                foreach (LinkedList<T> list in cards)
+                foreach (ICollection<T> list in cards)
                     count += list.Count;
                 return count;
             }
@@ -43,6 +44,10 @@ namespace MyTypes
         /// Возвращает, является ли коллекция только для чтения. Возвращается false.
         /// </summary>
         bool ICollection<T>.IsReadOnly => false;
+
+        object ICollection.SyncRoot => cards;
+
+        bool ICollection.IsSynchronized => cards.IsSynchronized;
 
         /// <summary>
         /// Добавляет указанный элемент в набор.
@@ -64,8 +69,8 @@ namespace MyTypes
             if (Contains(item))
                 return false;
             lastModifed = DateTime.Now;
-            int pos = item.GetHashCode() % cards.Length;
-            cards[pos].AddLast(item);
+            uint pos = (uint)item.GetHashCode() % (uint)cards.LongLength;
+            cards[pos].Add(item);
             return true;
         }
 
@@ -75,7 +80,7 @@ namespace MyTypes
         public void Clear()
         {
             lastModifed = DateTime.Now;
-            foreach (LinkedList<T> list in cards)
+            foreach (ICollection<T> list in cards)
             {
                 list.Clear();
             }
@@ -91,7 +96,7 @@ namespace MyTypes
         {
             if (item == null)
                 return false;
-            int pos = item.GetHashCode() % cards.Length;
+            uint pos = (uint)item.GetHashCode() % (uint)cards.LongLength;
             return cards[pos].Contains(item);
         }
 
@@ -209,12 +214,9 @@ namespace MyTypes
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
             lastModifed = DateTime.Now;
-            LinkedList<T> notNeedAdd = new LinkedList<T>();
             foreach(T oth in other)
             {
-                if (Remove(oth))
-                    notNeedAdd.AddLast(oth);
-                else
+                if (!Remove(oth))
                     Add(oth);
             }
         }
@@ -314,7 +316,7 @@ namespace MyTypes
         }
 
         /// <summary>
-        /// Удаляет указанный элемент из объекта System.Collections.Generic.HashSet`1.
+        /// Удаляет указанный элемент из объекта <see cref="MyHashSet{T}"/>.
         /// </summary>
         /// <param name="item">Подлежащий удалению элемент.</param>
         /// <returns>Значение true, если элемент был найден и удален; в противном случае — значение
@@ -324,20 +326,50 @@ namespace MyTypes
         {
             if (item == null)
                 return false;
-            int pos = item.GetHashCode() % cards.Length;
+            uint pos = (uint)item.GetHashCode() % (uint)cards.LongLength;
             return cards[pos].Remove(item);
         }
 
         /// <summary>
         /// Возвращает перечислитель, который осуществляет итерацию по коллекции.
         /// </summary>
-        /// <returns>Объект <see cref="System.Collections.IEnumerator"/>, который используется для прохода по коллекции.</returns>
+        /// <returns>Объект <see cref="IEnumerator"/>, который используется для прохода по коллекции.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => new Enumerator(this);
 
-        //
-        // Сводка:
-        //     Перечисляет элементы объекта System.Collections.Generic.HashSet`1.
+        void ICollection.CopyTo(Array array, int index)
+        {
+            foreach(T elm in this)
+            {
+                array.SetValue(elm, index++);
+            }
+        }
+
+        /// <summary>
+        /// Показывает разницу в балансировке корзин.
+        /// Чем ближе к 0, тем лучше балансировка.
+        /// Чем ближе к 1, тем хуже балансировка.
+        /// </summary>
+        public double Balancing
+        {
+            get
+            {
+                int countHashSet = Count;
+                if (countHashSet == 0)
+                    return 0;
+                double mustCount = countHashSet / (double)cards.Length;
+                double difference = 0;
+                foreach(ICollection<T> card in cards)
+                {
+                    difference += Math.Abs(mustCount - card.Count);
+                }
+                return difference / (mustCount * cards.Length);
+            }
+        }
+
+        /// <summary>
+        /// Перечисляет элементы объекта <see cref="MyHashSet{T}"/>.
+        /// </summary>
         public struct Enumerator : IEnumerator<T>, IEnumerator
         {
             private MyHashSet<T> myHashSet;
@@ -387,14 +419,14 @@ namespace MyTypes
                     enumeratorCards = myHashSet.cards.GetEnumerator();
                     if (!enumeratorCards.MoveNext())
                         return false;
-                    enumeratorList = ((LinkedList<T>)enumeratorCards.Current).GetEnumerator();
+                    enumeratorList = ((IEnumerable<T>)enumeratorCards.Current).GetEnumerator();
                     return MoveNext();
                 }
                 if (enumeratorList.MoveNext())
                     return true;
                 if (!enumeratorCards.MoveNext())
                     return false;
-                enumeratorList = ((LinkedList<T>)enumeratorCards.Current).GetEnumerator();
+                enumeratorList = ((IEnumerable<T>)enumeratorCards.Current).GetEnumerator();
                 return MoveNext();
             }
 
