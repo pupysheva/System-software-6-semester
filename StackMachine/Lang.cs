@@ -54,7 +54,7 @@ namespace StackMachine
 
         public static readonly LexerLang lexerLang;
         public static readonly ParserLang parserLang;
-        public static readonly AbstractStackExecuteLang stackMachine;
+        public static readonly MyStackLang stackMachine;
 
         static Lang()
         {
@@ -98,20 +98,20 @@ namespace StackMachine
                 new Nonterminal("HASHSET_ADD & value", WordAndValue, AND, HASHSET_ADD, value),
                 new Nonterminal("HASHSET_CONTAINS & value", WordAndValue, AND, HASHSET_CONTAINS, value),
                 new Nonterminal("HASHSET_REMOVE & value", WordAndValue, AND, HASHSET_REMOVE, value),
-                new Nonterminal("HASHSET_COUNT", (List<string> commands, ActionInsert insert, int helper) => insert(0), AND, HASHSET_COUNT));
+                new Nonterminal("HASHSET_COUNT", AndInserter(0), AND, HASHSET_COUNT));
             Nonterminal command_list_expr = new Nonterminal(nameof(command_list_expr), OrInserter, OR,
                 new Nonterminal("LIST_ADD & value", WordAndValue, AND, LIST_ADD, value),
                 new Nonterminal("LIST_CONTAINS & value", WordAndValue, AND, LIST_CONTAINS, value),
                 new Nonterminal("LIST_REMOVE & value", WordAndValue, AND, LIST_REMOVE, value),
-                new Nonterminal("LIST_COUNT", (List<string> commands, ActionInsert insert, int helper) => insert(0), AND, LIST_COUNT));
+                new Nonterminal("LIST_COUNT", AndInserter(0), AND, LIST_COUNT));
             Nonterminal stmt =
                 new Nonterminal(nameof(stmt), OrInserter, OR,
                     command_hash_expr,
                     command_list_expr,
-                    new Nonterminal("value (OP value)*", (List<string> commands, ActionInsert insert, int helper) => { insert(1); insert(0); }, AND,
+                    new Nonterminal("value (OP value)*", AndInserter(0, 1), AND,
                         value,
                         new Nonterminal("(OP value)*", MoreInserter, ZERO_AND_MORE,
-                            new Nonterminal("OP & value", (List<string> commands, ActionInsert insert, int helper) => { insert(1); insert(0); }, AND,
+                            new Nonterminal("OP & value", AndInserter(1, 0), AND,
                                 "OP",
                                 value
                             )
@@ -121,7 +121,7 @@ namespace StackMachine
             Nonterminal b_val_expr = new Nonterminal(nameof(b_val_expr),
                 OrInserter, OR, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B), stmt);
             Nonterminal body = new Nonterminal(nameof(body), AndInserter(1), AND, "L_QB", lang, "R_QB");
-            Nonterminal condition = new Nonterminal(nameof(condition), AndInserter(3, 1, 2), AND, "L_B", stmt, "LOGICAL_OP", stmt, "R_B");
+            Nonterminal condition = new Nonterminal(nameof(condition), AndInserter(1, 3, 2), AND, L_B, stmt, LOGICAL_OP, stmt, R_B);
             Nonterminal for_condition = new Nonterminal(nameof(condition), AndInserter(0, 2, 1), AND, value, LOGICAL_OP, value);
             Nonterminal while_expr = new Nonterminal(nameof(while_expr),
                 (List<string> commands, ActionInsert insert, int helper) =>
@@ -142,8 +142,12 @@ namespace StackMachine
                     int beginDo = commands.Count;
                     insert(1);
                     insert(3);
-                    commands.Add(beginDo.ToString());
+                    int indexOfAddressExit = commands.Count;
+                    commands.Add("?");
                     commands.Add("!f");
+                    commands.Add(beginDo.ToString()); // Если попали сюда, значит истина. И надо повторить.
+                    commands.Add("goto!");
+                    commands[indexOfAddressExit] = commands.Count.ToString();
                 }
                 , AND, DO_KW, body, WHILE_KW, condition);
             Nonterminal assign_expr = new Nonterminal(nameof(assign_expr), AndInserter(0, 2, 1), AND, VAR, ASSIGN_OP, b_val_expr);
@@ -197,11 +201,11 @@ namespace StackMachine
             stackMachine = new MyStackLang();
         }
 
-        internal class MyStackLang : AbstractStackExecuteLang
+        public class MyStackLang : AbstractStackExecuteLang
         {
-            private readonly ICollection<double> list
+            public readonly ICollection<double> list
                 = new MyLinkedList<double>();
-            private readonly ISet<double> set
+            public readonly ISet<double> set
                 = new MyHashSet<double>();
 
             protected override void ExecuteCommand(string command)
@@ -239,6 +243,8 @@ namespace StackMachine
                         {
                             double stmt = PopStk();
                             string var = Stack.Pop();
+                            if (IsNumber(var))
+                                throw new KeyNotFoundException();
                             variables[var] = stmt;
                         }
                         break;
@@ -251,8 +257,10 @@ namespace StackMachine
                         break;
                     case "-":
                         {
+                            double b = PopStk();
+                            double a = PopStk();
                             Stack.Push(
-                                (PopStk() - PopStk())
+                                (a - b)
                                 .ToString());
                         }
                         break;
@@ -265,9 +273,43 @@ namespace StackMachine
                         break;
                     case "/":
                         {
+                            double b = PopStk();
+                            double a = PopStk();
                             Stack.Push(
-                                (PopStk() / PopStk())
+                                (a / b)
                                 .ToString());
+                        }
+                        break;
+                    case ">":
+                        {
+                            double b = PopStk();
+                            double a = PopStk();
+                            Stack.Push(
+                                (a > b)
+                                ? "1" : "0");
+                        }
+                        break;
+                    case "<":
+                        {
+                            double b = PopStk();
+                            double a = PopStk();
+                            Stack.Push(
+                                (a < b)
+                                ? "1" : "0");
+                        }
+                        break;
+                    case "==":
+                        {
+                            Stack.Push(
+                                (PopStk() == PopStk())
+                                ? "1" : "0");
+                        }
+                        break;
+                    case "!=":
+                        {
+                            Stack.Push(
+                                (PopStk() != PopStk())
+                                ? "1" : "0");
                         }
                         break;
                     case nameof(HASHSET_ADD):
@@ -323,7 +365,7 @@ namespace StackMachine
                         break;
                     default:
                         {
-                            if (!variables.ContainsKey(command) && !double.TryParse(command, out double drop))
+                            if (!variables.ContainsKey(command) && !IsNumber(command))
                                 variables[command] = 0;
                             Stack.Push(command);
                         }
@@ -335,6 +377,11 @@ namespace StackMachine
             /// Получает с стэка значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
             /// </summary>
             private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
+
+            private bool IsNumber(string str)
+            {
+                return double.TryParse(str, out double drop);
+            }
 
             private double GetValueOfVarOrDigit(string VarOrDigit)
             {

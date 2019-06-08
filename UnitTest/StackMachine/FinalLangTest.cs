@@ -42,6 +42,24 @@ namespace StackMachine.Test
             Console.WriteLine(string.Join("\n", Polsk));
         }
 
+        [TestMethod]
+        public void ExecuteTest()
+        {
+            StreamReader input = StringToStream(Resource1.LangExample);
+            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            input.Close();
+            List<string> Polsk = Lang.parserLang.Compile(tokens);
+            Console.WriteLine(string.Join("\n", Polsk));
+            Lang.stackMachine.Execute(Polsk);
+            Assert.AreEqual(0, Lang.stackMachine.list.Count);
+            Assert.AreEqual(1, Lang.stackMachine.Variables["test1"]);
+            Assert.AreEqual(1, Lang.stackMachine.Variables["test2"]);
+            Assert.AreEqual(1, Lang.stackMachine.Variables["test3"]);
+            Assert.AreEqual(1, Lang.stackMachine.Variables["test4"]);
+            Assert.AreEqual(1, Lang.stackMachine.Variables["test"]);
+        }
+
         /// <summary>
         /// Функция запускает тестирование на основание текста программы.
         /// Ожидается count терминалов, не считая терминалов CH_.
