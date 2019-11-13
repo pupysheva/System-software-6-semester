@@ -21,7 +21,7 @@ namespace StackMachine
         public ReadOnlyDictionary<string, double> Variables { get; }
 
         /// <summary>
-        /// Стэк, который хранит в себе исполняемый код.
+        /// Стек, который хранит в себе исполняемый код.
         /// </summary>
         protected readonly Stack<string> Stack
             = new Stack<string>();

@@ -51,10 +51,10 @@ namespace Parser
                 Compile = reportParser.Compile;
             Info.AddRange(reportParser.Info);
             if(IsSuccess)
-                CheckTreeOf_RULEOR_Error(Compile);
+                CheckTreeOf_RuleOr_Error(Compile);
         }
 
-        private void CheckTreeOf_RULEOR_Error(ITreeNode<object> compile)
+        private void CheckTreeOf_RuleOr_Error(ITreeNode<object> compile)
         {
             if (compile != null)
                 foreach (ITreeNode<object> o in compile)

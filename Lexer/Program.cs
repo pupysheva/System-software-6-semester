@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Lexer
 {
@@ -13,7 +12,7 @@ namespace Lexer
             List<Token> tokens;
             try
             {
-                // Получаем токены.
+                // Получаем жетоны.
                 tokens = new LexerLang().SearchTokens(stream);
             }
             catch(LexerException e)
@@ -24,7 +23,7 @@ namespace Lexer
             }
             stream.Close();
             foreach (Token token in tokens)
-                // Печатаем токины.
+                // Печатаем жетоны.
                 Console.WriteLine(token);
             Console.Write("Press eny key...");
             Console.ReadLine();

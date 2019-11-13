@@ -1,7 +1,7 @@
 ﻿namespace Lexer
 {
     /// <summary>
-    /// Класс, представляющий токен.
+    /// Класс, представляющий жетон.
     /// </summary>
     public class Token : Token<string>
     {
@@ -11,10 +11,10 @@
     public class Token<T>
     {
         /// <summary>
-        /// Создание экземпляра токена.
+        /// Создание экземпляра жетона.
         /// </summary>
         /// <param name="Type">Транслятор, с помощью которого
-        /// был найден токен.</param>
+        /// был найден жетон.</param>
         /// <param name="Value">Подстрока, которая была найдена
         /// транслятором.</param>
         public Token(Terminal Type, T Value)
@@ -24,12 +24,12 @@
         }
 
         /// <summary>
-        /// Тип токена.
+        /// Тип жетона.
         /// </summary>
         public Terminal Type { get; }
 
         /// <summary>
-        /// Значение токена.
+        /// Значение жетона.
         /// </summary>
         public T Value { get; }
 

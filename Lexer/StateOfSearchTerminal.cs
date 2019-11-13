@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexer
 {
@@ -22,7 +19,7 @@ namespace Lexer
         /// </summary>
         public IList<Terminal> Terminals { get; }
         /// <summary>
-        /// Количество найденых.
+        /// Количество найденных.
         /// </summary>
         public uint Count { private set; get; }
 

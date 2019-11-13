@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -15,7 +14,7 @@ namespace Lexer
         /// </summary>
         public LexerLang()
         {
-            avalibleTerminals = new List<Terminal>()
+            availableTerminals = new List<Terminal>()
             {
 
                 new Terminal("ASSIGN_OP", "^=$"),
@@ -52,23 +51,23 @@ namespace Lexer
         /// <summary>
         /// Создание экземпляра обработчика.
         /// </summary>
-        /// <param name="avalibleTerminals">Набор разрешённых терминалов.</param>
-        public LexerLang(IEnumerable<Terminal> avalibleTerminals)
+        /// <param name="availableTerminals">Набор разрешённых терминалов.</param>
+        public LexerLang(IEnumerable<Terminal> availableTerminals)
         {
-            this.avalibleTerminals = new List<Terminal>(avalibleTerminals ?? throw new ArgumentNullException());
+            this.availableTerminals = new List<Terminal>(availableTerminals ?? throw new ArgumentNullException());
         }
 
         /// <summary>
         /// Список поддерживаемых терминалов.
         /// </summary>
-        private readonly List<Terminal> avalibleTerminals;
+        private readonly List<Terminal> availableTerminals;
 
         /// <summary>
-        /// Переобразование входного текста в лист токенов на основе
+        /// Переобразование входного текста в лист жетонов на основе
         /// правил терминалов.
         /// </summary>
         /// <param name="input">Входной поток текста.</param>
-        /// <returns>Список найденных токенов.</returns>
+        /// <returns>Список найденных жетонов.</returns>
         public virtual List<Token> SearchTokens(StreamReader input)
         {
             if (input == null)
@@ -95,13 +94,13 @@ namespace Lexer
                 if (termsFound.Count <= 1 || input.EndOfStream)
                 {
                     if (termsFound.Count == 1 && !input.EndOfStream)
-                        // Это ещё не конец файла и есть 1 прецидент. Ищем дальше.
+                        // Это ещё не конец файла и есть 1 прецедент. Ищем дальше.
                         continue;
                     int last = char.MaxValue + 1;
                     if (termsFound.Count == 0)
                     {
                         last = bufferList[bufferList.Length - 1]; // Запоминаем последний символ.
-                        bufferList.Length--; // Уменьшаем длинну списка на 1.
+                        bufferList.Length--; // Уменьшаем длину списка на 1.
                         termsFound = SearchInTerminals(bufferList.ToString()); // Теперь ищем терминалы.
                     }
                     if (termsFound.Count != 1) // Ой, должен был остаться только один.
@@ -151,7 +150,7 @@ namespace Lexer
         private List<Terminal> SearchInTerminals(string expression)
         {
             List<Terminal> output = new List<Terminal>();
-            foreach (Terminal ter in avalibleTerminals)
+            foreach (Terminal ter in availableTerminals)
             {
                 Match mat = ter.RegularExpression.Match(expression);
                 if (mat.Length > 0 && mat.Value.Equals(expression))

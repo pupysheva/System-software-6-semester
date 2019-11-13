@@ -15,7 +15,7 @@ namespace StackMachine
             List<Token> tokens;
             try
             {
-                // Получаем токены.
+                // Получаем жетоны.
                 tokens = Lang.lexerLang.SearchTokens(stream);
             }
             catch (LexerException e)
@@ -29,7 +29,7 @@ namespace StackMachine
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             Console.ForegroundColor = ConsoleColor.Yellow;
             foreach (Token token in tokens)
-                // Печатаем токины.
+                // Печатаем жетоны.
                 Console.WriteLine(token);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("-----\nОтчёт компиляции:\n-----");

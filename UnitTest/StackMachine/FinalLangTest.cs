@@ -15,7 +15,7 @@ namespace StackMachine.Test
         [TestMethod]
         public void LexerTest()
         {
-            TestOnResurseCount(Resource1.LangExample, 154);
+            TestOnResourceCount(Resource1.LangExample, 154);
         }
 
         [TestMethod]
@@ -38,8 +38,8 @@ namespace StackMachine.Test
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
             Console.WriteLine(Lang.parserLang.Check(tokens).Compile);
-            List<string> Polsk = Lang.parserLang.Compile(tokens);
-            Console.WriteLine(string.Join("\n", Polsk));
+            List<string> Polish = Lang.parserLang.Compile(tokens);
+            Console.WriteLine(string.Join("\n", Polish));
         }
 
         [TestMethod]
@@ -49,9 +49,9 @@ namespace StackMachine.Test
             List<Token> tokens = Lang.lexerLang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
-            List<string> Polsk = Lang.parserLang.Compile(tokens);
-            Console.WriteLine(string.Join("\n", Polsk));
-            Lang.stackMachine.Execute(Polsk);
+            List<string> Polish = Lang.parserLang.Compile(tokens);
+            Console.WriteLine(string.Join("\n", Polish));
+            Lang.stackMachine.Execute(Polish);
             Assert.AreEqual(0, Lang.stackMachine.list.Count);
             Assert.AreEqual(1, Lang.stackMachine.Variables["test1"]);
             Assert.AreEqual(1, Lang.stackMachine.Variables["test2"]);
@@ -66,24 +66,24 @@ namespace StackMachine.Test
         /// </summary>
         /// <param name="text">Текст программы.</param>
         /// <param name="count">Количество ожидаемых терминалов.</param>
-        public List<Token> TestOnResurseCount(string text, int count)
+        public List<Token> TestOnResourceCount(string text, int count)
         {
             StreamReader input = StringToStream(text);
             List<Token> tokens = Lang.lexerLang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
             foreach (Token token in tokens)
-                // Печатаем токины.
+                // Печатаем жетоны.
                 Console.WriteLine(token);
             Assert.AreEqual(count, tokens.Count);
             return tokens;
         }
 
-        public static StreamReader StringToStream(string resurse)
+        public static StreamReader StringToStream(string resource)
         {
             return new StreamReader(
                new MemoryStream(
-                   Encoding.UTF8.GetBytes(resurse)
+                   Encoding.UTF8.GetBytes(resource)
                ));
         }
     }

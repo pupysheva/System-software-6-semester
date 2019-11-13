@@ -98,7 +98,7 @@ namespace UnitTest
                     int indexAddrTrue = commands.Count - 1;
                     commands.Add("if");
                     commands.Add("?"); // Адрес с ложью.
-                    int indexAdrrFalse = commands.Count - 1;
+                    int indexAddrFalse = commands.Count - 1;
                     commands.Add("goto");
                     // Сюда надо попасть, если true. 
                     commands[indexAddrTrue] = commands.Count.ToString();
@@ -106,7 +106,7 @@ namespace UnitTest
                     commands.Add(indexAddrTrue.ToString());
                     commands.Add("goto"); // Команда перехода в if к while.
                     // Надо выйти из цикла, если false:
-                    commands[indexAdrrFalse] = commands.Count.ToString();
+                    commands[indexAddrFalse] = commands.Count.ToString();
                 }, AND,
                 "WHILE_KW", "L_B", stmt, "R_B", "L_QB", lang, "R_QB");
             Nonterminal expr = new Nonterminal("expr",
@@ -144,7 +144,7 @@ namespace UnitTest
                     insert(1);
                 }, AND, "VAR", "ASSIGN_OP", "DIGIT"));
 
-            EasyStackLang = new MyEeasyStackLang();
+            EasyStackLang = new MyEasyStackLang();
         }
 
         [TestMethod]
@@ -177,16 +177,16 @@ namespace UnitTest
             Assert.AreEqual(2, EasyStackLang.Variables["a"], double.Epsilon);
         }
 
-        public static StreamReader StringToStream(string resurse)
+        public static StreamReader StringToStream(string resource)
         {
             return new StreamReader(
                new MemoryStream(
-                   Encoding.UTF8.GetBytes(resurse)
+                   Encoding.UTF8.GetBytes(resource)
                ));
         }
     }
 
-    internal class MyEeasyStackLang : AbstractStackExecuteLang
+    internal class MyEasyStackLang : AbstractStackExecuteLang
     {        
         protected override void ExecuteCommand(string command)
         {
@@ -265,7 +265,7 @@ namespace UnitTest
         }
 
         /// <summary>
-        /// Получает с стэка значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
+        /// Получает с стека значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
         /// </summary>
         private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
 

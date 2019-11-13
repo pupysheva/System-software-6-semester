@@ -70,11 +70,11 @@ namespace UnitTest
 
         /// <summary>
         /// Быстрое проведение тестирования <see cref="Parser.ParserLang"/>.
-        /// Удаляет токены с CH_.
+        /// Удаляет жетоны с CH_.
         /// </summary>
         /// <param name="resource">Текст тестирования.</param>
         /// <param name="isSuccess">True, если ожидается успех парсирования.</param>
-        /// <param name="tokens">Количество ожидаемых токенов. Установите -1 для игнорирования.</param>
+        /// <param name="tokens">Количество ожидаемых жетонов. Установите -1 для игнорирования.</param>
         /// <param name="parser">Особые правила парсера. Оставьте null, если нужен язык <see cref="parserLang"/>.</param>
         /// <param name="lexer">Особые правила лексера. Оставьте null, если нужен язык <see cref="lexerLang"/>.</param>
         public void CheckTest(string resource, bool isSuccess = true, int tokens = -1, ParserLang parser = null, LexerLang lexer = null)

@@ -374,7 +374,7 @@ namespace StackMachine
             }
 
             /// <summary>
-            /// Получает с стэка значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
+            /// Получает с стека значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
             /// </summary>
             private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
 

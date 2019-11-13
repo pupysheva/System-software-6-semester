@@ -28,12 +28,12 @@ namespace Parser
             : base() { }
 
         /// <summary>
-        /// Токен, в котором возникла проблема.
+        /// Жетон, в котором возникла проблема.
         /// </summary>
         public Token TokenProblem { get; } = null;
 
         /// <summary>
-        /// Идентификатор токена с проблемой.
+        /// Идентификатор жетона с проблемой.
         /// </summary>
         public int TokenIndex { get; } = -1;
     }

@@ -56,8 +56,8 @@ namespace Parser
         /// <summary>
         /// Получение номера ошибки.
         /// </summary>
-        /// <param name="index">Инджекс ошибки.</param>
-        /// <returns>Вощвращает ошибку парсера.</returns>
+        /// <param name="index">Индекс ошибки.</param>
+        /// <returns>Возвращает ошибку парсера.</returns>
         public ReportParserInfoLine this[int index] => errors[index];
 
         /// <summary>

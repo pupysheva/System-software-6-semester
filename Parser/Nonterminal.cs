@@ -12,7 +12,7 @@ namespace Parser
     /// <summary>
     /// Делегат хранит функцию, которая вставляет
     /// значение терминала или вызывает
-    /// формирование стэк-кода у нетерминала.
+    /// формирование стек-кода у нетерминала.
     /// </summary>
     /// <param name="IndexToAdd">-1 используется для OR, так
     /// как он там единственный. Для остальных - порядковый номер
@@ -23,11 +23,11 @@ namespace Parser
 
     /// <summary>
     /// Делегат, который представляет собой функцию, которая
-    /// служит для преобразования токенов в стек-код.
+    /// служит для преобразования жетонов в стек-код.
     /// </summary>
     /// <param name="commands">Сюда вставляются команды
     /// для стековой машины.</param>
-    /// <param name="insert">Функция вызывает вставку либо значение токена,
+    /// <param name="insert">Функция вызывает вставку либо значение жетона,
     /// либо вызывает функцию вставки кода входящего нетерминала.</param>
     /// <param name="helper">Используется для OR. Символизирует номер,
     /// начиная с 0, какой терминал или нетерминал был выбран.</param>
@@ -57,7 +57,7 @@ namespace Parser
         public string Name { get; } = null;
 
         /// <summary>
-        /// Функция преобразвания токенов в стек-код.
+        /// Функция преобразования жетонов в стек-код.
         /// </summary>
         public readonly TransferToStackCode TransferToStackCode = null;
 
@@ -93,14 +93,14 @@ namespace Parser
         public Nonterminal(RuleOperator rule, params object[] terminalsOrNonterminals)
         {
             this.rule = rule;
-            AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания ситаксиса C# достигнута."));
+            AddRange(terminalsOrNonterminals ?? throw new ArgumentNullException("Невероятная ошибка понимания синтаксиса C# достигнута."));
         }
 
         /// <summary>
-        /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
+        /// Проверяет, чтобы заданные жетоны соответствовали нетерминалу.
         /// </summary>
-        /// <param name="tokens">Список токенов, которые надо проверить.</param>
-        /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
+        /// <param name="tokens">Список жетонов, которые надо проверить.</param>
+        /// <returns>True, если последовательность жетонов подходит нетерминалу. Иначе - false.</returns>
         public ReportParser CheckRule(List<Token> tokens)
         {
             int a = 0, b = tokens.Count - 1;
@@ -108,16 +108,16 @@ namespace Parser
         }
 
         /// <summary>
-        /// Проверяет, чтобы заданные токены соответсвовали нетерминалу.
+        /// Проверяет, чтобы заданные жетоны соответствовали нетерминалу.
         /// </summary>
-        /// <param name="tokens">Список токенов, которые надо проверить.</param>
+        /// <param name="tokens">Список жетонов, которые надо проверить.</param>
         /// <param name="begin">Первый доступный индекс в листе tokens.</param>
         /// <param name="end">Последний доступный индекс в листе tokens.</param>
-        /// <returns>True, если последовательность токенов подходит нетерминалу. Иначе - false.</returns>
+        /// <returns>True, если последовательность жетонов подходит нетерминалу. Иначе - false.</returns>
         public ReportParser CheckRule(int deep, List<Token> tokens, ref int begin, ref int end)
         {
             if (tokens == null)
-                throw new ArgumentNullException("Список токенов должен был инициализирован.");
+                throw new ArgumentNullException("Список жетонов должен был инициализирован.");
             ReportParser output = new ReportParser();
             output.Info.AddInfo("Зашёл в нетерминал: " + ToString());
             if(--deep <= 0)
@@ -141,7 +141,7 @@ namespace Parser
                 default:
                     throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
             }
-            output.Info.AddInfo("Cостояние отчёта: " + output.IsSuccess + ", выхожу из нетерминала: " + ToString());
+            output.Info.AddInfo("Состояние отчёта: " + output.IsSuccess + ", выхожу из нетерминала: " + ToString());
             deep++;
             return output;
         }
@@ -156,7 +156,7 @@ namespace Parser
                 compile.Helper++;
             }
             while (output.IsSuccess) ;
-            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
+            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Текущий: " + ToString());
             return output;
         }
 
@@ -177,7 +177,7 @@ namespace Parser
                 compile.Helper++;
             }
             while (output.IsSuccess);
-            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Теущий: " + ToString());
+            output.Info.Success("Нетерминалы ZERO_AND_MORE всегда успешны. Текущий: " + ToString());
             return output;
         }
 
@@ -193,7 +193,7 @@ namespace Parser
                 {
                     if (begin > end)
                         output.Info.Add(new ReportParserInfoLine(
-                            "Входные токены закончились", o, null, begin));
+                            "Входные жетоны закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
@@ -236,7 +236,7 @@ namespace Parser
                 {
                     if (begin > end)
                         output.Info.Add(new ReportParserInfoLine(
-                            "Входные токены закончились", o, null, begin));
+                            "Входные жетоны закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
@@ -282,7 +282,7 @@ namespace Parser
                 {
                     if (begin > end)
                         output.Info.Add(new ReportParserInfoLine(
-                            "Входные токены закончились", o, null, begin));
+                            "Входные жетоны закончились", o, null, begin));
                     else if (!o.Equals(tokens[begin++].Type))
                         output.Info.Add(new ReportParserInfoLine(o, tokens[--begin], tokens, begin));
                     else
@@ -327,7 +327,7 @@ namespace Parser
         {
             if (!IsCanAdd(value))
                 throw new ArgumentException(
-                    "Ожидался токен или оператор. Фактически: " + value.ToString());
+                    "Ожидался жетон или оператор. Фактически: " + value.ToString());
             return value is string ? new Terminal((string)value)
                 : value;
         }
@@ -335,7 +335,7 @@ namespace Parser
         /// <summary>
         /// Определяет, может ли элемент быть добавлен в данное правило.
         /// </summary>
-        /// <param name="value">Объект, рассматреть который необходимо.</param>
+        /// <param name="value">Объект, рассмотреть который необходимо.</param>
         /// <returns>True, если это одно из:
         /// 1. <see cref="RuleOperator"/>;
         /// 2. <see cref="Terminal"/>;
@@ -355,7 +355,7 @@ namespace Parser
         /// Вызывает <see cref="IsCanAdd(object)"/> для каждого элемента
         /// множества array.
         /// </summary>
-        /// <returns>True, если все соответсуют <see cref="IsCanAdd(object)"/>. Иначе - false.</returns>
+        /// <returns>True, если все соответствуют. <see cref="IsCanAdd(object)"/>. Иначе - false.</returns>
         public bool IsCanAddRange(IEnumerable array)
         {
             foreach (object o in array)
@@ -368,7 +368,7 @@ namespace Parser
         /// Добавляет множество операторов или терминалов в правило.
         /// </summary>
         /// <param name="operatorsWithTerminals">Перечень объектов,
-        /// соответсвующих <see cref="IsCanAdd(object)"/>.</param>
+        /// соответствующих <see cref="IsCanAdd(object)"/>.</param>
         public void AddRange(IEnumerable<object> operatorsWithTerminals)
         { // Для безопасности необходимо добавлять каждый элемент последовательно.
             foreach (object opOrTer in operatorsWithTerminals)
@@ -434,7 +434,7 @@ namespace Parser
         /// <summary>
         /// Дополнить правило нетерминала.
         /// </summary>
-        /// <param name="item">Объект, соответсвующий <see cref="IsCanAdd(object)"/>.</param>
+        /// <param name="item">Объект, соответствующий <see cref="IsCanAdd(object)"/>.</param>
         public void Add(object item)
         {
             if ((rule == ZERO_AND_MORE || rule == ONE_AND_MORE)
@@ -454,7 +454,7 @@ namespace Parser
         public int IndexOf(object item)
         {
             if (IsCanAdd(item))
-                // Гарантируется, что все объекты в списке соответсвуют критерию IsCanAdd(object)
+                // Гарантируется, что все объекты в списке соответствуют критерию IsCanAdd(object)
                 return list.IndexOf(item);
             else
                 return -1;

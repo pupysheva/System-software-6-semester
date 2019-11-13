@@ -18,21 +18,21 @@ namespace UnitTest
         /// </summary>
         [TestMethod]
         public void assign_op()
-            => TestOnResurseCount(Resource1.assign_op, 3);
+            => TestOnResourceCount(Resource1.assign_op, 3);
 
         [TestMethod]
         public void assign_op_multiline()
-            => TestOnResurseCount(Resource1.assign_op_multiline, 6);
+            => TestOnResourceCount(Resource1.assign_op_multiline, 6);
 
         [TestMethod]
         public void op()
         {
-            TestOnResurseCount(Resource1.op, 11);
+            TestOnResourceCount(Resource1.op, 11);
         }
 
         [TestMethod]
         public void while_kw(){
-            TestOnResurseCount(Resource1._while, 16);
+            TestOnResourceCount(Resource1._while, 16);
         }
 
 
@@ -40,7 +40,7 @@ namespace UnitTest
         [TestMethod]
         public void print_kw()
         {
-            List<Token> tokens = TestOnResurseCount(Resource1.print_kw, 1);
+            List<Token> tokens = TestOnResourceCount(Resource1.print_kw, 1);
 
             Assert.AreEqual("PRINT_KW", tokens[0].Type.Name);
 
@@ -48,12 +48,12 @@ namespace UnitTest
         [TestMethod]
         public void condition()
         {
-            TestOnResurseCount(Resource1.condition, 27);
+            TestOnResourceCount(Resource1.condition, 27);
         }
         [TestMethod]
         public void cycle_for()
         {
-            TestOnResurseCount(Resource1.cycle_for, 29);
+            TestOnResourceCount(Resource1.cycle_for, 29);
         }
 #pragma warning restore IDE1006 // Стили именования
         /// <summary>
@@ -62,24 +62,24 @@ namespace UnitTest
         /// </summary>
         /// <param name="text">Текст программы.</param>
         /// <param name="count">Количество ожидаемых терминалов.</param>
-        public List<Token> TestOnResurseCount(string text, int count)
+        public List<Token> TestOnResourceCount(string text, int count)
         {
             StreamReader input = StringToStream(text);
             List<Token> tokens = lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
             foreach (Token token in tokens)
-                // Печатаем токины.
+                // Печатаем жетоны.
                 Console.WriteLine(token);
             Assert.AreEqual(count, tokens.Count);
             return tokens;
         }
 
-        public static StreamReader StringToStream(string resurse)
+        public static StreamReader StringToStream(string resource)
         {
             return new StreamReader(
                new MemoryStream(
-                   Encoding.UTF8.GetBytes(resurse)
+                   Encoding.UTF8.GetBytes(resource)
                ));
         }
     }
