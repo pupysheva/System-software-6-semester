@@ -119,48 +119,48 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="assign_op" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="assign_op_multiline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\assign_op_multiline.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources/assign_op_multiline.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="condition" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\if-else.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;koi8-r</value>
+    <value>Resources/if-else.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;koi8-r</value>
   </data>
   <data name="cycle_for" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\cycle_for.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/cycle_for.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="op" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="_while" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="print_kw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\print_kw.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/print_kw.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="ParserOR_assign_op" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\ParserOR_assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/ParserOR_assign_op.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="ParserONE_AND_MORE_OR__ASSIGN_OP__VAR" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\ParserONE_AND_MORE_OR__ASSIGN_OP__VAR.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/ParserONE_AND_MORE_OR__ASSIGN_OP__VAR.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Parser_assign_op_full" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Parser_assign_op_full.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/Parser_assign_op_full.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Parser_var_op_while_print_var" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Parser_var_op_while_print_var.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/Parser_var_op_while_print_var.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Parser_do_while" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Parser_do_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/Parser_do_while.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Parser_for" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Parser_for.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/Parser_for.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Stack_var_print" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Stack_var_print.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>Resources/Stack_var_print.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="LangExample" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\FinalLand\LangExample.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources/FinalLand/LangExample.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

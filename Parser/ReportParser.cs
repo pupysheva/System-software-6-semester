@@ -77,5 +77,8 @@ namespace Parser
         {
             Compile = null;
         }
+
+        public override string ToString()
+            => $"{nameof(ReportParser)}: {{Compile: {Compile}, Info: {Info}, IsSuccess: {IsSuccess}}}";
     }
 }
