@@ -38,7 +38,7 @@ namespace MyTypes.Tree.Tests
                     "Мясо"
                 }
             };
-            tree.Add(tree);
+            tree.AddTreeNode(tree);
             Console.Write(tree.ToString(StringFormat.NewLine));
             Assert.AreEqual("lol:\n\tlal\n\tkek\n\tcheburek:\n\t\tКапуста\n\t\tМясо\n\tcur: lol, deep: ...",
                 tree.ToString(StringFormat.NewLine));
@@ -92,7 +92,7 @@ namespace MyTypes.Tree.Tests
             };
             Console.WriteLine(tree1);
             Console.WriteLine(tree2);
-            tree1[0].Add(tree2);
+            tree1[0].AddTreeNode(tree2);
             Console.Write(tree1);
             Assert.AreEqual(tree2, tree1[0][0]);
             Assert.AreEqual(4, tree1.GetCountAll());

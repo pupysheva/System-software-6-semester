@@ -195,7 +195,7 @@ namespace UnitTest
                 case "print":
                     {
                         StringBuilder sb = new StringBuilder();
-                        foreach (var pair in variables)
+                        foreach (var pair in Variables)
                         {
                             sb.Append(pair.Key);
                             sb.Append(" = ");
@@ -223,7 +223,7 @@ namespace UnitTest
                     {
                         double stmt = PopStk();
                         string var = Stack.Pop();
-                        variables[var] = stmt;
+                        Variables[var] = stmt;
                     }
                     break;
                 case "+":
@@ -256,8 +256,8 @@ namespace UnitTest
                     break;
                 default:
                     {
-                        if (!variables.ContainsKey(command) && !double.TryParse(command, out double drop))
-                            variables[command] = 0;
+                        if (!Variables.ContainsKey(command) && !double.TryParse(command, out double drop))
+                            Variables[command] = 0;
                         Stack.Push(command);
                     }
                     break;
@@ -273,7 +273,7 @@ namespace UnitTest
         {
             if (double.TryParse(VarOrDigit, out double result))
                 return result;
-            return variables[VarOrDigit];
+            return Variables[VarOrDigit];
         }
     }
 

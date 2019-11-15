@@ -114,7 +114,7 @@ namespace Parser
         /// <param name="begin">Первый доступный индекс в листе tokens.</param>
         /// <param name="end">Последний доступный индекс в листе tokens.</param>
         /// <returns>True, если последовательность жетонов подходит нетерминалу. Иначе - false.</returns>
-        public ReportParser CheckRule(int deep, List<Token> tokens, ref int begin, ref int end)
+        public ReportParser CheckRule(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             if (tokens == null)
                 throw new ArgumentNullException("Список жетонов должен был инициализирован.");
@@ -146,7 +146,7 @@ namespace Parser
             return output;
         }
 
-        private ReportParser RuleZERO_AND_MORE(int deep, List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleZERO_AND_MORE(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
@@ -160,7 +160,7 @@ namespace Parser
             return output;
         }
 
-        private ReportParser RuleONE_AND_MORE(int deep, List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleONE_AND_MORE(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
             ReportParser output = new ReportParser(compile);
@@ -181,7 +181,7 @@ namespace Parser
             return output;
         }
 
-        private bool RuleMORE(int deep, List<Token> tokens, ReportParser output, ref int begin, ref int end)
+        private bool RuleMORE(int deep, IList<Token> tokens, ReportParser output, ref int begin, ref int end)
         {
             int b = begin;
             int e = end;
@@ -222,7 +222,7 @@ namespace Parser
             return output.IsSuccess;
         }
 
-        private ReportParser RuleAND(int deep, List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleAND(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             ITreeNode<object> compileTree = new TreeNode<object>(new ReportParserCompile(this, AND));
             ReportParser output = new ReportParser(compileTree);
@@ -270,7 +270,7 @@ namespace Parser
             return output;
         }
 
-        private ReportParser RuleOR(int deep, List<Token> tokens, ref int begin, ref int end)
+        private ReportParser RuleOR(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             ReportParserCompile comp = new ReportParserCompile(this, OR, -1);
             ITreeNode<object> compileTree = new TreeNode<object>(comp);

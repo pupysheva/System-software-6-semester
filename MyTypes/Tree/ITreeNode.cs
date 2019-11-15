@@ -16,7 +16,14 @@ namespace MyTypes.Tree
         void Add(T toAdd);
 
         /// <summary>
+        /// Добавляет соседа-дерева к корню дерева.
+        /// </summary>
+        /// <param name="toAdd">Новый сосед со своими потомками.</param>
+        void AddTreeNode(ITreeNode<T> toAdd);
+
+        /// <summary>
         /// Получает перечисление только соседних детей корня.
+        /// Для перечисления всех узлов используйте GetEnumerator.
         /// </summary>
         IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors();
     }

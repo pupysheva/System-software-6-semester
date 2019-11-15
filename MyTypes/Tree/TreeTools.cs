@@ -30,7 +30,7 @@ namespace MyTypes.Tree
             return count;
         }
 
-        private readonly static ISet<object> nodesWrited = new MyHashSet<object>();
+        private readonly static ISet<object> nodesWriter = new MyHashSet<object>();
 
         public static string ChildrenToString<T>(this ITreeNode<T> root, StringFormat sf = StringFormat.Default, string separator = ", ")
         {
@@ -45,11 +45,19 @@ namespace MyTypes.Tree
             return sb.ToString();
         }
 
+        public static TreeNode<T> DeepClone<T>(this ITreeNode<T> root, Func<T, T> CloneCurrent)
+        {
+            TreeNode<T> output = new TreeNode<T>(CloneCurrent(root.Current));
+            foreach(ITreeNode<T> node in root.GetEnumerableOnlyNeighbors())
+                output.AddTreeNode(node.DeepClone(CloneCurrent));
+            return output;
+        }
+
         public static string ToString<T>(this ITreeNode<T> root, StringFormat sf)
         {
             if (root == null)
                 return null;
-            if (!nodesWrited.Add(root))
+            if (!nodesWriter.Add(root))
                 return $"cur: {root.Current}, deep: ...";
             string output;
             try
@@ -58,10 +66,10 @@ namespace MyTypes.Tree
             }
             catch
             {
-                nodesWrited.Remove(root);
+                nodesWriter.Remove(root);
                 throw;
             }
-            nodesWrited.Remove(root);
+            nodesWriter.Remove(root);
             return output;
         }
 

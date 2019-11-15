@@ -7,18 +7,22 @@ namespace StackMachine
     public abstract class AbstractStackExecuteLang : IExecuteLang
     {
 
-        protected AbstractStackExecuteLang()
+        /// <summary>
+        /// Создаёт новый экземпляр абстрактной стековой машины.
+        /// </summary>
+        /// <param name="startVariables">Реализация таблицы переменных.</param>
+        protected AbstractStackExecuteLang(IDictionary<string, double> startVariables = null)
         {
-            Variables = new ReadOnlyDictionary<string, double>(variables);
+            if(startVariables != null)
+                Variables = startVariables;
+            else
+                Variables = Variables = new Dictionary<string, double>();
         }
 
         /// <summary>
         /// Таблица переменных для стековой машины.
         /// </summary>
-        protected readonly IDictionary<string, double> variables
-            = new Dictionary<string, double>();
-
-        public ReadOnlyDictionary<string, double> Variables { get; }
+        public IDictionary<string, double> Variables { get; private set; }
 
         /// <summary>
         /// Стек, который хранит в себе исполняемый код.

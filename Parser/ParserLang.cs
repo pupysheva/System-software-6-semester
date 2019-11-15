@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Lexer;
 using static Parser.RuleOperator;
 using MyTypes.Tree;
+using System.Linq;
 
 namespace Parser
 {
@@ -56,7 +57,7 @@ namespace Parser
         /// </summary>
         /// <param name="tokens">Список терминалов входного файла.</param>
         /// <returns>Отчёт об ошибках.</returns>
-        public ReportParser Check(List<Token> tokens)
+        public ReportParser Check(IList<Token> tokens)
         {
             int begin = 0, end = tokens.Count - 1;
             ReportParser output = mainNonterminal.CheckRule(500, tokens, ref begin, ref end);
@@ -65,9 +66,9 @@ namespace Parser
             return output;
         }
 
-        public List<string> Compile(List<Token> tokens, ReportParser report = null)
+        public List<string> Compile(IList<Token> tokens, ReportParser report = null)
         {
-            List<string> commands = new List<string>(tokens.Count);
+            List<string> commands = new List<string>(tokens.Count());
             if (report == null)
                 report = Check(tokens);
             if (!report.IsSuccess)

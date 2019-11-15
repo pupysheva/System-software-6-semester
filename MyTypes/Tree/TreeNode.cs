@@ -21,7 +21,7 @@ namespace MyTypes.Tree
 
         /// <summary>
         /// True, если при вызове <see cref="Add(T)"/> нужно проверять,
-        /// является ли это деревом и тогда отправлять аргумент в <see cref="Add(ITreeNode{T})"/>.
+        /// является ли это деревом и тогда отправлять аргумент в <see cref="AddTreeNode(ITreeNode{T})"/>.
         /// По умолчанию: true.
         /// </summary>
         public bool IsNeedAddSwap { get; set; } = true;
@@ -59,6 +59,10 @@ namespace MyTypes.Tree
 
         bool ICollection<ITreeNode<T>>.IsReadOnly => false;
 
+        T ITreeNode<T>.Current { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        int ICollection<ITreeNode<T>>.Count => throw new NotImplementedException();
+
         /// <summary>
         /// Добавить потомка.
         /// </summary>
@@ -66,16 +70,24 @@ namespace MyTypes.Tree
         public void Add(T item)
         {
             if (IsNeedAddSwap && item is ITreeNode<T> itemTree)
-                Add(itemTree);
+                AddTreeNode(itemTree);
             else
                 Children.Add(new TreeNode<T>(item));
         }
 
         /// <summary>
         /// Добавить узел потомка к текущему узлу.
+        /// Эквивалентно вызову <see cref="AddTreeNode(ITreeNode{T}})"/>.
         /// </summary>
         /// <param name="item">Узел, который должен стать потомком.</param>
         public void Add(ITreeNode<T> item)
+            => AddTreeNode(item);
+
+        /// <summary>
+        /// Добавить узел потомка к текущему узлу.
+        /// </summary>
+        /// <param name="item">Узел, который должен стать потомком.</param>
+        public void AddTreeNode(ITreeNode<T> item)
         {
             if (IsNeedAddSwap && item.Current is ITreeNode<T>)
                 throw new NotSupportedException($"Операция не поддерживается. Отключите {nameof(IsNeedAddSwap)}");
@@ -151,5 +163,8 @@ namespace MyTypes.Tree
         /// </summary>
         public IEnumerable<ITreeNode<T>> GetEnumerableOnlyNeighbors()
             => Children;
+
+        void ICollection<ITreeNode<T>>.Add(ITreeNode<T> item)
+            => AddTreeNode(item);
     }
 }
