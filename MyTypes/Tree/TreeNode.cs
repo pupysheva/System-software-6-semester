@@ -59,10 +59,6 @@ namespace MyTypes.Tree
 
         bool ICollection<ITreeNode<T>>.IsReadOnly => false;
 
-        T ITreeNode<T>.Current { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        int ICollection<ITreeNode<T>>.Count => throw new NotImplementedException();
-
         /// <summary>
         /// Добавить потомка.
         /// </summary>

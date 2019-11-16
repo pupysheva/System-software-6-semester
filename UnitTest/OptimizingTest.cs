@@ -1,6 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest;
+using StackMachine;
 
 namespace Optimizing.Test
 {
@@ -8,10 +9,14 @@ namespace Optimizing.Test
     public class Test
     {
         [TestMethod]
-        public void StartTest()
+        public void TestJsonResource()
         {
-            Console.WriteLine(Resources.Greeting);
-            Assert.Fail();
+            Assert.AreEqual("Hello, Resj", Resources.Greeting);
+        }
+
+        public void OptimizingSimple()
+        {
+            Assert
         }
     }
 }
