@@ -15,13 +15,13 @@ namespace StackMachine.Test
         [TestMethod]
         public void LexerTest()
         {
-            TestOnResourceCount(Resource1.LangExample, 154);
+            TestOnResourceCount(Resources.LangExample, 154);
         }
 
         [TestMethod]
         public void ParserTest()
         {
-            StreamReader input = StringToStream(Resource1.LangExample);
+            StreamReader input = StringToStream(Resources.LangExample);
             List<Token> tokens = Lang.lexerLang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
@@ -33,7 +33,7 @@ namespace StackMachine.Test
         [TestMethod]
         public void CompileTest()
         {
-            StreamReader input = StringToStream(Resource1.LangExample);
+            StreamReader input = StringToStream(Resources.LangExample);
             List<Token> tokens = Lang.lexerLang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
@@ -45,7 +45,7 @@ namespace StackMachine.Test
         [TestMethod]
         public void ExecuteTest()
         {
-            StreamReader input = StringToStream(Resource1.LangExample);
+            StreamReader input = StringToStream(Resources.LangExample);
             List<Token> tokens = Lang.lexerLang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();

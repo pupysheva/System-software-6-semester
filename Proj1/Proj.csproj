@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+	</PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Elemental.JsonResource" Version="0.2.0" />
+    </ItemGroup>
+</Project>

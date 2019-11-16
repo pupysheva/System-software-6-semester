@@ -18,21 +18,21 @@ namespace UnitTest
         /// </summary>
         [TestMethod]
         public void assign_op()
-            => TestOnResourceCount(Resource1.assign_op, 3);
+            => TestOnResourceCount(Resources.assign_op, 3);
 
         [TestMethod]
         public void assign_op_multiline()
-            => TestOnResourceCount(Resource1.assign_op_multiline, 6);
+            => TestOnResourceCount(Resources.assign_op_multiline, 6);
 
         [TestMethod]
         public void op()
         {
-            TestOnResourceCount(Resource1.op, 11);
+            TestOnResourceCount(Resources.op, 11);
         }
 
         [TestMethod]
         public void while_kw(){
-            TestOnResourceCount(Resource1._while, 16);
+            TestOnResourceCount(Resources._while, 16);
         }
 
 
@@ -40,7 +40,7 @@ namespace UnitTest
         [TestMethod]
         public void print_kw()
         {
-            List<Token> tokens = TestOnResourceCount(Resource1.print_kw, 1);
+            List<Token> tokens = TestOnResourceCount(Resources.print_kw, 1);
 
             Assert.AreEqual("PRINT_KW", tokens[0].Type.Name);
 
@@ -48,12 +48,12 @@ namespace UnitTest
         [TestMethod]
         public void condition()
         {
-            TestOnResourceCount(Resource1.condition, 27);
+            TestOnResourceCount(Resources.condition, 27);
         }
         [TestMethod]
         public void cycle_for()
         {
-            TestOnResourceCount(Resource1.cycle_for, 29);
+            TestOnResourceCount(Resources.cycle_for, 29);
         }
 #pragma warning restore IDE1006 // Стили именования
         /// <summary>

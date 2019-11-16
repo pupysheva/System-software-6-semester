@@ -150,7 +150,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream(Resource1.Stack_var_print));
+            List<Token> tokens = EasyLexerLang.SearchTokens(StringToStream(Resources.Stack_var_print));
             tokens.RemoveAll((s) => s.Type.Name.Contains("CH_"));
             tokens.WriteAll();
             Console.WriteLine(EasyParserLang.Check(tokens).Compile);

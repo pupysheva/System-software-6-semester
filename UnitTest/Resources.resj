@@ -1,0 +1,23 @@
+{
+    "Strings": {
+      "Greeting": "Hello, Resj",
+      "Farewell": "Goodbye, Resx"
+    },
+    "Files": {
+      "assign_op": "Resources/assign_op.txt",
+      "assign_op_multiline": "Resources/assign_op_multiline.txt",
+      "condition": "Resources/if-else.txt",
+      "cycle_for": "Resources/cycle_for.txt",
+      "op": "Resources/op.txt",
+      "_while": "Resources/_while.txt",
+      "print_kw": "Resources/print_kw.txt",
+      "ParserOR_assign_op": "Resources/ParserOR_assign_op.txt",
+      "ParserONE_AND_MORE_OR__ASSIGN_OP__VAR": "Resources/ParserONE_AND_MORE_OR__ASSIGN_OP__VAR.txt",
+      "Parser_assign_op_full": "Resources/Parser_assign_op_full.txt",
+      "Parser_var_op_while_print_var": "Resources/Parser_var_op_while_print_var.txt",
+      "Parser_do_while": "Resources/Parser_do_while.txt",
+      "Parser_for": "Resources/Parser_for.txt",
+      "Stack_var_print": "Resources/Stack_var_print.txt",
+      "LangExample": "Resources/FinalLand/LangExample.txt"
+    }
+  }

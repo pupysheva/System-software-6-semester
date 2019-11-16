@@ -24,13 +24,13 @@ namespace UnitTest
         public void ParserOR_assign_op()
         {
             Nonterminal lang = new Nonterminal(OR, "ASSIGN_OP");
-            CheckTest(Resource1.ParserOR_assign_op, true, 1, new ParserLang(lang));
+            CheckTest(Resources.ParserOR_assign_op, true, 1, new ParserLang(lang));
         }
         [TestMethod]
         public void ParserOR_assign_op2()
         {
             Nonterminal lang = new Nonterminal(OR, "абвгд", "ASSIGN_OP");
-            CheckTest(Resource1.ParserOR_assign_op, true, 1, new ParserLang(lang));
+            CheckTest(Resources.ParserOR_assign_op, true, 1, new ParserLang(lang));
         }
 
         [TestMethod]
@@ -38,35 +38,35 @@ namespace UnitTest
         {
             Nonterminal expr = new Nonterminal(OR, "ASSIGN_OP", "VAR");
             Nonterminal lang = new Nonterminal(ONE_AND_MORE, expr);
-            CheckTest(Resource1.ParserONE_AND_MORE_OR__ASSIGN_OP__VAR, true, 21, new ParserLang(lang));
+            CheckTest(Resources.ParserONE_AND_MORE_OR__ASSIGN_OP__VAR, true, 21, new ParserLang(lang));
         }
 
         [TestMethod]
         public void ParserOR_assign_op3()
             // Напомню: входная строка: "="
-            => CheckTest(Resource1.ParserOR_assign_op, false, 1);
+            => CheckTest(Resources.ParserOR_assign_op, false, 1);
 
         [TestMethod]
         public void Parser_assign_op_full()
-            => CheckTest(Resource1.Parser_assign_op_full, true, 17);
+            => CheckTest(Resources.Parser_assign_op_full, true, 17);
 
         [TestMethod]
         public void _while()
-            => CheckTest(Resource1._while, true, 16);
+            => CheckTest(Resources._while, true, 16);
 
         [TestMethod]
         public void Parser_var_op_while_print_var()
-            => CheckTest(Resource1.Parser_var_op_while_print_var, true, 18);
+            => CheckTest(Resources.Parser_var_op_while_print_var, true, 18);
 
         [TestMethod]
         public void Parser_do_while()
             // Поставить на true, когда будет разработан do while.
-            => CheckTest(Resource1.Parser_do_while, false, 10);
+            => CheckTest(Resources.Parser_do_while, false, 10);
 
         [TestMethod]
         public void Parser_for()
             // Может быть 19 при реализации for как в языке Си.
-            => CheckTest(Resource1.Parser_for, true, 21);
+            => CheckTest(Resources.Parser_for, true, 21);
 
         /// <summary>
         /// Быстрое проведение тестирования <see cref="Parser.ParserLang"/>.
