@@ -1,7 +1,0 @@
-basd = 0
-while(basd < 10)
-{
-	print
-	basd = 10
-}
-basd = 0

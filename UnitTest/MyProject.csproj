@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{8D4FB903-1A85-4B29-818C-E37FD921CD57}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lexer</RootNamespace>
-    <AssemblyName>Lexer</AssemblyName>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Elemental.JsonResource" Version="0.2.0" />
+  </ItemGroup>
 </Project>
