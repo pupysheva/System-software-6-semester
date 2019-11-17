@@ -7,8 +7,15 @@ using MyTypes.Tree;
 
 namespace Optimizing
 {
-    class SimpleOptimizing : IOptimizing
+    public class SimpleOptimizing : IOptimizing
     {
+        /// <summary>
+        /// Получает готовый экземпляр <see cref="SimpleOptimizing"/> из кэша.
+        /// </summary>
+        public static readonly SimpleOptimizing Instance = new SimpleOptimizing();
+
+        private SimpleOptimizing() {}
+
         /// <summary>
         /// Оптимизирует входное дерево компиляции.
         /// </summary>
@@ -48,7 +55,7 @@ namespace Optimizing
 
             foreach(var assign_expr in assign_exprs)
                 if(tryCalculate(assign_expr, varsValues))
-                    assign_expr[3].Current =
+                    assign_expr[2].Current =
                         new Token(Lang.DIGIT, varsValues[((Token)assign_expr[0].Current).Value].ToString());
             return new ReportParser(outputCompile);
         }

@@ -27,6 +27,9 @@
       <Project>{BCBF9A80-80C5-4F2E-A2AA-9979E5E3DD37}</Project>
       <Name>StackMachine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Optimizing\Optimizing.csproj">
+      <Name>Optimizing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
