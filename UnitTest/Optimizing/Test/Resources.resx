@@ -60,7 +60,10 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   
-  <data name="resxTest" xml:space="preserve">
+  <data name="ResxTest" xml:space="preserve">
     <value>Hey! It is work!</value>
+  </data>
+  <data name="OptimizeFirst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources/OptimizeFirst.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;UTF-8</value>
   </data>
 </root>

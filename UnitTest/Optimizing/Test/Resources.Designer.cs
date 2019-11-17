@@ -43,7 +43,7 @@ namespace Optimizing.Test {
         internal static ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    ResourceManager temp = new ResourceManager("UnitTest.Optimizing.Test.OptimizingResources", typeof(Resources).Assembly);
+                    ResourceManager temp = new ResourceManager("UnitTest.Optimizing.Test.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,6 +60,10 @@ namespace Optimizing.Test {
         /// <summary>
         /// Hey! It is work!
         /// </summary>
-        internal static string resxTest => ResourceManager.GetString("resxTest", Culture);
+        internal static string ResxTest => ResourceManager.GetString("ResxTest", Culture);
+        /// <summary>
+        /// a = 1 + 1
+        /// </summary>
+        internal static string OptimizeFirst => ResourceManager.GetString("OptimizeFirst", Culture);
     }
 }
