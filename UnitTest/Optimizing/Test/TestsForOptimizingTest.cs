@@ -37,6 +37,7 @@ namespace Optimizing.Test
         [DataTestMethod]
         [DataRow("OptimizeFirst", "a 2 =")]
         [DataRow("VarInVar", "a 3 = b 6 =")]
+        [DataRow("VarVarInVar", "a 7 = b 14 =")]
         public void OptimizingSimple(string resourceName, string expect)
         {
             var output = CompileAndOptimizing(Resources.GetString(resourceName));

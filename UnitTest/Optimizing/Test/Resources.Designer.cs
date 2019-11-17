@@ -72,5 +72,11 @@ namespace Optimizing.Test {
         /// b = a * 2
         /// </summary>
         internal static string VarInVar => GetString("VarInVar", Culture);
+        /// <summary>
+        /// a = 3
+        /// a = 7
+        /// b = a * 2
+        /// </summary>
+        internal static string VarVarInVar => GetString("VarVarInVar", Culture);
     }
 }
