@@ -78,5 +78,13 @@ namespace Optimizing.Test {
         /// b = a * 2
         /// </summary>
         internal static string VarVarInVar => GetString("VarVarInVar", Culture);
+        /// <summary>
+        /// if(1 + 2 == 3)
+        /// {
+        ///     a = 1;
+        /// }
+        /// b = 2;
+        /// </summary>
+        internal static string If => GetString("If", Culture);
     }
 }

@@ -38,6 +38,7 @@ namespace Optimizing.Test
         [DataRow("OptimizeFirst", "a 2 =")]
         [DataRow("VarInVar", "a 3 = b 6 =")]
         [DataRow("VarVarInVar", "a 7 = b 14 =")]
+        [DataRow("If", "1 2 + 3 ==")] // TODO
         public void OptimizingSimple(string resourceName, string expect)
         {
             var output = CompileAndOptimizing(Resources.GetString(resourceName));
