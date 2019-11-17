@@ -1,0 +1,432 @@
+-----
+Дерево компиляции:
+-----
+ReportParserCompile: {h: 15, rule: ZERO_AND_MORE, src: name: lang}:
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: Optimizing}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": a
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                       
+         ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 3, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 0, rule: OR, src: name: cycle_expr}:
+                        ReportParserCompile: {rule: AND, src: name: while_expr}:
+                                Token WHILE_KW: "^while$": while
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": a
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": <
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 10
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 2, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 4, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: command_hash_expr}:
+                                                                ReportParserCompile: {rule: AND, src: name: HASHSET_ADD & value}:
+                                                                        Token HASHSET_ADD: "^HASHSET_ADD$": HASHSET_ADD
+                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": a
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": a
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": a
+                                                                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: (OP value)*}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                                                        Token OP: "^\+|-|\*|/$": +
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test1
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 2, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 1, rule: OR, src: name: if_expr_OR_ifelse_expr}:
+                        ReportParserCompile: {rule: AND, src: name: if_expr}:
+                                Token IF_KW: "^if$": if
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 2, rule: OR, src: name: value}:
+                                                                ReportParserCompile: {h: 0, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {rule: AND, src: name: L_B stmt R_B}:
+                                                                                Token L_B: "^\($": (
+                                                                                ReportParserCompile: {h: 0, rule: OR, src: name: stmt}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: command_hash_expr}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: HASHSET_CONTAINS & value}:
+                                                                                                        Token HASHSET_CONTAINS: "^HASHSET_CONTAINS$": HASHSET_CONTAINS
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 2
+                                                                                Token R_B: "^\)$": )
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": ==
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test1
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 4, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 2, rule: OR, src: name: command_hash_expr}:
+                        ReportParserCompile: {rule: AND, src: name: HASHSET_REMOVE & value}:
+                                Token HASHSET_REMOVE: "^HASHSET_REMOVE$": HASHSET_REMOVE
+                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                        Token DIGIT: "^0|([1-9][0-9]*)$": 2
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test2
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 2, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 1, rule: OR, src: name: if_expr_OR_ifelse_expr}:
+                        ReportParserCompile: {rule: AND, src: name: if_expr}:
+                                Token IF_KW: "^if$": if
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 2, rule: OR, src: name: value}:
+                                                                ReportParserCompile: {h: 0, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {rule: AND, src: name: L_B stmt R_B}:
+                                                                                Token L_B: "^\($": (
+                                                                                ReportParserCompile: {h: 0, rule: OR, src: name: stmt}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: command_hash_expr}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: HASHSET_CONTAINS & value}:
+                                                                                                        Token HASHSET_CONTAINS: "^HASHSET_CONTAINS$": HASHSET_CONTAINS
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 2
+                                                                                Token R_B: "^\)$": )
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": ==
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test2
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 3, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 2, rule: OR, src: name: cycle_expr}:
+                        ReportParserCompile: {rule: AND, src: name: for_expr}:
+                                Token FOR_KW: "^for$": for
+                                Token L_B: "^\($": (
+                                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                        Token ASSIGN_OP: "^=$": =
+                                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                Token COMMA: "^;$": ;
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": <
+                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                Token DIGIT: "^0|([1-9][0-9]*)$": 10
+                                Token COMMA: "^;$": ;
+                                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                        Token ASSIGN_OP: "^=$": =
+                                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: (OP value)*}:
+                                                                        ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                                Token OP: "^\+|-|\*|/$": +
+                                                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 5, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: command_list_expr}:
+                                                                ReportParserCompile: {rule: AND, src: name: LIST_ADD & value}:
+                                                                        Token LIST_ADD: "^LIST_ADD$": LIST_ADD
+                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test3
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 3, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 1, rule: OR, src: name: cycle_expr}:
+                        ReportParserCompile: {rule: AND, src: name: do_while_expr}:
+                                Token DO_KW: "^do$": do
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 2, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 2, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: if_expr_OR_ifelse_expr}:
+                                                                ReportParserCompile: {rule: AND, src: name: ifelse_expr}:
+                                                                        Token IF_KW: "^if$": if
+                                                                        ReportParserCompile: {rule: AND, src: name: condition}:
+                                                                                Token L_B: "^\($": (
+                                                                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                                ReportParserCompile: {h: 2, rule: OR, src: name: value}:
+                                                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: b_val_expr}:
+                                                                                                             ReportParserCompile: {rule: AND, src: name: L_B stmt R_B}:
+                                                                                                             Token L_B: "^\($": (
+                                                                                                             ReportParserCompile: {h: 1, rule: OR, src: name: stmt}:
+                                                                                                             ReportParserCompile: {h: 1, rule: OR, src: name: command_list_expr}:
+                                                                                                             ReportParserCompile: {rule: AND, src: name: LIST_CONTAINS & value}:
+                                                                                                             Token LIST_CONTAINS: "^LIST_CONTAINS$": LIST_CONTAINS
+                                                                                                             ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                                             Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                                                             Token R_B: "^\)$": )
+                                                                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                                                                Token LOGICAL_OP: "^>|<|>=|<=|==$": ==
+                                                                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                                                                Token R_B: "^\)$": )
+                                                                        ReportParserCompile: {rule: AND, src: name: body}:
+                                                                                Token L_QB: "^{$": {
+                                                                                ReportParserCompile: {h: 2, rule: ZERO_AND_MORE, src: name: lang}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                                                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test3
+                                                                                                        Token ASSIGN_OP: "^=$": =
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                                                             ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                                             ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                                             ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                                                                             ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                                                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                                                        Token ASSIGN_OP: "^=$": =
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                                                             ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                                             ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                                             ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 10
+                                                                                                             ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                                                                Token R_QB: "^}$": }
+                                                                        Token ELSE_KW: "^else$": else
+                                                                        ReportParserCompile: {rule: AND, src: name: body}:
+                                                                                Token L_QB: "^{$": {
+                                                                                ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                                                        ReportParserCompile: {h: 5, rule: OR, src: name: expr}:
+                                                                                                ReportParserCompile: {h: 2, rule: OR, src: name: command_list_expr}:
+                                                                                                        ReportParserCompile: {rule: AND, src: name: LIST_REMOVE & value}:
+                                                                                                             Token LIST_REMOVE: "^LIST_REMOVE$": LIST_REMOVE
+                                                                                                             ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                                             Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                                Token R_QB: "^}$": }
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: (OP value)*}:
+                                                                                                ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                                                        Token OP: "^\+|-|\*|/$": +
+                                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                             Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                        Token R_QB: "^}$": }
+                                Token WHILE_KW: "^while$": while
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": i
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": <
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 10
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+        ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                        Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test4
+                        Token ASSIGN_OP: "^=$": =
+                        ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                        ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                        Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+        ReportParserCompile: {h: 2, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 1, rule: OR, src: name: if_expr_OR_ifelse_expr}:
+                        ReportParserCompile: {rule: AND, src: name: if_expr}:
+                                Token IF_KW: "^if$": if
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 1, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {h: 3, rule: OR, src: name: command_list_expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: LIST_COUNT}:
+                                                                Token LIST_COUNT: "^LIST_COUNT$": LIST_COUNT
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": ==
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test4
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 2, rule: OR, src: name: expr}:
+                ReportParserCompile: {h: 0, rule: OR, src: name: if_expr_OR_ifelse_expr}:
+                        ReportParserCompile: {rule: AND, src: name: ifelse_expr}:
+                                Token IF_KW: "^if$": if
+                                ReportParserCompile: {rule: AND, src: name: condition}:
+                                        Token L_B: "^\($": (
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test1
+                                                        ReportParserCompile: {h: 3, rule: ZERO_AND_MORE, src: name: (OP value)*}:
+                                                                ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                        Token OP: "^\+|-|\*|/$": +
+                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test2
+                                                                ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                        Token OP: "^\+|-|\*|/$": +
+                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test3
+                                                                ReportParserCompile: {rule: AND, src: name: OP & value}:
+                                                                        Token OP: "^\+|-|\*|/$": +
+                                                                        ReportParserCompile: {h: 0, rule: OR, src: name: value}:
+                                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test4
+                                        Token LOGICAL_OP: "^>|<|>=|<=|==$": ==
+                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 4
+                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_B: "^\)$": )
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 1
+                                                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_QB: "^}$": }
+                                Token ELSE_KW: "^else$": else
+                                ReportParserCompile: {rule: AND, src: name: body}:
+                                        Token L_QB: "^{$": {
+                                        ReportParserCompile: {h: 1, rule: ZERO_AND_MORE, src: name: lang}:
+                                                ReportParserCompile: {h: 1, rule: OR, src: name: expr}:
+                                                        ReportParserCompile: {rule: AND, src: name: assign_expr}:
+                                                                Token VAR: "^[a-zA-Z][a-zA-Z0-9]*$": test
+                                                                Token ASSIGN_OP: "^=$": =
+                                                                ReportParserCompile: {h: 1, rule: OR, src: name: b_val_expr}:
+                                                                        ReportParserCompile: {h: 2, rule: OR, src: name: stmt}:
+                                                                                ReportParserCompile: {rule: AND, src: name: value (OP value)*}:
+                                                                                        ReportParserCompile: {h: 1, rule: OR, src: name: value}:
+                                                                                                Token DIGIT: "^0|([1-9][0-9]*)$": 0
+                                                                                        ReportParserCompile: {h: 0, rule: ZERO_AND_MORE, src: name: (OP value)*}
+                                        Token R_QB: "^}$": }
+        ReportParserCompile: {h: 0, rule: OR, src: name: expr}:
+                Token PRINT_KW: "^print$": print

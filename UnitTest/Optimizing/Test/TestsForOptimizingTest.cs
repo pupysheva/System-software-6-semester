@@ -5,6 +5,7 @@ using StackMachine;
 using System.IO;
 using Optimizing;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Optimizing.Test
 {
@@ -33,20 +34,30 @@ namespace Optimizing.Test
             CollectionAssert.AreEqual(new string[]{"a", "1", "1", "+", "="}, output);
         }
 
-        [TestMethod]
-        public void OptimizingSimple()
+        [DataTestMethod]
+        [DataRow("OptimizeFirst", "a 2 =")]
+        [DataRow("VarInVar", "a 3 = b 6 =")]
+        public void OptimizingSimple(string resourceName, string expect)
         {
-            Assert.AreEqual("a = 1 + 1", Resources.OptimizeFirst);
-            var tokens = Lang.lexerLang.SearchTokens(StringToStream(Resources.OptimizeFirst));
+            var output = CompileAndOptimizing(Resources.GetString(resourceName));
+            CollectionAssert.AreEqual(expect.Split(' '), output);
+        }
+
+        private static List<string> CompileAndOptimizing(string resourceBody)
+        {
+            var tokens = Lang.lexerLang.SearchTokens(StringToStream(resourceBody));
             tokens.RemoveAll(t => t.Type.Name.StartsWith("CH_"));
+            Console.WriteLine($"tokens:\n{string.Join('\n', tokens)}");
+            var checkedTokens = Lang.parserLang.Check(tokens);
+            Console.WriteLine($"preLang:\n{string.Join(", ", checkedTokens)}");
             var output = Lang.parserLang.Compile(
                 tokens,
                 Optimizing.SimpleOptimizing.Instance.Optimize(
-                    Lang.parserLang.Check(tokens)
+                    checkedTokens
                 )
             );
-            Console.WriteLine(string.Join(", ", output));
-            CollectionAssert.AreEqual(new string[]{"a", "2", "="}, output);
+            Console.WriteLine($"optimizing:\n{string.Join(", ", output)}");
+            return output;
         }
 
         public static StreamReader StringToStream(string resource)

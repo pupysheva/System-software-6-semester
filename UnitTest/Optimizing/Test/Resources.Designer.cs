@@ -56,14 +56,21 @@ namespace Optimizing.Test {
         /// </summary>
         [EditorBrowsableAttribute(EditorBrowsableState.Advanced)]
         internal static CultureInfo Culture { get; set; }
+
+        internal static string GetString(string ResourceName, CultureInfo ci = null) => ResourceManager.GetString(ResourceName, ci == null ? Culture : ci);
         
         /// <summary>
         /// Hey! It is work!
         /// </summary>
-        internal static string ResxTest => ResourceManager.GetString("ResxTest", Culture);
+        internal static string ResxTest => GetString("ResxTest", Culture);
         /// <summary>
         /// a = 1 + 1
         /// </summary>
-        internal static string OptimizeFirst => ResourceManager.GetString("OptimizeFirst", Culture);
+        internal static string OptimizeFirst => GetString("OptimizeFirst", Culture);
+        /// <summary>
+        /// a = 1 + 2
+        /// b = a * 2
+        /// </summary>
+        internal static string VarInVar => GetString("VarInVar", Culture);
     }
 }
