@@ -6,17 +6,17 @@ using StackMachine;
 namespace Optimizing.Test
 {
     [TestClass]
-    public class Test
+    public class TestsForOptimizingTest
     {
         [TestMethod]
-        public void TestJsonResource()
+        public void TestResx()
         {
-            Assert.AreEqual("Hello, Resj", Resources.Greeting);
+            Assert.AreEqual("Hey! It is work!", Resources.resxTest);
         }
 
         public void OptimizingSimple()
         {
-            Assert
+            
         }
     }
 }
