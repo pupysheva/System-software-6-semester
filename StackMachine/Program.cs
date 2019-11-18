@@ -16,7 +16,7 @@ namespace StackMachine
             try
             {
                 // Получаем жетоны.
-                tokens = Lang.lexerLang.SearchTokens(stream);
+                tokens = Lexer.ExampleLang.Lang.SearchTokens(stream);
             }
             catch (LexerException e)
             {
@@ -33,7 +33,7 @@ namespace StackMachine
                 Console.WriteLine(token);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("-----\nОтчёт компиляции:\n-----");
-            var report = Lang.parserLang.Check(tokens);
+            var report = Parser.ExampleLang.Lang.Check(tokens);
             Console.WriteLine(string.Join("\n", report.Info));
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("-----\nДерево компиляции:\n-----");
@@ -44,12 +44,12 @@ namespace StackMachine
                 Console.ReadKey();
                 return 6;
             }
-            List<string> commands = Lang.parserLang.Compile(tokens);
+            List<string> commands = Parser.ExampleLang.Lang.Compile(tokens);
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("-----\nПольская запись:\n-----");
             Console.WriteLine(string.Join(", ", commands));
             Console.ForegroundColor = ConsoleColor.White;
-            Lang.stackMachine.Execute(commands);
+            ExampleLang.stackMachine.Execute(commands);
             Console.Write("Press eny key...");
             Console.ReadLine();
             return 0;

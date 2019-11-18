@@ -1,7 +1,6 @@
 using Parser;
 using Lexer;
 using System.Linq;
-using StackMachine;
 using System.Collections.Generic;
 using MyTypes.Tree;
 
@@ -56,20 +55,20 @@ namespace Optimizing
             foreach(var assign_expr in assign_exprs)
                 if(tryCalculate(assign_expr, varsValues))
                     assign_expr[2].Current =
-                        new Token(Lang.DIGIT, varsValues[((Token)assign_expr[0].Current).Value].ToString());
+                        new Token(Lexer.ExampleLang.DIGIT, varsValues[((Token)assign_expr[0].Current).Value].ToString());
             return new ReportParser(outputCompile);
         }
 
         bool tryCalculate(ITreeNode<object> assign_expr, Dictionary<string, double> varsValues)
         {
-            IEnumerable<string> commands = Lang.parserLang.Compile((from a in assign_expr where a.Current is Token select (Token)a.Current).ToList(),
+            IEnumerable<string> commands = Parser.ExampleLang.Lang.Compile((from a in assign_expr where a.Current is Token select (Token)a.Current).ToList(),
                 new ReportParser(assign_expr));
             Dictionary<string, double> toSend = new Dictionary<string, double>(varsValues);
             foreach(string varName in from a in assign_expr where a.Current is Token tk && tk.Type.Name == "VAR" && !toSend.ContainsKey(tk.Value) select ((Token)a.Current).Value)
             {
                 toSend[varName] = double.NaN;
             }
-            Lang.MyStackLang localStackMachine = new Lang.MyStackLang(toSend);
+            StackMachine.ExampleLang.MyStackLang localStackMachine = new StackMachine.ExampleLang.MyStackLang(toSend);
             try
             {
                 localStackMachine.Execute(commands);

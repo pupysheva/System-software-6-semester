@@ -22,10 +22,10 @@ namespace StackMachine.Test
         public void ParserTest()
         {
             StreamReader input = StringToStream(Resources.LangExample);
-            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
-            ReportParser report = Lang.parserLang.Check(tokens);
+            ReportParser report = Parser.ExampleLang.Lang.Check(tokens);
             Console.WriteLine(string.Join("\n", report.Info));
             Assert.IsTrue(report.IsSuccess);
         }
@@ -34,11 +34,11 @@ namespace StackMachine.Test
         public void CompileTest()
         {
             StreamReader input = StringToStream(Resources.LangExample);
-            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
-            Console.WriteLine(Lang.parserLang.Check(tokens).Compile);
-            List<string> Polish = Lang.parserLang.Compile(tokens);
+            Console.WriteLine(Parser.ExampleLang.Lang.Check(tokens).Compile);
+            List<string> Polish = Parser.ExampleLang.Lang.Compile(tokens);
             Console.WriteLine(string.Join("\n", Polish));
         }
 
@@ -46,18 +46,18 @@ namespace StackMachine.Test
         public void ExecuteTest()
         {
             StreamReader input = StringToStream(Resources.LangExample);
-            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
-            List<string> Polish = Lang.parserLang.Compile(tokens);
+            List<string> Polish = Parser.ExampleLang.Lang.Compile(tokens);
             Console.WriteLine(string.Join("\n", Polish));
-            Lang.stackMachine.Execute(Polish);
-            Assert.AreEqual(0, Lang.stackMachine.list.Count);
-            Assert.AreEqual(1, Lang.stackMachine.Variables["test1"]);
-            Assert.AreEqual(1, Lang.stackMachine.Variables["test2"]);
-            Assert.AreEqual(1, Lang.stackMachine.Variables["test3"]);
-            Assert.AreEqual(1, Lang.stackMachine.Variables["test4"]);
-            Assert.AreEqual(1, Lang.stackMachine.Variables["test"]);
+            ExampleLang.stackMachine.Execute(Polish);
+            Assert.AreEqual(0, ExampleLang.stackMachine.list.Count);
+            Assert.AreEqual(1, ExampleLang.stackMachine.Variables["test1"]);
+            Assert.AreEqual(1, ExampleLang.stackMachine.Variables["test2"]);
+            Assert.AreEqual(1, ExampleLang.stackMachine.Variables["test3"]);
+            Assert.AreEqual(1, ExampleLang.stackMachine.Variables["test4"]);
+            Assert.AreEqual(1, ExampleLang.stackMachine.Variables["test"]);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace StackMachine.Test
         public List<Token> TestOnResourceCount(string text, int count)
         {
             StreamReader input = StringToStream(text);
-            List<Token> tokens = Lang.lexerLang.SearchTokens(input);
+            List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
             foreach (Token token in tokens)

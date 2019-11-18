@@ -23,12 +23,12 @@ namespace Optimizing.Test
         public void CheckOptimizingSimple()
         {
             Assert.AreEqual("a = 1 + 1", Resources.OptimizeFirst);
-            var tokens = Lang.lexerLang.SearchTokens(StringToStream(Resources.OptimizeFirst));
+            var tokens = Lexer.ExampleLang.Lang.SearchTokens(StringToStream(Resources.OptimizeFirst));
             tokens.RemoveAll(t => t.Type.Name.StartsWith("CH_"));
             Console.WriteLine(string.Join("\n", tokens));
-            var output = Lang.parserLang.Compile(
+            var output = Parser.ExampleLang.Lang.Compile(
                 tokens,
-                Lang.parserLang.Check(tokens)
+                Parser.ExampleLang.Lang.Check(tokens)
             );
             Console.WriteLine(string.Join(", ", output));
             CollectionAssert.AreEqual(new string[]{"a", "1", "1", "+", "="}, output);
@@ -47,12 +47,12 @@ namespace Optimizing.Test
 
         private static List<string> CompileAndOptimizing(string resourceBody)
         {
-            var tokens = Lang.lexerLang.SearchTokens(StringToStream(resourceBody));
+            var tokens = Lexer.ExampleLang.Lang.SearchTokens(StringToStream(resourceBody));
             tokens.RemoveAll(t => t.Type.Name.StartsWith("CH_"));
             Console.WriteLine($"tokens:\n{string.Join('\n', tokens)}");
-            var checkedTokens = Lang.parserLang.Check(tokens);
+            var checkedTokens = Parser.ExampleLang.Lang.Check(tokens);
             Console.WriteLine($"preLang:\n{string.Join(", ", checkedTokens)}");
-            var output = Lang.parserLang.Compile(
+            var output = Parser.ExampleLang.Lang.Compile(
                 tokens,
                 Optimizing.SimpleOptimizing.Instance.Optimize(
                     checkedTokens
