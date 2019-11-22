@@ -31,7 +31,7 @@ namespace Optimizing.Example
                 throw new OptimizingException("Входное дерево компиляции построено не верно!");
             if(compiledCode.Compile == null)
                 throw new OptimizingException("Вызовите compiledCode.Compile() перед началом.");
-            ITreeNode<object> outputCompile = CloneTree(compiledCode.Compile);
+            ITreeNode<object> outputCompile = compiledCode.Compile.CloneCompileTree();
 
             var assign_exprs = from a in outputCompile
                 where a.Current is ReportParserCompile rpc && rpc.Source == Parser.ExampleLang.assign_expr
@@ -71,19 +71,6 @@ namespace Optimizing.Example
             catch { return false; }
             varsValues[((Token)assign_expr[0].Current).Value] = toSend.GetValueOrDefault(((Token)assign_expr[0].Current).Value, double.NaN);
             return true;
-        }
-
-        private static ITreeNode<object> CloneTree(ITreeNode<object> CompileTree)
-        {
-            return CompileTree.DeepClone(obj =>
-            {
-                return obj switch
-                {
-                    Token t => t,//new Token(t.Type, t.Value);
-                    ReportParserCompile rpc => rpc,//new ReportParserCompile(rpc.Source, rpc.CurrentRule, rpc.Helper);
-                    _ => throw new OptimizingException($"В дереве компиляции встретился неизвестный тип: {obj.GetType()}"),
-                };
-            });
         }
     }
 }

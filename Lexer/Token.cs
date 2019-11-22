@@ -34,7 +34,7 @@
         /// <summary>
         /// Значение жетона.
         /// </summary>
-        public T Value { get; }
+        public T Value { get; set; }
 
         /// <summary>
         /// Порядковый номер жетона.

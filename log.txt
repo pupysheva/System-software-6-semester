@@ -1,3 +1,4 @@
+Example/Assign_ExprRemover.cs(112,40): warning CS0649: Полю "Assign_ExprRemover.OptimizingStackMachine.DictionaryHooker.IsNotUsed" нигде не присваивается значение, поэтому оно всегда будет иметь значение по умолчанию null. [./Optimizing/Optimizing.csproj]
 Тестовый запуск ./UnitTest/bin/Debug/netcoreapp3.0/UnitTest.dll(.NETCoreApp,Version=v3.0)
 Программа Microsoft (R) Test Execution Command Line Tool версии 16.3.0
 (с) Корпорация Майкрософт (Microsoft Corporation). Все права защищены.
@@ -5,7 +6,7 @@
 Запуск выполнения тестов; подождите...
 
 Общее количество тестовых файлов (1), соответствующих указанному шаблону.
-  X OptimizingSimple (VarVarInVar,a 7 = b 14 =) [39ms]
+  X OptimizingSimple (VarVarInVar,a 7 = b 14 =) [43ms]
   Сообщение об ошибке:
    CollectionAssert.AreEqual failed. (Different number of elements.)
   Трассировка стека:
@@ -512,4 +513,4 @@
 Всего тестов: 55
      Пройдено: 54
      Не пройдено: 1
- Общее время: 3,2493 Секунды
+ Общее время: 3,6357 Секунды

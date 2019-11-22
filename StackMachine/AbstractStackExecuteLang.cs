@@ -22,7 +22,7 @@ namespace StackMachine
         /// <summary>
         /// Таблица переменных для стековой машины.
         /// </summary>
-        public IDictionary<string, double> Variables { get; private set; }
+        public IDictionary<string, double> Variables { get; protected set; }
 
         /// <summary>
         /// Стек, который хранит в себе исполняемый код.
