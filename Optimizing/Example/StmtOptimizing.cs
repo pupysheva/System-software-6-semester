@@ -70,7 +70,6 @@ namespace Optimizing.Example
                 localStackMachine.Execute(commands);
             }
             catch { return null; }
-            varsValues[((Token)assign_expr[0].Current).Value] = toSend.GetValueOrDefault(((Token)assign_expr[0].Current).Value, double.NaN);
             return localStackMachine.GetLastValueStack();
         }
 
@@ -95,8 +94,8 @@ namespace Optimizing.Example
 
             public string GetLastValueStack()
             {
-                string output;
-                while (Stack.TryPop(out output));
+                string output = null;
+                while (Stack.TryPop(out string b)) output = b;
                 return output;
             }
         }

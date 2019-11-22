@@ -64,7 +64,7 @@ namespace Parser
         /// <summary>
         /// Последний свободный идентификатор.
         /// </summary>
-        private ulong FreeId = 0;
+        private static ulong FreeId = 0;
 
         private readonly object sync = new object();
 

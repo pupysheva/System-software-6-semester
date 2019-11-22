@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Parser
 {
@@ -29,6 +30,8 @@ namespace Parser
         public ulong Id { get; }
 
         private readonly static Random ran = new Random();
+
+        private readonly HashSet<ulong> IdsDebug = new HashSet<ulong>();
 
         /// <summary>
         /// Создание нового экземпляра инструкции компилятору.
