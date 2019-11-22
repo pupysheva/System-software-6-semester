@@ -21,9 +21,9 @@ namespace StackMachine
                 : base(startVariables)
             { }
 
-            private readonly Dictionary<string, Action<string, MyStackLang>> commands = new Dictionary<string, Action<string, MyStackLang>>()
+            private readonly Dictionary<string, Action<MyStackLang>> commands = new Dictionary<string, Action<MyStackLang>>()
             {
-                ["print"] = (cmd, _) =>
+                ["print"] = _ =>
                 {
                     StringBuilder sb = new StringBuilder();
                     foreach (var pair in _.Variables)
@@ -35,18 +35,18 @@ namespace StackMachine
                     }
                     Console.Write(sb.ToString());
                 },
-                ["goto!"] = (cmd, _) =>
+                ["goto!"] = _ =>
                 {
                     _.InstructionPointer = (int)_.PopStk() - 1;
                 },
-                ["!f"] = (cmd, _) =>
+                ["!f"] = _ =>
                 {
                     int addr = (int)_.PopStk();
                     int logical = (int)_.PopStk();
                     if (logical == 0) // Если ложь, то пропускаем body.
                         _.InstructionPointer = addr - 1;
                 },
-                ["="] = (cmd, _) =>
+                ["="] = _ =>
                 {
                     double stmt = _.PopStk();
                     string var = _.Stack.Pop();
@@ -54,13 +54,13 @@ namespace StackMachine
                         throw new KeyNotFoundException();
                     _.Variables[var] = stmt;
                 },
-                ["+"] = (cmd, _) =>
+                ["+"] = _ =>
                 {
                     _.Stack.Push(
                         (_.PopStk() + _.PopStk())
                         .ToString());
                 },
-                ["-"] = (cmd, _) =>
+                ["-"] = _ =>
                 {
                     double b = _.PopStk();
                     double a = _.PopStk();
@@ -68,13 +68,13 @@ namespace StackMachine
                         (a - b)
                         .ToString());
                 },
-                ["*"] = (cmd, _) =>
+                ["*"] = _ =>
                 {
                     _.Stack.Push(
                         (_.PopStk() * _.PopStk())
                         .ToString());
                 },
-                ["/"] = (cmd, _) =>
+                ["/"] = _ =>
                 {
                     double b = _.PopStk();
                     double a = _.PopStk();
@@ -82,7 +82,7 @@ namespace StackMachine
                         (a / b)
                         .ToString());
                 },
-                [">"] = (cmd, _) =>
+                [">"] = _ =>
                 {
                     double b = _.PopStk();
                     double a = _.PopStk();
@@ -90,7 +90,7 @@ namespace StackMachine
                         (a > b)
                         ? "1" : "0");
                 },
-                ["<"] = (cmd, _) =>
+                ["<"] = _ =>
                 {
                     double b = _.PopStk();
                     double a = _.PopStk();
@@ -98,66 +98,60 @@ namespace StackMachine
                         (a < b)
                         ? "1" : "0");
                 },
-                ["=="] = (cmd, _) =>
+                ["=="] = _ =>
                 {
                     _.Stack.Push(
                         (_.PopStk() == _.PopStk())
                         ? "1" : "0");
                 },
-                ["!="] = (cmd, _) =>
+                ["!="] = _ =>
                 {
                     _.Stack.Push(
                         (_.PopStk() != _.PopStk())
                         ? "1" : "0");
                 },
-                [HASHSET_ADD.Name] = (cmd, _) =>
+                [HASHSET_ADD.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.Stack.Push(_.set.Add(buffer) ? "1" : "0");
                 },
-                [HASHSET_CONTAINS.Name] = (cmd, _) =>
+                [HASHSET_CONTAINS.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.Stack.Push(_.set.Contains(buffer) ? "1" : "0");
                 },
-                [HASHSET_COUNT.Name] = (cmd, _) =>
+                [HASHSET_COUNT.Name] = _ =>
                 {
                     _.Stack.Push(_.set.Count.ToString());
                 },
-                [HASHSET_REMOVE.Name] = (cmd, _) =>
+                [HASHSET_REMOVE.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.Stack.Push(_.set.Remove(buffer) ? "1" : "0");
                 },
-                ["?"] = (cmd, _) =>
+                ["?"] = _ =>
                 {
                     throw new NotImplementedException();
                 },
-                [LIST_ADD.Name] = (cmd, _) =>
+                [LIST_ADD.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.list.Add(buffer);
                     _.Stack.Push("1");
                 },
-                [LIST_CONTAINS.Name] = (cmd, _) =>
+                [LIST_CONTAINS.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.Stack.Push(_.list.Contains(buffer) ? "1" : "0");
                 },
-                [LIST_COUNT.Name] = (cmd, _) =>
+                [LIST_COUNT.Name] = _ =>
                 {
                     _.Stack.Push(_.list.Count.ToString());
                 },
-                [LIST_REMOVE.Name] = (cmd, _) =>
+                [LIST_REMOVE.Name] = _ =>
                 {
                     double buffer = _.PopStk();
                     _.Stack.Push(_.list.Remove(buffer) ? "1" : "0");
-                },
-                [null] = (cmd, _) => // Объявлена новая переменная.
-                {
-                    if (!_.Variables.ContainsKey(cmd) && !IsNumber(cmd))
-                        _.Variables[cmd] = 0;
-                    _.Stack.Push(cmd);
                 }
             };
 
@@ -168,7 +162,12 @@ namespace StackMachine
 
             protected override void ExecuteCommand(string command)
             {
-                commands.GetValueOrDefault(command, commands[null]).Invoke(command, this);
+                commands.GetValueOrDefault(command, _ => 
+                { // Объявлена новая переменная.
+                    if (!_.Variables.ContainsKey(command) && !IsNumber(command))
+                        _.Variables[command] = 0;
+                    _.Stack.Push(command);
+                }).Invoke(this);
             }
 
             /// <summary>

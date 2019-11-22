@@ -14,7 +14,7 @@ namespace MyTypes.Tree
         protected List<ITreeNode<T>> Children
             = new List<ITreeNode<T>>();
 
-        public TreeNode(T Current = default(T))
+        public TreeNode(T Current = default)
         {
             this.Current = Current;
         }

@@ -30,11 +30,6 @@ namespace Parser
         }
 
         /// <summary>
-        /// Свод правил языка.
-        /// </summary>
-        public static readonly ParserLang Lang = new ParserLang(lang);
-
-        /// <summary>
         /// Главный нетерминал.
         /// Возможно, вам нужно использовать <see cref="Lang"/>.
         /// </summary>
@@ -52,8 +47,6 @@ namespace Parser
                new Nonterminal("LIST_COUNT", AndInserter(0), AND, LIST_COUNT)),
             stmt =
                new Nonterminal(nameof(stmt), OrInserter, OR,
-                   command_hash_expr,
-                   command_list_expr,
                    new Nonterminal("value (OP value)*", AndInserter(0, 1), AND,
                        value,
                        new Nonterminal("(OP value)*", MoreInserter, ZERO_AND_MORE,
@@ -67,8 +60,8 @@ namespace Parser
             b_val_expr = new Nonterminal(nameof(b_val_expr),
                OrInserter, OR, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B), stmt),
             body = new Nonterminal(nameof(body), AndInserter(1), AND, "L_QB", lang, "R_QB"),
-            condition = new Nonterminal(nameof(condition), AndInserter(1, 3, 2), AND, L_B, stmt, R_B),
-            for_condition = new Nonterminal(nameof(condition), AndInserter(0, 2, 1), AND, stmt),
+            condition = new Nonterminal(nameof(condition), AndInserter(1), AND, L_B, stmt, R_B),
+            for_condition = new Nonterminal(nameof(condition), AndInserter(0), AND, stmt),
             while_expr = new Nonterminal(nameof(while_expr),
                (List<string> commands, ActionInsert insert, int helper) =>
                {
@@ -140,11 +133,16 @@ namespace Parser
                }, AND, FOR_KW, L_B, /*2*/assign_expr, COMMA, /*4*/for_condition, COMMA, /*6*/assign_expr, R_B, /*8*/ body),
             cycle_expr = new Nonterminal(nameof(cycle_expr), OrInserter, OR, while_expr, do_while_expr, for_expr),
             expr = new Nonterminal(nameof(expr), OrInserter, OR, PRINT_KW, assign_expr, if_expr_OR_ifelse_expr, cycle_expr, command_hash_expr, command_list_expr);
+
+        /// <summary>
+        /// Свод правил языка.
+        /// </summary>
+        public static readonly ParserLang Lang = new ParserLang(lang);
         
         static ExampleLang()
         {
             lang.Add(expr);
-            value.AddRange(new object[] { VAR, DIGIT, b_val_expr });
+            value.AddRange(new object[] { command_hash_expr, command_list_expr, VAR, DIGIT, b_val_expr });
         }
     }
 }

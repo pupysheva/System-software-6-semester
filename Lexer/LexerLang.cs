@@ -12,45 +12,6 @@ namespace Lexer
         /// <summary>
         /// Создание экземпляра обработчика.
         /// </summary>
-        public LexerLang()
-        {
-            availableTerminals = new List<Terminal>()
-            {
-
-                new Terminal("ASSIGN_OP", "^=$"),
-                new Terminal("VAR", "^[a-zA-Z]+$", uint.MaxValue),
-                new Terminal("DIGIT", "^0|([1-9][0-9]*)$"),
-                new Terminal("OP", "^\\+|-|\\*|/$"),
-                new Terminal("LOGICAL_OP", "^>|<|>=|<=|==$"),
-                new Terminal("WHILE_KW", "^while$", 0),
-                new Terminal("PRINT_KW", "^print$", 0),
-                new Terminal("FOR_KW", "^for$", 0),
-                new Terminal("IF_KW", "^if$", 0),
-                new Terminal("ELSE_KW", "^else$", 0),
-                new Terminal("L_QB", "^{$"),
-                new Terminal("R_QB", "^}$"),
-                new Terminal("L_B", "^\\($"),
-                new Terminal("R_B", "^\\)$"),
-                new Terminal("COMMA", "^;$"),
-                new Terminal("COM", "^,$"),
-                /*
-                 Те терминалы, которые ниже, по-сути нужны парсеру.
-                 Для того, чтобы проанализировать выражение:
-                 a = "Привет, мир!",
-                 чтобы не было так:
-                 a="Привет,мир!".
-                 */
-                new Terminal("CH_SPACE", "^ $"),
-                new Terminal("CH_LEFTLINE", "^\r$"),
-                new Terminal("CH_NEWLINE", "^\n$"),
-                new Terminal("CH_TAB", "^\t$")
-
-            };
-        }
-
-        /// <summary>
-        /// Создание экземпляра обработчика.
-        /// </summary>
         /// <param name="availableTerminals">Набор разрешённых терминалов.</param>
         public LexerLang(IEnumerable<Terminal> availableTerminals)
         {
@@ -65,7 +26,7 @@ namespace Lexer
         /// <summary>
         /// Переобразование входного текста в лист жетонов на основе
         /// правил терминалов.
-        /// Не забудьте после удалить все комментарии и CH_ жетоны!
+        /// Не забудьте после удалить все комментарии и CH_ жетоны, если используете <see cref="ExampleLang.Lang"/>!
         /// </summary>
         /// <param name="input">Входной поток текста.</param>
         /// <returns>Список найденных жетонов.</returns>
@@ -137,7 +98,8 @@ namespace Lexer
                     output.Add(
                         new Token(
                         termsFound.First(),
-                        bufferList.ToString()
+                        bufferList.ToString(),
+                        (ulong)output.Count
                         ));
                     bufferList.Clear();
                     lastAdd = true;

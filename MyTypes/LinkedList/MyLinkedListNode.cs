@@ -17,14 +17,14 @@
         }
 
         /// <summary>
-        /// Инициализирует новый экзампляр <see cref="MyLinkedList{T}"/> класс,
+        /// Инициализирует новый экземпляр <see cref="MyLinkedList{T}"/> класс,
         /// содержащий указанное значение и связанный с конкретным листом.
         /// </summary>
         /// <param name="list">Лист, в котором создаётся узел.</param>
         /// <param name="previous">Предыдущий узел по отношению к создаваемому узлу.</param>
         /// <param name="next">Следующий узел по отношению к создаваемому узлу.</param>
         /// <param name="value">Значение, которое должно содержаться в <see cref="MyLinkedListNode{T}"/>.</param>
-        internal MyLinkedListNode(MyLinkedList<T> list, MyLinkedListNode<T> previous, MyLinkedListNode<T> next, T value = default(T)) : this(value)
+        internal MyLinkedListNode(MyLinkedList<T> list, MyLinkedListNode<T> previous, MyLinkedListNode<T> next, T value = default) : this(value)
         {
             List = list;
             Previous = previous;

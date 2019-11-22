@@ -3,6 +3,7 @@ using Lexer;
 using System.Linq;
 using System.Collections.Generic;
 using MyTypes.Tree;
+using System;
 
 namespace Optimizing
 {
@@ -12,6 +13,7 @@ namespace Optimizing
         /// Получает готовый экземпляр <see cref="SimpleOptimizing"/> из кэша.
         /// </summary>
         public static readonly SimpleOptimizing Instance = new SimpleOptimizing();
+        private static readonly Random ran = new Random();
 
         private SimpleOptimizing() {}
 
@@ -28,15 +30,12 @@ namespace Optimizing
                 throw new OptimizingException("Вызовите compiledCode.Compile() перед началом.");
             ITreeNode<object> outputCompile = compiledCode.Compile.DeepClone(obj =>
             {
-                switch(obj)
+                return obj switch
                 {
-                    case Token t:
-                        return t;//new Token(t.Type, t.Value);
-                    case ReportParserCompile rpc:
-                        return rpc;//new ReportParserCompile(rpc.Source, rpc.CurrentRule, rpc.Helper);
-                    default:
-                        throw new OptimizingException($"В дереве компиляции встретился неизвестный тип: {obj.GetType()}");
-                }
+                    Token t => t,//new Token(t.Type, t.Value);
+                    ReportParserCompile rpc => rpc,//new ReportParserCompile(rpc.Source, rpc.CurrentRule, rpc.Helper);
+                    _ => throw new OptimizingException($"В дереве компиляции встретился неизвестный тип: {obj.GetType()}"),
+                };
             });
             var assign_exprs = from a in outputCompile
                 where a.Current is ReportParserCompile rpc && rpc.Source.Name == "assign_expr"
@@ -55,7 +54,7 @@ namespace Optimizing
             foreach(var assign_expr in assign_exprs)
                 if(tryCalculate(assign_expr, varsValues))
                     assign_expr[2].Current =
-                        new Token(Lexer.ExampleLang.DIGIT, varsValues[((Token)assign_expr[0].Current).Value].ToString());
+                        new Token(Lexer.ExampleLang.DIGIT, varsValues[((Token)assign_expr[0].Current).Value].ToString(), ran.NextULong());
             return new ReportParser(outputCompile);
         }
 

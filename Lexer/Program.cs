@@ -13,7 +13,7 @@ namespace Lexer
             try
             {
                 // Получаем жетоны.
-                tokens = new LexerLang().SearchTokens(stream);
+                tokens = ExampleLang.Lang.SearchTokens(stream);
             }
             catch(LexerException e)
             {

@@ -17,12 +17,10 @@ namespace Parser
                 filename = Console.ReadLine();
             try
             {
-                using (StreamReader file = new StreamReader(filename))
-                {
-                    List<Token> tokens = new LexerLang().SearchTokens(file);
-                    tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-                    Console.WriteLine(new ParserLang().Check(tokens).ToString());
-                }
+                using StreamReader file = new StreamReader(filename);
+                List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(file);
+                tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+                Console.WriteLine(Parser.ExampleLang.Lang.Check(tokens).ToString());
             }
             catch(Exception e)
             {

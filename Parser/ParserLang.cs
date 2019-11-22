@@ -16,7 +16,7 @@ namespace Parser
         private readonly Nonterminal mainNonterminal;
 
         public ParserLang(Nonterminal mainNonterminal)
-            => this.mainNonterminal = mainNonterminal ?? throw new ArgumentNullException();
+            => this.mainNonterminal = mainNonterminal ?? throw new ArgumentNullException(nameof(mainNonterminal));
 
         /// <summary>
         /// Проверяет, соответствует ли заданный язык программирования грамматике.
@@ -38,7 +38,7 @@ namespace Parser
             if (report == null)
                 report = Check(tokens);
             if (!report.IsSuccess)
-                return null;
+                throw new ArgumentException("Свойство report.IsSuccess вернуло false. Возможно, входной файл написан с ошибками. Он не может быть скомпилирован.");
             ITreeNode<object> compileTree = report.Compile;
             ReportParserCompile currentComp = (ReportParserCompile)compileTree.Current;
             currentComp.Source.TransferToStackCode(commands, (i) => Inserter(i, compileTree, commands), currentComp.Helper);

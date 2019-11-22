@@ -40,10 +40,10 @@ namespace StackMachine
         {
             if (code == null)
                 throw new ArgumentNullException();
-            else if (code is LinkedList<string>)
-                Execute((LinkedList<string>)code);
-            else if (code is IList<string>)
-                ((IExecuteLang)this).Execute((IList<string>)code);
+            else if (code is LinkedList<string> list)
+                Execute(list);
+            else if (code is IList<string> list1)
+                ((IExecuteLang)this).Execute(list1);
             else
                 ExecuteIEnumerable(code);
         }

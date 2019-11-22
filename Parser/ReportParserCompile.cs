@@ -1,4 +1,6 @@
-﻿namespace Parser
+﻿using System;
+
+namespace Parser
 {
     public class ReportParserCompile
     {
@@ -22,6 +24,13 @@
         public int Helper;
 
         /// <summary>
+        /// Случайное число.
+        /// </summary>
+        public ulong Id { get; } = ran.NextULong();
+
+        private readonly static Random ran = new Random();
+
+        /// <summary>
         /// Создание нового экземпляра инструкции компилятору.
         /// </summary>
         /// <param name="Source">Источник, кто добавил в компилятор запись.</param>
@@ -34,6 +43,6 @@
         }
 
         public override string ToString()
-            => $"ReportParserCompile: {{{(Helper == int.MinValue ? "" : $"h: {Helper}, ")}rule: {CurrentRule}, src: {Source}}}";
+            => $"{nameof(ReportParserCompile)}: {{ Id: RPC{Id}, {(Helper == int.MinValue ? "" : $"h: {Helper}, ")}rule: {CurrentRule}, src: {Source}}}";
     }
 }

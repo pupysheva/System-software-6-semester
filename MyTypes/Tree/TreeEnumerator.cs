@@ -91,7 +91,7 @@ namespace MyTypes.Tree
         object IEnumerator.Current => Current;
 
         public void Dispose()
-            => Start = default(J);
+            => Start = default;
 
         public bool MoveNext()
         {

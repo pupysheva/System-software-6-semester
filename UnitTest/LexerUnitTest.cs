@@ -10,7 +10,7 @@ namespace UnitTest
     [TestClass]
     public class LexerUnitTest
     {
-        LexerLang lang = new LexerLang();
+        private readonly LexerLang lang = ExampleLang.Lang;
 
 #pragma warning disable IDE1006 // Стили именования
         /// <summary>

@@ -14,11 +14,11 @@ namespace UnitTest
         /// <summary>
         /// Содержит нетерминалы среды тестирования.
         /// </summary>
-        private readonly ParserLang parserLang = new ParserLang();
+        private readonly ParserLang parserLang = Parser.ExampleLang.Lang;
         /// <summary>
         /// Содержит терминалы среды тестирования.
         /// </summary>
-        private readonly LexerLang lexerLang = new LexerLang();
+        private readonly LexerLang lexerLang = Lexer.ExampleLang.Lang;
 
         [TestMethod]
         public void ParserOR_assign_op()
@@ -49,10 +49,11 @@ namespace UnitTest
         [TestMethod]
         public void Parser_assign_op_full()
             => CheckTest(Resources.Parser_assign_op_full, true, 17);
-
+#pragma warning disable IDE1006 // Стили именования
         [TestMethod]
         public void _while()
             => CheckTest(Resources._while, true, 16);
+#pragma warning restore IDE1006
 
         [TestMethod]
         public void Parser_var_op_while_print_var()
@@ -60,8 +61,7 @@ namespace UnitTest
 
         [TestMethod]
         public void Parser_do_while()
-            // Поставить на true, когда будет разработан do while.
-            => CheckTest(Resources.Parser_do_while, false, 10);
+            => CheckTest(Resources.Parser_do_while, true, 10);
 
         [TestMethod]
         public void Parser_for()

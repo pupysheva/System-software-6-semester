@@ -24,6 +24,7 @@ namespace StackMachine.Test
             StreamReader input = StringToStream(Resources.LangExample);
             List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
+            Console.WriteLine(string.Join("\n", tokens));
             input.Close();
             ReportParser report = Parser.ExampleLang.Lang.Check(tokens);
             Console.WriteLine(string.Join("\n", report.Info));
@@ -37,8 +38,10 @@ namespace StackMachine.Test
             List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(input);
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
             input.Close();
-            Console.WriteLine(Parser.ExampleLang.Lang.Check(tokens).Compile);
-            List<string> Polish = Parser.ExampleLang.Lang.Compile(tokens);
+            var check = Parser.ExampleLang.Lang.Check(tokens);
+            Console.WriteLine(check.Compile);
+            Assert.IsTrue(check.IsSuccess);
+            List<string> Polish = Parser.ExampleLang.Lang.Compile(tokens, check);
             Console.WriteLine(string.Join("\n", Polish));
         }
 
