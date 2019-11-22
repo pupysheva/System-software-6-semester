@@ -8,7 +8,7 @@ namespace Parser
         /// <summary>
         /// Кто добавил?
         /// </summary>
-        public readonly Nonterminal Source;
+        public Nonterminal Source;
         /// <summary>
         /// Конкретное правило, которое использует нетерминал.
         /// Несмотря на то, что у нетерминала присваивается одно правило,
@@ -16,7 +16,7 @@ namespace Parser
         /// Так, при использовании <see cref="RuleOperator.ONE_AND_MORE"/> также используются правила:
         /// <see cref="RuleOperator.ZERO_AND_MORE"/> и <see cref="RuleOperator.AND"/>.
         /// </summary>
-        public readonly RuleOperator CurrentRule;
+        public RuleOperator CurrentRule;
         /// <summary>
         /// Для AND не нужен.
         /// Для OR - идентификатор следующего шага.

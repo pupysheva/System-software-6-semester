@@ -165,7 +165,8 @@ namespace StackMachine
                 commands.GetValueOrDefault(command, _ => 
                 { // Объявлена новая переменная.
                     if (!_.Variables.ContainsKey(command) && !IsNumber(command))
-                        _.Variables[command] = 0;
+                    {
+                    }
                     _.Stack.Push(command);
                 }).Invoke(this);
             }

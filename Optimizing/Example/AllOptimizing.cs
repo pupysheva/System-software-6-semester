@@ -13,7 +13,8 @@ namespace Optimizing.Example
         private static readonly IEnumerable<IOptimizing> optimizations = new IOptimizing[]
         {
             Assign_ExprStmtOptimizing.Instance,
-            StmtOptimizing.Instance
+            StmtOptimizing.Instance,
+            Assign_ExprRemover.Instance
         };
 
         private AllOptimizing(){}

@@ -5,6 +5,7 @@ using MyTypes.Tree;
 using Parser;
 using Lexer;
 using System.Linq;
+using System;
 
 namespace Optimizing.Example
 {
@@ -17,16 +18,18 @@ namespace Optimizing.Example
 
         private Assign_ExprRemover() {}
 
+        public readonly Terminal EMPTY = new Terminal(nameof(EMPTY));
+
         public ReportParser Optimize(ReportParser compiledCode)
         {
             if(!compiledCode.IsSuccess)
                 throw new OptimizingException("Входное дерево компиляции построено не верно!");
             if(compiledCode.Compile == null)
                 throw new OptimizingException("Вызовите compiledCode.Compile() перед началом.");
-            ITreeNode<object> outputCompile = compiledCode.Compile.CloneCompileTree();
+            ITreeNode<object> treeCompileForCheckVars = compiledCode.Compile.CloneCompileTree();
 
-            var assignOpTokens = from a in outputCompile
-            where a.Current is Token token && token.Type == Lexer.ExampleLang.OP && token.Value == "="
+            var assignOpTokens = from a in treeCompileForCheckVars
+            where a.Current is Token token && token.Type == Lexer.ExampleLang.ASSIGN_OP
             select (Token)a.Current;
 
             foreach(Token t in assignOpTokens)
@@ -34,17 +37,27 @@ namespace Optimizing.Example
                 t.Value = t.Id + " =";
             }
 
-            IList<string> commands = string.Join(' ', Parser.ExampleLang.Lang.Compile((from a in outputCompile where a.Current is Token t select (Token)a.Current).ToList())).Split(' ');
+            IList<string> commands = string.Join(' ', Parser.ExampleLang.Lang.Compile((from a in treeCompileForCheckVars where a.Current is Token t select (Token)a.Current).ToList(), new ReportParser(treeCompileForCheckVars))).Split(' ');
             HashSet<ulong> TokensToRemove = new OptimizingStackMachine().MyExecute(commands);
 
-            var RPCToRemove = from a in outputCompile where a.Current is ReportParserCompile && a.Count == 3 && a[1].Current is Token && TokensToRemove.Contains(((Token)a[1].Current).Id)
+            foreach(Token t in assignOpTokens)
+            {
+                t.Value = "=";
+            }
+
+            ITreeNode<object> output = compiledCode.Compile.CloneCompileTree();
+
+            var RPCToRemove = from a in output where a.Current is ReportParserCompile && a.Count == 3 && a[1].Current is Token token && TokensToRemove.Contains(token.Id)
             select a;
             foreach(var rpc in RPCToRemove)
             {
                 rpc.Clear();
+                ((ReportParserCompile)rpc.Current).CurrentRule = RuleOperator.ZERO_AND_MORE;
+                ((ReportParserCompile)rpc.Current).Source = Parser.ExampleLang.lang;
+                ((ReportParserCompile)rpc.Current).Helper = int.MinValue;
             }
 
-            return new ReportParser(outputCompile);
+            return new ReportParser(output);
         }
 
         class OptimizingStackMachine : StackMachine.ExampleLang.MyStackLang
@@ -53,17 +66,13 @@ namespace Optimizing.Example
             readonly HashSet<ulong> ToRemove = new HashSet<ulong>();
             public OptimizingStackMachine(IDictionary<string, double> startVariables = null) : base(null)
             {
-                myDic = new DictionaryHooker(startVariables);
+                myDic = new DictionaryHooker(this, startVariables);
                 base.Variables = myDic;
                 base.commands["="] = _ =>
                 {
                     ulong id = ulong.Parse(Stack.Pop());
                     double stmt = PopStk();
                     string var = Stack.Pop();
-                    if(!myDic.IsLastSetIsUsed)
-                    {
-                        ToRemove.Add(id);
-                    }
                     if (IsNumber(var))
                         throw new KeyNotFoundException();
                     Variables[var] = stmt;
@@ -79,26 +88,19 @@ namespace Optimizing.Example
 
             public IEnumerable<ulong> GetIdsOfLastSet(IList<string> code)
             {
-                IEnumerable<string> ECode = code.Reverse();
-                foreach(string var in myDic.IsNotUsed)
+                foreach(var var in myDic.IsNotUsedIndexes)
                 {
-                    using IEnumerator<string> EnumCode = ECode.GetEnumerator();
-                    while(EnumCode.MoveNext())
-                    {
-                        if(EnumCode.Current == var)
-                        {
-                            EnumCode.MoveNext();
-                            yield return ulong.Parse(EnumCode.Current);
-                            break;
-                        }
-                    }
+                    yield return ulong.Parse(code[var.Item1]);
                 }
             }
 
             class DictionaryHooker : IDictionary<string, double>
             {
-                public DictionaryHooker(IDictionary<string, double> source = null)
+                private readonly OptimizingStackMachine Machine;
+
+                public DictionaryHooker(OptimizingStackMachine machine, IDictionary<string, double> source = null)
                 {
+                    Machine = machine;
                     if(source != null)
                         Source = source;
                     else
@@ -109,22 +111,36 @@ namespace Optimizing.Example
                 /// <summary>
                 /// Переменные, которые использовались для чтения.
                 /// </summary>
-                public HashSet<string> IsNotUsed;
-
-                public bool IsLastSetIsUsed { get; private set; } 
+                public List<(int, string)> IsNotUsedIndexes = new List<(int, string)>();
 
                 public double this[string key]
                 {
                     get
                     {
-                        IsNotUsed.Remove(key);
+                        RemoveFromIndex(key, Machine.InstructionPointer);
                         return Source[key];
                     }
                     set
                     {
-                        IsLastSetIsUsed = !IsNotUsed.Contains(key);
-                        IsNotUsed.Add(key);
+                        IsNotUsedIndexes.Add((Machine.InstructionPointer - 1, key));
                         Source[key] = value;
+                    }
+                }
+
+                private void RemoveFromIndex(string var, int ofLeft)
+                {
+                    int? indexMax = null;
+                    for(int i = 0; i < IsNotUsedIndexes.Count; i++)
+                    {
+                        if(var == IsNotUsedIndexes[i].Item2 && IsNotUsedIndexes[i].Item1 < ofLeft)
+                        {
+                            if(!indexMax.HasValue || IsNotUsedIndexes[i].Item1 > IsNotUsedIndexes[indexMax.Value].Item1)
+                                indexMax = i;
+                        }
+                    }
+                    if(indexMax.HasValue)
+                    {
+                        IsNotUsedIndexes.RemoveAt(indexMax.Value);
                     }
                 }
 
@@ -143,7 +159,6 @@ namespace Optimizing.Example
 
                 public void Add(KeyValuePair<string, double> item)
                 {
-                    IsNotUsed.Add(item.Key);
                     Source.Add(item);
                 }
 
@@ -154,13 +169,11 @@ namespace Optimizing.Example
 
                 public bool Contains(KeyValuePair<string, double> item)
                 {
-                    IsNotUsed.Remove(item.Key);
                     return Source.Contains(item);
                 }
 
                 public bool ContainsKey(string key)
                 {
-                    IsNotUsed.Remove(key);
                     return Source.ContainsKey(key);
                 }
 
@@ -171,7 +184,11 @@ namespace Optimizing.Example
 
                 public IEnumerator<KeyValuePair<string, double>> GetEnumerator()
                 {
-                    return Source.GetEnumerator();
+                    foreach(var pair in Source)
+                    {
+                        RemoveFromIndex(pair.Key, Machine.InstructionPointer);
+                        yield return pair;
+                    }
                 }
 
                 public bool Remove(string key)
