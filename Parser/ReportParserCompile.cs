@@ -26,7 +26,7 @@ namespace Parser
         /// <summary>
         /// Случайное число.
         /// </summary>
-        public ulong Id { get; } = ran.NextULong();
+        public ulong Id { get; }
 
         private readonly static Random ran = new Random();
 
@@ -35,11 +35,15 @@ namespace Parser
         /// </summary>
         /// <param name="Source">Источник, кто добавил в компилятор запись.</param>
         /// <param name="Helper">Дополнительная информация о результатах парсера.</param>
-        public ReportParserCompile(Nonterminal Source, RuleOperator CurrentRule, int Helper = int.MinValue)
+        public ReportParserCompile(Nonterminal Source, RuleOperator CurrentRule, int Helper = int.MinValue, ulong Id = ulong.MaxValue)
         {
             this.Source = Source;
             this.CurrentRule = CurrentRule;
             this.Helper = Helper;
+            if(Id != ulong.MaxValue)
+                this.Id = Id;
+            else
+                this.Id = ran.NextULong();
         }
 
         public override string ToString()

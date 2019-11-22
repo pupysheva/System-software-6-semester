@@ -62,6 +62,13 @@ namespace Parser
         public readonly TransferToStackCode TransferToStackCode = null;
 
         /// <summary>
+        /// Последний свободный идентификатор.
+        /// </summary>
+        private ulong FreeId = 0;
+
+        private readonly object sync = new object();
+
+        /// <summary>
         /// Создание экземпляра нетерминала.
         /// </summary>
         /// <param name="Name">Устанавливает имя терминала.</param>
@@ -100,11 +107,11 @@ namespace Parser
         /// Проверяет, чтобы заданные жетоны соответствовали нетерминалу.
         /// </summary>
         /// <param name="tokens">Список жетонов, которые надо проверить.</param>
-        /// <returns>True, если последовательность жетонов подходит нетерминалу. Иначе - false.</returns>
+        /// <returns>Отчёт анализа кода.</returns>
         public ReportParser CheckRule(List<Token> tokens)
         {
             int a = 0, b = tokens.Count - 1;
-            return CheckRule(500, tokens, ref a, ref b);
+            return CheckRule(tokens, ref a, ref b);
         }
 
         /// <summary>
@@ -113,8 +120,32 @@ namespace Parser
         /// <param name="tokens">Список жетонов, которые надо проверить.</param>
         /// <param name="begin">Первый доступный индекс в листе tokens.</param>
         /// <param name="end">Последний доступный индекс в листе tokens.</param>
-        /// <returns>True, если последовательность жетонов подходит нетерминалу. Иначе - false.</returns>
-        public ReportParser CheckRule(int deep, IList<Token> tokens, ref int begin, ref int end)
+        /// <param name="deep">Ограничение по поиску в глубину.</param>
+        /// <returns>Отчёт анализа кода.</returns>
+        public ReportParser CheckRule(IList<Token> tokens, ref int begin, ref int end, int deep = 500)
+        {
+            lock(sync)
+            {
+                try
+                {
+                    var output = PCheckRule(deep, tokens, ref begin, ref end);
+                    return output;
+                }
+                finally
+                {
+                    FreeId = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Проверяет, чтобы заданные жетоны соответствовали нетерминалу.
+        /// </summary>
+        /// <param name="tokens">Список жетонов, которые надо проверить.</param>
+        /// <param name="begin">Первый доступный индекс в листе tokens.</param>
+        /// <param name="end">Последний доступный индекс в листе tokens.</param>
+        /// <returns>Отчёт анализа кода.</returns>
+        private ReportParser PCheckRule(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
             if (tokens == null)
                 throw new ArgumentNullException("Список жетонов должен был инициализирован.");
@@ -142,13 +173,12 @@ namespace Parser
                     throw new NotImplementedException($"Оператор {Enum.GetName(typeof(RuleOperator), rule)} не реализован.");
             }
             output.Info.AddInfo("Состояние отчёта: " + output.IsSuccess + ", выхожу из нетерминала: " + ToString());
-            deep++;
             return output;
         }
 
         private ReportParser RuleZERO_AND_MORE(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1);
+            ReportParserCompile compile = new ReportParserCompile(this, ZERO_AND_MORE, -1, FreeId++);
             ReportParser output = new ReportParser(compile);
             do
             {
@@ -162,7 +192,7 @@ namespace Parser
 
         private ReportParser RuleONE_AND_MORE(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1);
+            ReportParserCompile compile = new ReportParserCompile(this, ONE_AND_MORE, -1, FreeId++);
             ReportParser output = new ReportParser(compile);
             compile.Helper++;
             if (!RuleMORE(deep, tokens, output, ref begin, ref end))
@@ -199,9 +229,9 @@ namespace Parser
                     else
                         output.Compile.Add(tokens[begin - 1]);
                 }
-                else if (o is Nonterminal)
+                else if (o is Nonterminal nonterminal)
                 {
-                    output.Merge(((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end));
+                    output.Merge(nonterminal.PCheckRule(deep, tokens, ref begin, ref end));
                     if (!output.IsSuccess)
                     {
                         output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
@@ -224,7 +254,7 @@ namespace Parser
 
         private ReportParser RuleAND(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
-            ITreeNode<object> compileTree = new TreeNode<object>(new ReportParserCompile(this, AND));
+            ITreeNode<object> compileTree = new TreeNode<object>(new ReportParserCompile(this, AND, Id: FreeId++));
             ReportParser output = new ReportParser(compileTree);
             int b = begin;
             int e = end;
@@ -245,9 +275,9 @@ namespace Parser
                         output.Info.Success(tokens[begin - 1].ToString());
                     }
                 }
-                else if(o is Nonterminal)
+                else if(o is Nonterminal nonterminal)
                 {
-                    output.Merge(((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end));
+                    output.Merge(nonterminal.PCheckRule(deep, tokens, ref begin, ref end));
                     if(!output.IsSuccess)
                     {
                         output.Info.Add(new ReportParserInfoLine(o, null, tokens, begin));
@@ -272,7 +302,7 @@ namespace Parser
 
         private ReportParser RuleOR(int deep, IList<Token> tokens, ref int begin, ref int end)
         {
-            ReportParserCompile comp = new ReportParserCompile(this, OR, -1);
+            ReportParserCompile comp = new ReportParserCompile(this, OR, -1, FreeId++);
             ITreeNode<object> compileTree = new TreeNode<object>(comp);
             ReportParser output = new ReportParser(compileTree);
             foreach (object o in this)
@@ -292,9 +322,9 @@ namespace Parser
                         return output;
                     }
                 }
-                else if (o is Nonterminal)
+                else if (o is Nonterminal nonterminal)
                 {
-                    ReportParser buffer = ((Nonterminal)o).CheckRule(deep, tokens, ref begin, ref end);
+                    ReportParser buffer = nonterminal.PCheckRule(deep, tokens, ref begin, ref end);
                     if (buffer.IsSuccess)
                     {
                         output.Merge(buffer);
@@ -328,7 +358,7 @@ namespace Parser
             if (!IsCanAdd(value))
                 throw new ArgumentException(
                     "Ожидался жетон или оператор. Фактически: " + value.ToString());
-            return value is string ? new Terminal((string)value)
+            return value is string @string ? new Terminal(@string)
                 : value;
         }
 
@@ -348,7 +378,7 @@ namespace Parser
             || value is string
             || value is RuleOperator
             || value is Nonterminal
-            || (value is object[] && IsCanAddRange((object[])value))
+            || (value is object[] v && IsCanAddRange(v))
             );
 
         /// <summary>
@@ -391,9 +421,9 @@ namespace Parser
                 {
                     if (o != null)
                     {
-                        if (o is Nonterminal)
+                        if (o is Nonterminal nonterminal)
                             if (depth != 0)
-                                sb.Append("{ " + ((Nonterminal)o).ToString(depth - 1) + " }");
+                                sb.Append("{ " + nonterminal.ToString(depth - 1) + " }");
                             else
                                 sb.Append("{ ... }");
                         else
