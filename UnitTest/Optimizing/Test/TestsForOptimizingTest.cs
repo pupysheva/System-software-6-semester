@@ -56,7 +56,7 @@ namespace Optimizing.Test
             Assert.IsTrue(checkedTokens.IsSuccess, "Ошибка компиляции.");
             var output = Parser.ExampleLang.Lang.Compile(
                 tokens,
-                SimpleOptimizing.Instance.Optimize(
+                Example.AllOptimizing.Instance.Optimize(
                     checkedTokens
                 )
             );

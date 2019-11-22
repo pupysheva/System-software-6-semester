@@ -256,7 +256,7 @@ namespace UnitTest
                     break;
                 default:
                     {
-                        if (!Variables.ContainsKey(command) && !double.TryParse(command, out double drop))
+                        if (!Variables.ContainsKey(command) && !double.TryParse(command, out _))
                             Variables[command] = 0;
                         Stack.Push(command);
                     }

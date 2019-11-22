@@ -21,7 +21,7 @@ namespace StackMachine
                 : base(startVariables)
             { }
 
-            private readonly Dictionary<string, Action<MyStackLang>> commands = new Dictionary<string, Action<MyStackLang>>()
+            protected readonly Dictionary<string, Action<MyStackLang>> commands = new Dictionary<string, Action<MyStackLang>>()
             {
                 ["print"] = _ =>
                 {
@@ -173,12 +173,12 @@ namespace StackMachine
             /// <summary>
             /// Получает с стека значение и вызывает <see cref="GetValueOfVarOrDigit(string)"/>.
             /// </summary>
-            private double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
+            protected double PopStk() => GetValueOfVarOrDigit(Stack.Pop());
 
-            private static bool IsNumber(string str)
+            protected static bool IsNumber(string str)
                 => double.TryParse(str, out double _);
 
-            private double GetValueOfVarOrDigit(string VarOrDigit)
+            protected double GetValueOfVarOrDigit(string VarOrDigit)
             {
                 if (double.TryParse(VarOrDigit, out double result))
                     return result;
