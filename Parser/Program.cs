@@ -20,7 +20,8 @@ namespace Parser
                 using StreamReader file = new StreamReader(filename);
                 List<Token> tokens = Lexer.ExampleLang.Lang.SearchTokens(file);
                 tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
-                Console.WriteLine(Parser.ExampleLang.Lang.Check(tokens).ToString());
+                var report = Parser.ExampleLang.Lang.Check(tokens);
+                Console.WriteLine(report.ToString());
             }
             catch(Exception e)
             {

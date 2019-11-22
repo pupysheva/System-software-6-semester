@@ -44,7 +44,7 @@ namespace StackMachine
                 Console.ReadKey();
                 return 6;
             }
-            List<string> commands = Parser.ExampleLang.Lang.Compile(tokens);
+            List<string> commands = Parser.ExampleLang.Lang.Compile(tokens, report);
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("-----\nПольская запись:\n-----");
             Console.WriteLine(string.Join(", ", commands));
