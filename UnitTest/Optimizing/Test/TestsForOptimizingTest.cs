@@ -20,7 +20,7 @@ namespace Optimizing.Test
         [TestMethod]
         public void CheckOptimizingSimple()
         {
-            Assert.AreEqual("a = 1 + 1\nprint", Resources.OptimizeFirst);
+            Assert.AreEqual($"a = 1 + 1{Environment.NewLine}print", Resources.OptimizeFirst);
             var tokens = Lexer.ExampleLang.Lang.SearchTokens(StringToStream(Resources.OptimizeFirst));
             tokens.RemoveAll(t => t.Type.Name.StartsWith("CH_"));
             Console.WriteLine(string.Join("\n", tokens));

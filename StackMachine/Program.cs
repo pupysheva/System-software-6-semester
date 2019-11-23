@@ -1,4 +1,5 @@
 ﻿using Lexer;
+using Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,6 +54,11 @@ namespace StackMachine
             Console.Write("Press eny key...");
             Console.ReadLine();
             return 0;
+        }
+
+        public static ReportParser GetParserReportFromUser()
+        {
+            return null;
         }
 
         /// <summary>
