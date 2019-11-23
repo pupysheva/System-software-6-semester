@@ -37,14 +37,6 @@ namespace Optimizing.Example
                 where a.Current is ReportParserCompile rpc && rpc.Source == Parser.ExampleLang.assign_expr
                 select a;
 
-            var VarsOnLeftOfAssign_expr = from a in assign_exprs    select a[0];
-
-            var allVars = from a in outputCompile
-                where a.Current is Token t && t.Type == Lexer.ExampleLang.VAR
-                select a;
-            
-            var VarsOnRightOfAssign_expr = allVars.Except(VarsOnLeftOfAssign_expr);
-
             Dictionary<string, double> varsValues = new Dictionary<string, double>();
 
             foreach(var assign_expr in assign_exprs)

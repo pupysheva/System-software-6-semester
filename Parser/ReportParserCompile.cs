@@ -31,8 +31,6 @@ namespace Parser
 
         private readonly static Random ran = new Random();
 
-        private readonly HashSet<ulong> IdsDebug = new HashSet<ulong>();
-
         /// <summary>
         /// Создание нового экземпляра инструкции компилятору.
         /// </summary>

@@ -9,7 +9,7 @@ namespace Parser
         private static void OrInserter(List<string> commands, ActionInsert insert, int helper)
             => insert();
 
-        private static TransferToStackCode AndInserter(params int[] order)
+        public static TransferToStackCode AndInserter(params int[] order)
         {
             return (List<string> commands, ActionInsert insert, int helper) =>
             {
@@ -18,12 +18,12 @@ namespace Parser
                     insert(order[a++]);
             };
         }
-        private static void MoreInserter(List<string> commands, ActionInsert insert, int helper)
+        public static void MoreInserter(List<string> commands, ActionInsert insert, int helper)
         {
             for(int i = 0; i < helper; i++)
                 insert(i);
         }
-        private static void WordAndValue(List<string> commands, ActionInsert insert, int helper)
+        public static void WordAndValue(List<string> commands, ActionInsert insert, int helper)
         {
             insert(1);
             insert(0);
@@ -57,8 +57,12 @@ namespace Parser
                        )
                    )
                ),
-            b_val_expr = new Nonterminal(nameof(b_val_expr),
-               OrInserter, OR, new Nonterminal("L_B stmt R_B", AndInserter(1), AND, L_B, stmt, R_B), stmt),
+            b_val_expr = new Nonterminal(nameof(b_val_expr), OrInserter, OR,
+                new Nonterminal("L_B stmt R_B", AndInserter(1), AND,
+                    L_B,
+                    stmt,
+                    R_B),
+                stmt),
             body = new Nonterminal(nameof(body), AndInserter(1), AND, "L_QB", lang, "R_QB"),
             condition = new Nonterminal(nameof(condition), AndInserter(1), AND, L_B, stmt, R_B),
             for_condition = new Nonterminal(nameof(condition), AndInserter(0), AND, stmt),

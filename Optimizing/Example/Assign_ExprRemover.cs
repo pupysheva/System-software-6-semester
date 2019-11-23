@@ -16,6 +16,8 @@ namespace Optimizing.Example
     {
         public static readonly Assign_ExprRemover Instance = new Assign_ExprRemover();
 
+        private static readonly Random ran = new Random();
+
         private Assign_ExprRemover() {}
 
         public readonly Terminal EMPTY = new Terminal(nameof(EMPTY));
@@ -28,21 +30,25 @@ namespace Optimizing.Example
                 throw new OptimizingException("Вызовите compiledCode.Compile() перед началом.");
             ITreeNode<object> treeCompileForCheckVars = compiledCode.Compile.CloneCompileTree();
 
-            var assignOpTokens = from a in treeCompileForCheckVars
-            where a.Current is Token token && token.Type == Lexer.ExampleLang.ASSIGN_OP
-            select (Token)a.Current;
+            var assignOpRPCs = from a in treeCompileForCheckVars
+            where a.Current == Parser.ExampleLang.assign_expr
+            select (ITreeNode<object>)a;
 
-            foreach(Token t in assignOpTokens)
+            foreach(ITreeNode<object> assign_op in assignOpRPCs)
             {
-                t.Value = t.Id + " =";
+                ReportParserCompile rpc = (ReportParserCompile)assign_op.Current;
+                rpc.Source.TransferToStackCode = Parser.ExampleLang.AndInserter(0, 2, 3, 1);
+                assign_op.Add(new Token(Lexer.ExampleLang.DIGIT, ((Token)assign_op[1].Current).Id.ToString(), ran.NextULong()));
             }
 
             IList<string> commands = string.Join(' ', Parser.ExampleLang.Lang.Compile((from a in treeCompileForCheckVars where a.Current is Token t select (Token)a.Current).ToList(), new ReportParser(treeCompileForCheckVars))).Split(' ');
             HashSet<ulong> TokensToRemove = new OptimizingStackMachine().MyExecute(commands);
 
-            foreach(Token t in assignOpTokens)
+            foreach (ITreeNode<object> assign_op in assignOpRPCs)
             {
-                t.Value = "=";
+                ReportParserCompile rpc = (ReportParserCompile)assign_op.Current;
+                rpc.Source.TransferToStackCode = Parser.ExampleLang.AndInserter(0, 2, 1);
+                assign_op.RemoveAt(3);
             }
 
             ITreeNode<object> output = compiledCode.Compile.CloneCompileTree();

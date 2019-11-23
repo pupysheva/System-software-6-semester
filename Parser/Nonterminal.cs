@@ -59,7 +59,7 @@ namespace Parser
         /// <summary>
         /// Функция преобразования жетонов в стек-код.
         /// </summary>
-        public readonly TransferToStackCode TransferToStackCode = null;
+        public TransferToStackCode TransferToStackCode = null;
 
         /// <summary>
         /// Последний свободный идентификатор.
