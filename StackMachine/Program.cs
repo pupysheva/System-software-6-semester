@@ -6,9 +6,16 @@ using System.IO;
 
 namespace StackMachine
 {
-    class Program
+    public class Program
     {
         static int Main(string[] args)
+        {
+            var tokensReport = GetParserReportFromUser(args);
+            CompileAndExecute(tokensReport);
+            return 0;
+        }
+
+        public static (IList<Token>, ReportParser) GetParserReportFromUser(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
@@ -24,7 +31,7 @@ namespace StackMachine
                 // Ошибка.
                 Console.WriteLine(e + "\n" + e.StackTrace);
                 Console.ReadKey();
-                return 5;
+                throw;
             }
             stream.Close();
             tokens.RemoveAll((Token t) => t.Type.Name.Contains("CH_"));
@@ -39,13 +46,18 @@ namespace StackMachine
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("-----\nДерево компиляции:\n-----");
             Console.WriteLine(report.Compile);
-            if(!report.IsSuccess)
+            if (!report.IsSuccess)
             {
                 Console.WriteLine("Не могу запустить...");
                 Console.ReadKey();
-                return 6;
+                throw new Exception("Код не может быть запущен.");
             }
-            List<string> commands = Parser.ExampleLang.Lang.Compile(tokens, report);
+            return (tokens, report);
+        }
+
+        public static void CompileAndExecute((IList<Token>, ReportParser) info)
+        {
+            List<string> commands = Parser.ExampleLang.Lang.Compile(info.Item1, info.Item2);
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("-----\nПольская запись:\n-----");
             Console.WriteLine(string.Join(", ", commands));
@@ -53,12 +65,6 @@ namespace StackMachine
             ExampleLang.stackMachine.Execute(commands);
             Console.Write("Press eny key...");
             Console.ReadLine();
-            return 0;
-        }
-
-        public static ReportParser GetParserReportFromUser()
-        {
-            return null;
         }
 
         /// <summary>
